@@ -7,14 +7,23 @@ public class EnemyBird : MonoBehaviour
     private float speed = 5f;
 
 
-
-    private BirdAttackState birdAttackState;
-    private BirdCircleState birdCircleState;
-    private BirdDisengageState birdDisengageState;
+    private StateMachine _stateMachine = new StateMachine();
+    private BirdAttackState _birdAttackState;
+    private BirdCircleState _birdCircleState;
+    private BirdDisengageState _birdDisengageState;
 
 
     void Awake()
     {
-        
+        _birdAttackState     = new BirdAttackState();
+        _birdCircleState     = new BirdCircleState(target, this);
+        _birdDisengageState  = new BirdDisengageState();
+
+        _stateMachine.EnterState(_birdCircleState);
+    }
+
+    void Update()
+    {
+        _stateMachine._currentState.StateUpdate();
     }
 }
