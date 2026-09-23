@@ -2,11 +2,15 @@ using UnityEngine;
 
 public class Trash : MonoBehaviour
 {
-
+    bool _isCatched = false;
     float _randomTimeOffset;
     float _amplitude;
     float _speed;
     Vector3 _startPos;
+
+    public GameObject particleVFX;
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,7 +24,27 @@ public class Trash : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float yOffset = Mathf.Sin((Time.time + _randomTimeOffset) * _speed) * _amplitude;
-        transform.position = new Vector3(_startPos.x, _startPos.y + yOffset, _startPos.z);
+        if ((_isCatched == false))
+        {
+            float yOffset = Mathf.Sin((Time.time + _randomTimeOffset) * _speed) * _amplitude;
+            transform.position = new Vector3(_startPos.x, _startPos.y + yOffset, _startPos.z);
+        }
+
+    }
+
+    public void Die()
+    {
+        Instantiate(particleVFX,transform.position, Quaternion.identity);
+        Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        CatcherNet catcherNet = collision.gameObject.GetComponent<CatcherNet>();
+        if(catcherNet != null)
+        {
+            catcherNet.ShowBirdInNet();
+            Die();
+        }
     }
 }
