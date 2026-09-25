@@ -1,4 +1,3 @@
-using System.Threading;
 using UnityEngine;
 
 public class EnemyRefillState : IState
@@ -26,7 +25,8 @@ public class EnemyRefillState : IState
         timer += Time.deltaTime;
         if(timer >= enemyAircraft.timeToFillBalloon)
         {
-            enemyAircraft._balloonTree.
+            enemyAircraft._balloonTree.AddBalloon();
+            enemyAircraft.ChangeTask();
         }
     }
 }
