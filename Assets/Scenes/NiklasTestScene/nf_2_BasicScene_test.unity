@@ -5056,7 +5056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eebb1b9c4a4018468dbf3106f718c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  _balloonTree: {fileID: 661041926}
+  PlayerBaloonTree: {fileID: 661041926}
   liftMultiplier: 2
   gravityMultiplier: 5
   hoverThreshold: 10
