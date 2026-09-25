@@ -9,15 +9,12 @@ public class BirdCircleState : IState
         
     
     [Header("Circling")]
-    private float _circleRadius;
     private float _circleMaxRadius = 15;
     private float _cirecleMinRadius = 5;
 
-    private float _circleSpeed;
     private float _circleMaxSpeed = 2f;
     private float _circleMinSpeed = .5f;
 
-    private float _heightAboveTarget;
     private float _minHeightAboveTarget = 5;
     private float _maxHeightAboveTarget = 12.5f;
 
@@ -26,41 +23,49 @@ public class BirdCircleState : IState
     private float angle;
     private EnemyBird bird;
 
+    float timer;
+
     public void OnEntry()
     {
-        _circleRadius       = Random.Range(_cirecleMinRadius, _circleMaxRadius);
-        _circleSpeed        = Random.Range(_circleMinSpeed, _circleMaxSpeed);
-        _heightAboveTarget  = Random.Range(_minHeightAboveTarget, _maxHeightAboveTarget);
-        _clockwise          = Random.Range(1,3);
+        bird._circleRadius       = Random.Range(_cirecleMinRadius, _circleMaxRadius);
+        bird._circleSpeed        = Random.Range(_circleMinSpeed, _circleMaxSpeed);
+        bird._heightAboveTarget  = Random.Range(_minHeightAboveTarget, _maxHeightAboveTarget);
+        _clockwise               = Random.Range(1,3);
         if(_clockwise == 2)
         {
             _clockwise = -1;
         }
+
+        timer = 10f;
     }
 
     public void OnExit()
-    {
-        bird.currentRadius = _circleRadius;
+    { 
     }
 
     public void StateUpdate()
     {
         CircleTarget();
         UpdateRotation();
+        timer -= Time.deltaTime;
+        if(timer <= 0)
+        {
+            bird._stateMachine.ChangeState(bird._birdAttackState);
+        }
     }
 
     private void CircleTarget()
     {
-    angle += _circleSpeed * Time.deltaTime;
-    float heightVar = _heightAboveTarget += Mathf.Sin(Time.time * Mathf.Sin(1/2)) * .001f;
+    angle += bird._circleSpeed * Time.deltaTime;
+    float heightVar = bird._heightAboveTarget += Mathf.Sin(Time.time * Mathf.Sin(1/2)) * .001f;
 
     Vector3 offset = new Vector3(
-        Mathf.Cos(angle * _clockwise) * _circleRadius,
+        Mathf.Cos(angle * _clockwise) * bird._circleRadius,
         heightVar,
-        Mathf.Sin(angle * _clockwise) * _circleRadius
+        Mathf.Sin(angle * _clockwise) * bird._circleRadius
         );
 
-    bird.transform.position = Vector3.zero + offset;
+    bird.transform.position = bird.target.transform.position + offset;
     }
 
     private void UpdateRotation()

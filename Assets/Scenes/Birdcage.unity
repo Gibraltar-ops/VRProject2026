@@ -228,8 +228,8 @@ Transform:
   m_GameObject: {fileID: 276326530}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.00067, y: 4.64, z: 2.43469}
-  m_LocalScale: {x: 0.42017, y: 0, z: 1.26051}
+  m_LocalPosition: {x: 7.99, y: 4.64, z: 2.43469}
+  m_LocalScale: {x: 0.38, y: 0.16, z: 2.13}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -246,7 +246,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00089a595189da8469a2c24529e382c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBird
+  _circleRadius: 0
+  _circleSpeed: 0
+  _heightAboveTarget: 0
+  _attackingSpeed: 100
   target: {fileID: 1337415913}
+  currentRadius: 0
 --- !u!1 &334094883
 GameObject:
   m_ObjectHideFlags: 0

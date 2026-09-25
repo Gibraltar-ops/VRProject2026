@@ -1,3 +1,4 @@
+using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 public class BirdAttackState : IState
@@ -6,19 +7,37 @@ public class BirdAttackState : IState
     {
         this.bird = bird;
         this.target = target;
-        this._circleRadius = currentRadius;
+    }
+
+    private enum AttackPhase
+    {
+        MoveToTarget,
+        Hover,
+        Dive
     }
 
     private GameObject target;
     private EnemyBird bird;
-    private float _circleRadius;
-    private bool _isAttacking;
-    private Vector3 chargePoint;
+
+    private AttackPhase phase;
+    
+    private Vector3 hoverPos;
+    private Vector3 attackDir;
+    private Quaternion diveRotation;
+
+    private float hoverTime = 2.5f;
+    private float hoverTimer;
 
     public void OnEntry()
     {
-        _isAttacking = false;
-        chargePoint = CalculateChargePoint();
+        hoverTimer = hoverTime;
+        Vector3 toTarget = (bird.transform.position - target.transform.position).normalized;
+
+        hoverPos = target.transform.position + toTarget * (bird._circleRadius) * .5f;
+        attackDir = (target.transform.position - hoverPos).normalized;
+
+        diveRotation = Quaternion.LookRotation(attackDir);
+        phase = AttackPhase.MoveToTarget;
     }
 
     public void OnExit()
@@ -28,28 +47,64 @@ public class BirdAttackState : IState
 
     public void StateUpdate()
     {
-        bird.transform.position = Vector3.MoveTowards(bird.transform.position, chargePoint, DistanceToChargePoint()*Time.deltaTime);
-        if(DistanceToChargePoint() < 1f)
+        switch(phase)
         {
-            _isAttacking = true;
+            case AttackPhase.MoveToTarget:
+                MoveToTarget();
+                break;
+            
+            case AttackPhase.Hover:
+                Hover();
+                break;
+
+            case AttackPhase.Dive:
+                Dive();
+                break;
         }
-
     }
 
-    private Vector3 CalculateChargePoint()
+    
+    private void MoveToTarget()
     {
-        Vector3 chargeDir = target.transform.position.normalized;
-        Vector3 chargePoint = chargeDir * (_circleRadius*.5f);
-        return chargePoint;
+        bird.transform.position = Vector3.MoveTowards(
+            bird.transform.position,
+            hoverPos,
+            bird._circleSpeed * 3.14f * Time.deltaTime
+        );
+
+        bird.transform.rotation = Quaternion.Slerp(bird.transform.rotation, TargetRotation(hoverPos), Time.deltaTime);
+
+        if(Vector3.Distance(bird.transform.position, hoverPos) < 0.1f)
+        {
+            phase = AttackPhase.Hover;
+        }
     }
 
-    private float DistanceToChargePoint()
+    private void Hover()
     {
-        return Vector3.Distance(bird.transform.position, chargePoint);
+        hoverTimer -= Time.deltaTime;
+        bird.transform.rotation = Quaternion.Slerp(bird.transform.rotation, TargetRotation(attackDir), Time.deltaTime * 2);
+
+        if(hoverTimer <= 0f)
+        {
+            phase = AttackPhase.Dive;
+        }
     }
 
-    private Vector3 CalculateAttackPoint()
+    private void Dive()
     {
-        return Vector3.zero;
+        bird.transform.position += attackDir * bird._attackingSpeed * Time.deltaTime;
+        float distance_past_target = Vector3.Dot(bird.transform.position - target.transform.position, attackDir);
+
+        if(distance_past_target >= bird._circleRadius * .5f)
+        {
+            bird._stateMachine.ChangeState(bird._birdCircleState);
+        }
     }
+
+    private Quaternion TargetRotation(Vector3 pointToLookAt)
+    {
+        return Quaternion.LookRotation(pointToLookAt);
+    }
+
 }

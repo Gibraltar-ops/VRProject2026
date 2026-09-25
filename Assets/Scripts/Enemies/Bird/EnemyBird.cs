@@ -2,13 +2,23 @@ using UnityEngine;
 
 public class EnemyBird : MonoBehaviour
 {
+
+    [Header("Circleing")]
+    public float _circleRadius;
+    public float _circleSpeed;
+    public float _heightAboveTarget;
+
+    [Header("Attacking")]
+
+    public float _attackingSpeed = 50f;
+
+
     public GameObject target;
     public float currentRadius;
 
-    private StateMachine _stateMachine = new StateMachine();
-    private BirdAttackState _birdAttackState;
-    private BirdCircleState _birdCircleState;
-    private BirdDisengageState _birdDisengageState;
+    public StateMachine _stateMachine = new StateMachine();
+    public BirdAttackState _birdAttackState;
+    public BirdCircleState _birdCircleState;
 
     private float timer;
 
@@ -18,22 +28,14 @@ public class EnemyBird : MonoBehaviour
     {
         _birdAttackState     = new BirdAttackState(this, target, currentRadius);
         _birdCircleState     = new BirdCircleState(this);
-        _birdDisengageState  = new BirdDisengageState();
+        //_birdDisengageState  = new BirdDisengageState();
 
         _stateMachine.EnterState(_birdCircleState);
-
-        timer = 0;
-
         
     }
 
     void Update()
     {
         _stateMachine._currentState.StateUpdate();
-        timer += Time.deltaTime;
-        if(timer > 5f && _stateMachine._currentState != _birdAttackState)
-        {
-            _stateMachine.ChangeState(_birdAttackState);
-        }
     }
 }
