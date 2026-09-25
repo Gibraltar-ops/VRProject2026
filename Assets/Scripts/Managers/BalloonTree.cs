@@ -22,7 +22,7 @@ public class BalloonTree : MonoBehaviour
     //public Transform TargetOrigin;
     public GameObject PopParticles;
 
-    public static event Action<GameObject> OnBalloonPopped;
+    public static event Action<BalloonInfo> OnBalloonPopped;
 
     void OnEnable()
     {
@@ -75,13 +75,14 @@ public class BalloonTree : MonoBehaviour
 
     }
 
-    BalloonInfo GetOutmostBalloon()
+    public BalloonInfo GetOutmostBalloon()
     {
 
         for (int i = 0; i < _balloons.Count; i++)
         {
             if (_balloons[i].active && _balloons[i].available)
             {
+                _balloons[i].available = false;
                 return _balloons[i];
             }
         }
@@ -117,7 +118,7 @@ public class BalloonTree : MonoBehaviour
         _balloons[index].available = false;
         _balloons[index].transform.gameObject.SetActive(false);
         Instantiate(PopParticles, _balloons[index].transform.position, quaternion.identity, transform);
-        OnBalloonPopped?.Invoke(_balloons[index].transform.gameObject);
+        OnBalloonPopped?.Invoke(_balloons[index]);
 
     }
 
@@ -128,7 +129,7 @@ public class BalloonTree : MonoBehaviour
         balloon.available = false;
         balloon.transform.gameObject.SetActive(false);
         Instantiate(PopParticles, balloon.transform.position, quaternion.identity, transform);
-        OnBalloonPopped?.Invoke(balloon.transform.gameObject);
+        OnBalloonPopped?.Invoke(balloon);
         Debug.Log("Popped Balloon with id: " + balloon.ID);
 
     }
@@ -141,7 +142,7 @@ public class BalloonTree : MonoBehaviour
             if (balloonInfo.transform.gameObject == balloonGameObject)
             {
                 PopBalloon(balloonInfo);
-                OnBalloonPopped?.Invoke(balloonGameObject);
+                OnBalloonPopped?.Invoke(balloonInfo);
                 return;
             }
         }
