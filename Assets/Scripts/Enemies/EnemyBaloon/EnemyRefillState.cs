@@ -1,16 +1,32 @@
+using System.Threading;
 using UnityEngine;
 
-public class EnemyRefillState : MonoBehaviour
+public class EnemyRefillState : IState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public EnemyRefillState(EnemyAircraft enemyAircraft)
+    {
+        this.enemyAircraft = enemyAircraft;
+    }
+
+    EnemyAircraft enemyAircraft;
+    private float timer;
+
+    public void OnEntry()
+    {
+        timer = 0;
+    }
+
+    public void OnExit()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StateUpdate()
     {
-        
+        timer += Time.deltaTime;
+        if(timer >= enemyAircraft.timeToFillBalloon)
+        {
+            enemyAircraft._balloonTree.
+        }
     }
 }
