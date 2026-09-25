@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4544289100353059966}
   - component: {fileID: 6202120911029206360}
   - component: {fileID: 411706426893110431}
+  - component: {fileID: 8807567573601141533}
   m_Layer: 0
   m_Name: Bird_prototype
   m_TagString: Untagged
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trash
   particleVFX: {fileID: 4790004038812169528, guid: 0b6ca83481ecf524d82b558be4015c4f, type: 3}
+  health: {fileID: 8807567573601141533}
 --- !u!135 &6202120911029206360
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -96,6 +98,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8807567573601141533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2259958211159256268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59dca55d87faadb4a8a5449d0a9b2676, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  maxHealth: 1
+  currentHealth: 1
 --- !u!1 &3100715685287036148
 GameObject:
   m_ObjectHideFlags: 0

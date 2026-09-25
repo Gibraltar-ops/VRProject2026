@@ -10,7 +10,8 @@ public class Trash : MonoBehaviour
 
     public GameObject particleVFX;
 
-
+    public Health health;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,6 +20,17 @@ public class Trash : MonoBehaviour
         _amplitude = Random.value + 1.0f;
         _startPos = transform.position;
         _speed = Random.value + 1f;
+
+        health.Die += Health_Die;
+    }
+    private void OnDisable()
+    {
+        health.Die -= Health_Die;
+    }
+
+    private void Health_Die()
+    {
+        Die();
     }
 
     // Update is called once per frame
