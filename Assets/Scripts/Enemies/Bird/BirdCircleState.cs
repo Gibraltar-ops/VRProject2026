@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit.Utilities;
 
 public class BirdCircleState : IState
 {
@@ -16,8 +15,8 @@ public class BirdCircleState : IState
     private float _circleMaxSpeed = 2f;
     private float _circleMinSpeed = .5f;
 
-    private float _minHeightAboveTarget = 5;
-    private float _maxHeightAboveTarget = 12.5f;
+    private float _minHeightAboveTarget = 0;
+    private float _maxHeightAboveTarget = 4;
 
     private int _clockwise;
 
