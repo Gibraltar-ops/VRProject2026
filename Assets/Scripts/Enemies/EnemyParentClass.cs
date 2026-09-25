@@ -13,6 +13,11 @@ public class EnemyParentClass : MonoBehaviour
         
     }
 
+    virtual public void Start()
+    {
+        
+    }
+
     virtual public void Update()
     {
         
