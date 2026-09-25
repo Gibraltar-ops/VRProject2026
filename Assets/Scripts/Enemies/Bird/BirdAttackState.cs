@@ -35,8 +35,8 @@ public class BirdAttackState : IState
 
         hoverPos = target.transform.position + toTarget * (bird._circleRadius) * .5f;
         attackDir = (target.transform.position - hoverPos).normalized;
-
         diveRotation = Quaternion.LookRotation(attackDir);
+
         phase = AttackPhase.MoveToTarget;
     }
 
@@ -72,7 +72,7 @@ public class BirdAttackState : IState
             bird._circleSpeed * 3.14f * Time.deltaTime
         );
 
-        bird.transform.rotation = Quaternion.Slerp(bird.transform.rotation, TargetRotation(hoverPos), Time.deltaTime);
+        bird.transform.rotation = Quaternion.Slerp(bird.transform.rotation, TargetRotation(hoverPos + attackDir), Time.deltaTime);
 
         if(Vector3.Distance(bird.transform.position, hoverPos) < 0.1f)
         {
@@ -87,6 +87,7 @@ public class BirdAttackState : IState
 
         if(hoverTimer <= 0f)
         {
+            bird.transform.rotation = diveRotation;
             phase = AttackPhase.Dive;
         }
     }

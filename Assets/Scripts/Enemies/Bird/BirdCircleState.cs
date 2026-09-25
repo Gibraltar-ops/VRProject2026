@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Utilities;
 
 public class BirdCircleState : IState
 {
@@ -70,7 +71,7 @@ public class BirdCircleState : IState
 
     private void UpdateRotation()
     {
-        Vector3 direction = (Vector3.zero - bird.transform.position).normalized;
+        Vector3 direction = (bird.target.transform.position - bird.transform.position).normalized;
         Vector3 perpendicularDir = Vector3.Cross(direction, Vector3.up).normalized;
 
         if(perpendicularDir != Vector3.zero)
