@@ -9,7 +9,7 @@ public class BasicGun : MonoBehaviour
     public GameObject vfx;
     public void Fire()
     {
-        Instantiate(vfx,transform.position, Quaternion.LookRotation(transform.up * -1, transform.right) );
+        Instantiate(vfx,transform.position, Quaternion.LookRotation(transform.up * -1, transform.right * -1) );
 
         RaycastHit hit;
         if (Physics.Raycast(RaycastOrigin.position, transform.up * -1, out hit, Mathf.Infinity))

@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
 
     [Header("Systems")]
-    public BalloonTree _balloonTree{get; private set;}
+    public BalloonTree _balloonTree;
 
     public int ActiveBalloons{
         get{return _balloonTree.ActiveBalloons;}

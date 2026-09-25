@@ -19,7 +19,7 @@ public class BalloonTree : MonoBehaviour
 
     public List<BalloonInfo> _balloons{get; private set;}
     public int ActiveBalloons{get; private set;}
-    private int startBalloons = 7;
+    [SerializeField] private int startBalloons = 7;
 
     private float _popInterval = 1.5f;
     private float _timer = 0;
