@@ -1,44 +1,61 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [Header("References")]
+    [Header("Information")]
     private float _altitude = GameManager.instance.Altitude;
+    private float WinAltitude = GameManager.instance.WinAltitude;
 
     [Header("Enemy PreFabs")]
     public EnemyParentClass bird;
 
+    private float timer;
+
+    void Start()
+    {
+        timer = 0;
+    }
 
     void Update()
     {
         HandleEnemySpawn();
+        timer += Time.deltaTime;
     }
 
     private void HandleEnemySpawn()
     {
-        switch (_altitude)
+        float progress = _altitude / WinAltitude;
+        switch (progress)
         {
-            case > 10000:
+            case > .667f:
+                SpawnEnemy(bird, 3);
                 break;
             
-            case > 7500:
+            case > .5f:
+                SpawnEnemy(bird, 5);
                 break;
 
-            case > 5000:
+            case > .33f:
+                SpawnEnemy(bird, 10);
                 break;
             
-            case > 2500:
+            case > .10f:
+                SpawnEnemy(bird, 12.5f);
                 break;
             
-            case >= 0:
+            case >= 0.001f:
+                SpawnEnemy(bird, 15);
                 break;
-            
-
         }
     }
 
-    private void SpawnEnemy(EnemyParentClass prefab)
+    private void SpawnEnemy(EnemyParentClass prefab, float frequency)
     {
-        //Instantiate(prefab, );
+        if(timer >= frequency)
+        {
+            Instantiate(prefab, new Vector3(0,-5,0), quaternion.identity);
+            timer = 0;
+        }
     }
 }
