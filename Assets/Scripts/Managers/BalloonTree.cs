@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
@@ -18,8 +19,10 @@ public class BalloonTree : MonoBehaviour
     private List<BalloonInfo> _balloons;
     private float _popInterval = 1.5f;
     private float _timer = 0;
-    public Transform TargetOrigin;
+    //public Transform TargetOrigin;
     public GameObject PopParticles;
+
+    public static event Action<GameObject> OnBalloonPopped;
 
     void OnEnable()
     {
@@ -114,21 +117,23 @@ public class BalloonTree : MonoBehaviour
         _balloons[index].available = false;
         _balloons[index].transform.gameObject.SetActive(false);
         Instantiate(PopParticles, _balloons[index].transform.position, quaternion.identity, transform);
+        OnBalloonPopped?.Invoke(_balloons[index].transform.gameObject);
 
     }
 
-    void PopBalloon(BalloonInfo balloon)
+    public void PopBalloon(BalloonInfo balloon)
     {
         if (balloon == null) return;
         balloon.active = false;
         balloon.available = false;
         balloon.transform.gameObject.SetActive(false);
         Instantiate(PopParticles, balloon.transform.position, quaternion.identity, transform);
+        OnBalloonPopped?.Invoke(balloon.transform.gameObject);
         Debug.Log("Popped Balloon with id: " + balloon.ID);
 
     }
 
-    void PopBalloon(GameObject balloonGameObject)
+    public void PopBalloon(GameObject balloonGameObject)
     {
         if (balloonGameObject == null) return;
         foreach (BalloonInfo balloonInfo in _balloons)
@@ -136,6 +141,7 @@ public class BalloonTree : MonoBehaviour
             if (balloonInfo.transform.gameObject == balloonGameObject)
             {
                 PopBalloon(balloonInfo);
+                OnBalloonPopped?.Invoke(balloonGameObject);
                 return;
             }
         }
@@ -143,6 +149,7 @@ public class BalloonTree : MonoBehaviour
 
     void HandleBalloonHit(GameObject gameObject)
     {
+        if (!gameObject.activeSelf) return;
         PopBalloon(gameObject);
     }
 
@@ -154,6 +161,7 @@ public class BalloonTree : MonoBehaviour
             {
                 _balloons[i].active = true;
                 _balloons[i].available = true;
+                _balloons[i].transform.gameObject.SetActive(true);
                 return;
             }
         }
