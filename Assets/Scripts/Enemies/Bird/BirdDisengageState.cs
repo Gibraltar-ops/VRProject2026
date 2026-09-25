@@ -1,16 +1,19 @@
 using UnityEngine;
 
-public class BirdDisengageState : MonoBehaviour
+public class BirdDisengageState : IState
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void OnEntry()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnExit()
     {
-        
+        throw new System.NotImplementedException();
+    }
+
+    public void StateUpdate()
+    {
+        throw new System.NotImplementedException();
     }
 }
