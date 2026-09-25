@@ -6,7 +6,7 @@ public class Health : MonoBehaviour
     [SerializeField] private int maxHealth;
     [SerializeField] private int currentHealth;
 
-    public event Action Die; // event för när vi dör, animation, particlar och statemachines kan lyssna på
+    public event Action Die; // event fï¿½r nï¿½r vi dï¿½r, animation, particlar och statemachines kan lyssna pï¿½
 
     public void TakeDamage(int damageAmount)
     {
