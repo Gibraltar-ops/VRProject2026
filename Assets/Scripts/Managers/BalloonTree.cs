@@ -70,8 +70,15 @@ public class BalloonTree : MonoBehaviour
             _balloons.Add(sorted[i]);
         }
 
-        ActiveBalloons = startBalloons;
-
+        int counter = 0;
+        for (int i = 0; i < _balloons.Count; i++)
+        {
+            if (_balloons[i].active)
+            {
+                counter++;
+            }
+        }
+        ActiveBalloons = counter;
     }
 
     // Update is called once per frame
