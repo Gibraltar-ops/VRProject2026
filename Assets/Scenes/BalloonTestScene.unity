@@ -1096,7 +1096,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BalloonTree
   CenterPoint: {fileID: 585749190}
   BalloonParent: {fileID: 1205666095}
-  TargetOrigin: {fileID: 1297998521}
   PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
 --- !u!1001 &829379861
 PrefabInstance:
@@ -8367,7 +8366,7 @@ GameObject:
   - component: {fileID: 5311567805905214576}
   - component: {fileID: 7737317464321342312}
   m_Layer: 0
-  m_Name: Blaster
+  m_Name: BaseGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
