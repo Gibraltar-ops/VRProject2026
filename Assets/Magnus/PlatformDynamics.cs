@@ -29,6 +29,10 @@ public class PlatformDynamics : MonoBehaviour
     private void FixedUpdate()
     {
         CalculateVelocity();
+    }
+
+    private void Update()
+    {
         UpdateAltitude();
     }
 
