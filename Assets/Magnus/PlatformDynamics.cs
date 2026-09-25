@@ -14,12 +14,16 @@ public class PlatformDynamics : MonoBehaviour
     [SerializeField] private float winAltitude = 15000f;
     [SerializeField] private float liftMultiplier = 2.0f;
     [SerializeField] private float gravityMultiplier = 5.0f;
+    [Tooltip("Hur många ballonger som behövs för att hovra")]
     [SerializeField] private int hoverThreshold = 10;
+    [Tooltip("Hur få ballonger som behövs för att hamna i fritt fall")]
     [SerializeField] private int freefallThreshold = 3;
+    [Tooltip("Hur mycket acceleration/lift multiplier påverkas per uppblåst ballong")]
     [SerializeField] private float acceleration = 2.0f;
     
     [Header("Fritt fall - justeringar")]
     [SerializeField] private float maxFreeFallSpeed = 30.0f;
+    [Tooltip("Accelerering för fritt fall - 9.8 = jordens tyngdkraft")]
     [SerializeField] private float freefallAcceleration = 9.8f;
     
     private void FixedUpdate()
