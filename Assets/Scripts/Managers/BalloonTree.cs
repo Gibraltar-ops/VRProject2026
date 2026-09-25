@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -32,8 +30,6 @@ public class BalloonTree : MonoBehaviour
         BasicGun.OnGunHit -= HandleBalloonHit;
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
     void Start()
     {
         List<BalloonInfo> unsorted = new();
@@ -48,7 +44,6 @@ public class BalloonTree : MonoBehaviour
         }
 
         List<BalloonInfo> sorted = unsorted.OrderBy(dist => dist.DistanceFromCenter).ToList();
-
 
         for (int i = 0; i < sorted.Count; i++)
         {
@@ -90,7 +85,7 @@ public class BalloonTree : MonoBehaviour
         return null;
     }
 
-    BalloonInfo GetClosestAvailableBalloon(Vector3 origin)
+    public BalloonInfo GetClosestAvailableBalloon(Vector3 origin)
     {
         int closest = -1;
         float closestDist = float.MaxValue;
