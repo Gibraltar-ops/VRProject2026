@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Systems")]
 
-    public BalloonTree PlayerBaloonTree{get; private set;}
+    public BalloonTree PlayerBaloonTree;
 
     public int ActivePlayerBalloons{
         get{return PlayerBaloonTree.ActiveBalloons;}
