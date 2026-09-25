@@ -16,7 +16,11 @@ public class BalloonTree : MonoBehaviour
 {
     public Transform CenterPoint;
     public Transform BalloonParent;
-    private List<BalloonInfo> _balloons;
+
+    public List<BalloonInfo> _balloons{get; private set;}
+    public int ActiveBalloons{get; private set;}
+    private int startBalloons = 7;
+
     private float _popInterval = 1.5f;
     private float _timer = 0;
     //public Transform TargetOrigin;
@@ -51,10 +55,22 @@ public class BalloonTree : MonoBehaviour
         for (int i = 0; i < sorted.Count; i++)
         {
             sorted[i].ID = i;
-            sorted[i].active = true;
-            sorted[i].available = true;
+            if(i < startBalloons)
+            {
+                sorted[i].active = true;
+                sorted[i].available = true;   
+                sorted[i].transform.gameObject.SetActive(true); 
+            }
+            else
+            {
+                sorted[i].active = false;
+                sorted[i].available = false;
+                sorted[i].transform.gameObject.SetActive(false);   
+            }
             _balloons.Add(sorted[i]);
         }
+
+        ActiveBalloons = startBalloons;
 
     }
 
@@ -119,6 +135,7 @@ public class BalloonTree : MonoBehaviour
         _balloons[index].transform.gameObject.SetActive(false);
         Instantiate(PopParticles, _balloons[index].transform.position, quaternion.identity, transform);
         OnBalloonPopped?.Invoke(_balloons[index]);
+        ActiveBalloons--;
 
     }
 
@@ -131,6 +148,7 @@ public class BalloonTree : MonoBehaviour
         Instantiate(PopParticles, balloon.transform.position, quaternion.identity, transform);
         OnBalloonPopped?.Invoke(balloon);
         Debug.Log("Popped Balloon with id: " + balloon.ID);
+        ActiveBalloons--;
 
     }
 
@@ -146,6 +164,7 @@ public class BalloonTree : MonoBehaviour
                 return;
             }
         }
+        ActiveBalloons--;
     }
 
     void HandleBalloonHit(GameObject gameObject)
@@ -166,6 +185,7 @@ public class BalloonTree : MonoBehaviour
                 return;
             }
         }
+        ActiveBalloons++;
     }
 
     BalloonInfo GetBalloonFromIndex(int index)

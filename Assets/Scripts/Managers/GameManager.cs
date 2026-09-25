@@ -5,6 +5,11 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
 
     [Header("Systems")]
+    public BalloonTree _balloonTree{get; private set;}
+
+    public int ActiveBalloons{
+        get{return _balloonTree.ActiveBalloons;}
+    }
 
     [Header("Altitude")]
     public float Altitude{get; private set;}
@@ -12,17 +17,17 @@ public class GameManager : MonoBehaviour
     
     public float CloudBaseAltitude{get;} = 1200f;
     public float WinAltitude {get; private set; } = 15000f;
-
-    [Header("Runtime debug: antal ballonger")] 
-    [SerializeField] private int activeBalloons = 1;
     
     [Header("Balans/Thresholds")]
     [SerializeField] private float liftMultiplier = 2.0f;
     [SerializeField] private float gravityMultiplier = 5.0f;
+
     [Tooltip("Hur många ballonger som behövs för att hovra")]
     [SerializeField] private int hoverThreshold = 10;
+
     [Tooltip("Hur få ballonger som behövs för att hamna i fritt fall")]
     [SerializeField] private int freefallThreshold = 3;
+
     [Tooltip("Hur mycket acceleration/lift multiplier påverkas per uppblåst ballong")]
     [SerializeField] private float acceleration = 2.0f;
     
@@ -53,23 +58,23 @@ public class GameManager : MonoBehaviour
     {
         float targetVelocity = 0f;
 
-        if (activeBalloons > hoverThreshold)
+        if (ActiveBalloons > hoverThreshold)
         {
-            int extraBalloons = activeBalloons - hoverThreshold;
+            int extraBalloons = ActiveBalloons - hoverThreshold;
             targetVelocity = extraBalloons * liftMultiplier;
         }
         
-        else if (activeBalloons <= freefallThreshold)
+        else if (ActiveBalloons <= freefallThreshold)
         {
             targetVelocity = -maxFreeFallSpeed;
         }
-        else if (activeBalloons < hoverThreshold)
+        else if (ActiveBalloons < hoverThreshold)
         {
-            int missingBalloons = hoverThreshold - activeBalloons;
+            int missingBalloons = hoverThreshold - ActiveBalloons;
             targetVelocity = -(missingBalloons * (gravityMultiplier / (hoverThreshold - freefallThreshold))); 
         }
 
-        float currentAcceleration = (activeBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
+        float currentAcceleration = (ActiveBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
         
         VerticalVelocity = Mathf.MoveTowards(VerticalVelocity, targetVelocity, currentAcceleration * Time.fixedDeltaTime);
 
@@ -84,20 +89,4 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
-    public void AddBalloon()
-    {
-        activeBalloons++;
-    }
-    
-    public void RemoveBalloon(int amount)
-    {
-        activeBalloons -= amount;
-
-        if (activeBalloons < 0)
-        {
-            activeBalloons = 0;
-        }
-    }
-
 }

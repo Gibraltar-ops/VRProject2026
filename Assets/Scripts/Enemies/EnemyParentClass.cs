@@ -5,7 +5,7 @@ public class EnemyParentClass : MonoBehaviour
 
     public int _hitPoints;
 
-    public BalloonTree _balloonTree;
+    public BalloonTree _balloonTree = GameManager.instance._balloonTree;
     public BalloonInfo target;
 
     virtual public void Awake()
@@ -30,12 +30,12 @@ public class EnemyParentClass : MonoBehaviour
 
     protected void SetInitTarget()
     {
-        _balloonTree.GetOutmostBalloon();
+        target = _balloonTree.GetOutmostBalloon();
     }
 
     protected void GetNewTarget()
     {
-        _balloonTree.GetClosestAvailableBalloon(gameObject.transform.position);
+        target = _balloonTree.GetClosestAvailableBalloon(gameObject.transform.position);
     }
 
     private void HandleTargetChange(BalloonInfo balloon)
