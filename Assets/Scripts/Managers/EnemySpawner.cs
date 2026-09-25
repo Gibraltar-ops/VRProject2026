@@ -8,8 +8,19 @@ public class EnemySpawner : MonoBehaviour
     [Header("Enemy PreFabs")]
     public GameObject bird;
 
-    void Awake()
+
+    void Update()
     {
-       
+        HandleEnemySpawn();
+    }
+
+    private void HandleEnemySpawn()
+    {
+        
+    }
+
+    private void SpawnEnemy(GameObject prefab)
+    {
+        
     }
 }
