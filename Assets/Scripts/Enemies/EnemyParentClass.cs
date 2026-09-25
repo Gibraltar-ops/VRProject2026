@@ -6,7 +6,7 @@ public class EnemyParentClass : MonoBehaviour
     public int _hitPoints;
 
     public BalloonTree _balloonTree = GameManager.instance.PlayerBaloonTree;
-    public BalloonInfo target;
+    protected BalloonInfo target;
 
     virtual public void Awake()
     {
