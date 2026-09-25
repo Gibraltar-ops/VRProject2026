@@ -24,7 +24,7 @@ public class GroundPlane : MonoBehaviour
       allRenderers = GetComponentsInChildren<Renderer>();
    }
 
-   private void Update()
+   private void FixedUpdate()
    {
       if (platform == null) return;
 
