@@ -5,10 +5,11 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
 
     [Header("Systems")]
-    public BalloonTree _balloonTree;
 
-    public int ActiveBalloons{
-        get{return _balloonTree.ActiveBalloons;}
+    public BalloonTree PlayerBaloonTree;
+
+    public int ActivePlayerBalloons{
+        get{return PlayerBaloonTree.ActiveBalloons;}
     }
 
     [Header("Altitude")]
@@ -51,30 +52,30 @@ public class GameManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        HandleAltitudeChange();
+        HandleAltitudeChange(ActivePlayerBalloons);
     }
 
-    private void HandleAltitudeChange()
+    public void HandleAltitudeChange(int personalBalloons)
     {
         float targetVelocity = 0f;
 
-        if (ActiveBalloons > hoverThreshold)
+        if (personalBalloons > hoverThreshold)
         {
-            int extraBalloons = ActiveBalloons - hoverThreshold;
+            int extraBalloons = personalBalloons - hoverThreshold;
             targetVelocity = extraBalloons * liftMultiplier;
         }
         
-        else if (ActiveBalloons <= freefallThreshold)
+        else if (personalBalloons <= freefallThreshold)
         {
             targetVelocity = -maxFreeFallSpeed;
         }
-        else if (ActiveBalloons < hoverThreshold)
+        else if (personalBalloons < hoverThreshold)
         {
-            int missingBalloons = hoverThreshold - ActiveBalloons;
+            int missingBalloons = hoverThreshold - personalBalloons;
             targetVelocity = -(missingBalloons * (gravityMultiplier / (hoverThreshold - freefallThreshold))); 
         }
 
-        float currentAcceleration = (ActiveBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
+        float currentAcceleration = (personalBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
         
         VerticalVelocity = Mathf.MoveTowards(VerticalVelocity, targetVelocity, currentAcceleration * Time.fixedDeltaTime);
 
