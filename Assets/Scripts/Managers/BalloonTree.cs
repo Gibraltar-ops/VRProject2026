@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class BalloonInfo
 {
@@ -20,10 +21,19 @@ public class BalloonInfo
     public BalloonState state;
 
 }
+
+[RequireComponent(typeof(AudioSource))]
 public class BalloonTree : MonoBehaviour
 {
     public Transform CenterPoint;
     public Transform BalloonParent;
+    
+    public AudioClip[] poppingSounds;
+    public float minPitch = 0.9f;
+    public float maxPitch = 1.1f;
+    private AudioSource source;
+    public AudioMixerGroup sfxGroup;
+
 
     public List<BalloonInfo> _balloons { get; private set; }
     public int ActiveBalloons { get; private set; }
@@ -47,6 +57,15 @@ public class BalloonTree : MonoBehaviour
 
     void Start()
     {
+        source = GetComponent<AudioSource>();
+        source.playOnAwake = false;
+        source.spatialBlend = 1f;
+
+        if (sfxGroup != null)
+        {
+            source.outputAudioMixerGroup = sfxGroup;
+        }
+        
         List<BalloonInfo> unsorted = new();
         _balloons = new();
         foreach (Transform balloon in BalloonParent)
@@ -151,6 +170,7 @@ public class BalloonTree : MonoBehaviour
     {
         if (balloon == null) return;
         balloon.state = BalloonInfo.BalloonState.Dead;
+        PlayPoppingSound(poppingSounds);
         balloon.transform.gameObject.SetActive(false);
         Instantiate(PopParticles, balloon.transform.position, quaternion.identity, transform);
         OnBalloonPopped?.Invoke(balloon);
@@ -229,5 +249,16 @@ public class BalloonTree : MonoBehaviour
         return Vector3.Distance(balloon.position, center.position);
     }
 
+    private void PlayPoppingSound(AudioClip[] audioArray)
+    {
+        if (audioArray == null || audioArray.Length == 0) return;
+        
+        source.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        
+        int randomIndex = UnityEngine.Random.Range(0, audioArray.Length);
+        AudioClip selectedClip = audioArray[randomIndex];
+        
+        source.PlayOneShot(selectedClip);
+    }
 
 }
