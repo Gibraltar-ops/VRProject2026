@@ -45,6 +45,14 @@ public class BirdCircleState : IState
 
     public void StateUpdate()
     {
+        if(bird.target == null)
+        {
+            bird.target = bird.targetBalloonTree.GetClosestAvailableBalloon(bird.gameObject.transform.position);
+            if(bird.target == null)
+            {
+                bird.target = bird.targetBalloonTree.GetOutmostBalloon();
+            }
+        }
         CircleTarget();
         UpdateRotation();
         timer -= Time.deltaTime;

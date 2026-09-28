@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class EnemyParentClass : MonoBehaviour
 {
-
-    public int _hitPoints;
-
-    public BalloonTree _balloonTree;
+    public BalloonTree targetBalloonTree;
     public BalloonInfo target;
+
+    public EnemySpawner spawnerForThis;
 
     virtual public void Awake()
     {
@@ -15,41 +14,24 @@ public class EnemyParentClass : MonoBehaviour
 
     virtual public void Start()
     {
-        _balloonTree = GameManager.instance.PlayerBaloonTree;
     }
 
     virtual public void Update()
     {
-        
     }
 
-    void OnEnable()
+    public void SpawnEnemy(EnemyParentClass enemyToSpawn, EnemySpawner enemySpawner, BalloonTree targetTree)
     {
-        BalloonTree.OnBalloonPopped += HandleTargetChange;
+        spawnerForThis = enemySpawner;
+        spawnerForThis.enemiesSpawned.Add(this);
+        Instantiate(enemyToSpawn, enemySpawner.transform.position - Vector3.down * 5, Quaternion.identity);
+        targetBalloonTree = targetTree;
     }
 
-    void OnDisable()
+    public void KillEnemy()
     {
-        BalloonTree.OnBalloonPopped -= HandleTargetChange;
-    }
-
-    protected void SetInitTarget()
-    {
-        target = _balloonTree.GetOutmostBalloon();
-    }
-
-    protected void GetNewTarget()
-    {
-        target = _balloonTree.GetClosestAvailableBalloon(gameObject.transform.position);
-    }
-
-    private void HandleTargetChange(BalloonInfo balloon)
-    {
-        if(balloon == target)
-        {
-            GetNewTarget();
-        }
-        
+        spawnerForThis.enemiesSpawned.Remove(this);
+        Destroy(gameObject);
     }
 
 

@@ -30,7 +30,7 @@ public class BirdDeadState : IState
         bird.transform.position += Vector3.Lerp(bird.transform.position, gravePos, fallingSpeed);
         if(Vector3.Distance(bird.transform.position, gravePos) < 5f)
         {
-            bird.KillBird();
+            bird.KillEnemy();
         }
     }
 }

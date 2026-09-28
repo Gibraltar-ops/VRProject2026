@@ -23586,10 +23586,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 223a5a267ebf9fc468d9bff9778b4d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BalloonTree
-  CenterPoint: {fileID: 0}
-  BalloonParent: {fileID: 0}
+  CenterPoint: {fileID: 610601473}
+  BalloonParent: {fileID: 610601473}
   startBalloons: 7
-  PopParticles: {fileID: 0}
+  PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
 --- !u!1 &1683470277
 GameObject:
   m_ObjectHideFlags: 0

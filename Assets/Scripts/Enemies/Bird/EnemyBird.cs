@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyBird : EnemyParentClass
 {
-    private Health _health;
+    public Health _health;
 
     [Header("Circleing")]
     public float _circleRadius;
@@ -12,7 +12,6 @@ public class EnemyBird : EnemyParentClass
     [Header("Attacking")]
     public float _attackingSpeed = 50f;
 
-
     public float currentRadius;
 
     public StateMachine _stateMachine = new StateMachine();
@@ -20,12 +19,8 @@ public class EnemyBird : EnemyParentClass
     public BirdCircleState _birdCircleState;
     public BirdDeadState _birdDeadState;
 
-    
-
-
-    override public void Awake()
+    override public void Start()
     {
-        SetInitTarget();
         _birdAttackState     = new BirdAttackState(this, target, currentRadius);
         _birdCircleState     = new BirdCircleState(this);
         //_birdDisengageState  = new BirdDisengageState();
@@ -62,8 +57,4 @@ public class EnemyBird : EnemyParentClass
         _stateMachine.ChangeState(_birdDeadState);
     }
 
-    public void KillBird()
-    {
-        Destroy(gameObject);
-    }
 }
