@@ -79,7 +79,7 @@ public class BalloonTree : MonoBehaviour
         int counter = 0;
         for (int i = 0; i < _balloons.Count; i++)
         {
-            if (_balloons[i].state == BalloonInfo.BalloonState.Dead)
+            if (_balloons[i].state == BalloonInfo.BalloonState.Alive)
             {
                 counter++;
             }
