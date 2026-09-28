@@ -14,9 +14,9 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  m_FogMode: 3
+  m_FogMode: 1
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
@@ -477,6 +477,7 @@ GameObject:
   m_Component:
   - component: {fileID: 862944237}
   - component: {fileID: 862944236}
+  - component: {fileID: 862944238}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -519,6 +520,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &862944238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862944235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65559b567c8038d43aa1bfaa15af347d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AtmosphericFog
+  groundFogColor: {r: 0.9019608, g: 0.83137256, b: 0.7647059, a: 1}
+  highAltitudeColor: {r: 0.8509804, g: 0.9019608, b: 0.9490196, a: 1}
+  groundFogEndDistance: 800
+  highAltitudeEndDistance: 150
+  playerCamera: {fileID: 0}
 --- !u!1 &1093449715
 GameObject:
   m_ObjectHideFlags: 0
