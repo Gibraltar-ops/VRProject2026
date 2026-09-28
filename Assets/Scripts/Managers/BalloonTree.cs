@@ -6,19 +6,27 @@ using UnityEngine;
 
 public class BalloonInfo
 {
+    public enum BalloonState
+    {
+        Alive,
+        Dead,
+        MarkedForDeath,
+        MarkedForSpawn
+    }
     public Transform transform;
     public int ID;
     public float DistanceFromCenter;
-    public bool active;
-    public bool available;
+
+    public BalloonState state;
+
 }
 public class BalloonTree : MonoBehaviour
 {
     public Transform CenterPoint;
     public Transform BalloonParent;
 
-    public List<BalloonInfo> _balloons{get; private set;}
-    public int ActiveBalloons{get; private set;}
+    public List<BalloonInfo> _balloons { get; private set; }
+    public int ActiveBalloons { get; private set; }
     [SerializeField] private int startBalloons = 7;
 
     private float _popInterval = 1.5f;
@@ -55,17 +63,15 @@ public class BalloonTree : MonoBehaviour
         for (int i = 0; i < sorted.Count; i++)
         {
             sorted[i].ID = i;
-            if(i < startBalloons)
+            if (i < startBalloons)
             {
-                sorted[i].active = true;
-                sorted[i].available = true;   
-                sorted[i].transform.gameObject.SetActive(true); 
+                sorted[i].state = BalloonInfo.BalloonState.Alive;
+                sorted[i].transform.gameObject.SetActive(true);
             }
             else
             {
-                sorted[i].active = false;
-                sorted[i].available = false;
-                sorted[i].transform.gameObject.SetActive(false);   
+                sorted[i].state = BalloonInfo.BalloonState.Dead;
+                sorted[i].transform.gameObject.SetActive(false);
             }
             _balloons.Add(sorted[i]);
         }
@@ -73,7 +79,7 @@ public class BalloonTree : MonoBehaviour
         int counter = 0;
         for (int i = 0; i < _balloons.Count; i++)
         {
-            if (_balloons[i].active)
+            if (_balloons[i].state == BalloonInfo.BalloonState.Dead)
             {
                 counter++;
             }
@@ -103,13 +109,18 @@ public class BalloonTree : MonoBehaviour
 
         for (int i = 0; i < _balloons.Count; i++)
         {
-            if (_balloons[i].active && _balloons[i].available)
+            if (_balloons[i].state == BalloonInfo.BalloonState.Alive)
             {
-                _balloons[i].available = false;
+                _balloons[i].state = BalloonInfo.BalloonState.MarkedForDeath;
                 return _balloons[i];
             }
         }
         return null;
+    }
+
+    public void SetBalloonState(BalloonInfo balloon, BalloonInfo.BalloonState state)
+    {
+        balloon.state = state;
     }
 
     public BalloonInfo GetClosestAvailableBalloon(Vector3 origin)
@@ -119,7 +130,7 @@ public class BalloonTree : MonoBehaviour
 
         for (int i = 0; i < _balloons.Count; i++)
         {
-            if (!_balloons[i].active || !_balloons[i].available)
+            if (_balloons[i].state != BalloonInfo.BalloonState.Alive)
                 continue;
 
             float dist = Vector3.SqrMagnitude(_balloons[i].transform.position - origin);
@@ -131,26 +142,15 @@ public class BalloonTree : MonoBehaviour
             }
         }
         if (closest < 0) return null;
-        _balloons[closest].available = !_balloons[closest].available;
+        _balloons[closest].state = BalloonInfo.BalloonState.MarkedForDeath;
         return GetBalloonFromIndex(closest);
     }
 
-    void PopBalloon(int index)
-    {
-        _balloons[index].active = false;
-        _balloons[index].available = false;
-        _balloons[index].transform.gameObject.SetActive(false);
-        Instantiate(PopParticles, _balloons[index].transform.position, quaternion.identity, transform);
-        OnBalloonPopped?.Invoke(_balloons[index]);
-        ActiveBalloons--;
-
-    }
 
     public void PopBalloon(BalloonInfo balloon)
     {
         if (balloon == null) return;
-        balloon.active = false;
-        balloon.available = false;
+        balloon.state = BalloonInfo.BalloonState.Dead;
         balloon.transform.gameObject.SetActive(false);
         Instantiate(PopParticles, balloon.transform.position, quaternion.identity, transform);
         OnBalloonPopped?.Invoke(balloon);
@@ -171,7 +171,6 @@ public class BalloonTree : MonoBehaviour
                 return;
             }
         }
-        ActiveBalloons--;
     }
 
     void HandleBalloonHit(GameObject gameObject)
@@ -180,19 +179,43 @@ public class BalloonTree : MonoBehaviour
         PopBalloon(gameObject);
     }
 
-    void AddBalloon()
+    public BalloonInfo GetFreeBalloonSlot()
     {
         for (int i = 0; i < _balloons.Count; i++)
         {
-            if (!_balloons[i].active)
+            if (_balloons[i].state == BalloonInfo.BalloonState.Dead)
             {
-                _balloons[i].active = true;
-                _balloons[i].available = true;
+                _balloons[i].state = BalloonInfo.BalloonState.MarkedForSpawn;
+                return _balloons[i];
+            }
+        }
+        return null;
+    }
+
+    // Call the zero-parameter version if you just want to add a balloon instantly, using the pool of dead balloons.
+    public void AddBalloon()
+    {
+        for (int i = 0; i < _balloons.Count; i++)
+        {
+            if (_balloons[i].state == BalloonInfo.BalloonState.Dead)
+            {
+                _balloons[i].state = BalloonInfo.BalloonState.Alive;
                 _balloons[i].transform.gameObject.SetActive(true);
+                ActiveBalloons++;
                 return;
             }
         }
-        ActiveBalloons++;
+    }
+    // Pass along a specific balloon if you have received and freed a slot earlier using GetFreeBalloonSlot.
+    public void AddBalloon(BalloonInfo balloon)
+    {
+        if (balloon.state == BalloonInfo.BalloonState.MarkedForSpawn)
+        {
+            balloon.state = BalloonInfo.BalloonState.Alive;
+            balloon.transform.gameObject.SetActive(true);
+            ActiveBalloons++;
+        }
+
     }
 
     BalloonInfo GetBalloonFromIndex(int index)
