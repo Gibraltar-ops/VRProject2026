@@ -9,7 +9,7 @@ public class DeflatedBallon : MonoBehaviour
     public float _timer;
     public bool _isInflating = false;
     private bool _interactable = true;
-    private BalloonTree ballonTree;
+    private BalloonTree PlayerBalloonTree;
     Vector3 _targetScale1 = Vector3.one * 0.3f;
     Vector3 _targetScale2 = Vector3.one * 1.2f;
 
@@ -32,7 +32,7 @@ public class DeflatedBallon : MonoBehaviour
     {
         _startScale = _inflatableTransform.localScale;
         state = State.Deflated;
-        ballonTree = GameManager.instance.PlayerBaloonTree;
+        PlayerBalloonTree = GameManager.instance.PlayerBaloonTree;
     }
 
     // Update is called once per frame
@@ -88,7 +88,9 @@ public class DeflatedBallon : MonoBehaviour
         }
         else if (state == State.Complete)
         {
+            BalloonInfo slot = PlayerBalloonTree.GetFreeBalloonSlot();
             _isInflating = false;
+            StartCoroutine(AddBalloonToCanopy(slot));
             Debug.Log("Dropped Full Balloon.");
         }
     }
@@ -113,5 +115,26 @@ public class DeflatedBallon : MonoBehaviour
         }
         _timer = 0f;
         _interactable = true;
+    }
+
+    IEnumerator AddBalloonToCanopy(BalloonInfo slot)
+    {
+        float moveTime = 2f;
+        float timer = 0f;
+        float t;
+
+        Vector3 startPosition = new Vector3(_inflatableTransform.position.x, _inflatableTransform.position.y, _inflatableTransform.position.z);
+        Vector3 endPosition = slot.transform.position;
+
+        while (timer < moveTime)
+        {
+            t = timer / moveTime;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = endPosition;
+        PlayerBalloonTree.AddBalloon(slot);
+        Destroy(gameObject);
     }
 }
