@@ -470,7 +470,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 50a84724cf3c5474abfdc45582c3e2a2, type: 3}
   - {fileID: 8300000, guid: 43eeed8ed08d1a64b9dfe7c5c30c7d05, type: 3}
   minPitch: 0.9
-  maxPitch: 0
+  maxPitch: 1.1
   sfxGroup: {fileID: 7721132474655496399, guid: 928d96293023bf743a181c01563cfc47, type: 2}
   _vfx: {fileID: 4790004038812169528, guid: 0b6ca83481ecf524d82b558be4015c4f, type: 3}
 --- !u!82 &7359061709211399574
