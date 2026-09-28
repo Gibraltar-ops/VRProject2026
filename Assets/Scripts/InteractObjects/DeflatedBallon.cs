@@ -33,7 +33,7 @@ public class DeflatedBallon : MonoBehaviour
     public AudioClip[] poppingSounds;
 
     public float minPitch = 0.9f;
-    public float maxPitch;
+    public float maxPitch = 1.1f;
 
     private AudioSource source;
 
