@@ -1,6 +1,9 @@
 using System.Collections;
+using System.IO.Compression;
+using Unity.Mathematics;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class DeflatedBallon : MonoBehaviour
 {
 
@@ -16,6 +19,7 @@ public class DeflatedBallon : MonoBehaviour
     public float _firstPhaseTime = 2f;
     public float _secondPhaseTime = 8f;
     public float destoryAfterTime = 4f;
+    Rigidbody rb;
     Vector3 _startScale;
     State state;
 
@@ -33,6 +37,7 @@ public class DeflatedBallon : MonoBehaviour
         _startScale = _inflatableTransform.localScale;
         state = State.Deflated;
         PlayerBalloonTree = GameManager.instance.PlayerBaloonTree;
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -121,19 +126,33 @@ public class DeflatedBallon : MonoBehaviour
     {
         float moveTime = 2f;
         float timer = 0f;
-        float t;
+        float t = 0f;
 
-        Vector3 startPosition = new Vector3(_inflatableTransform.position.x, _inflatableTransform.position.y, _inflatableTransform.position.z);
-        Vector3 endPosition = slot.transform.position;
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = slot.transform.position - (_inflatableTransform.position - _attachmentPoint.position);
+        Quaternion startRotation = transform.rotation;
+        Quaternion endRotation = slot.transform.rotation;
+
+        rb.isKinematic = true;
 
         while (timer < moveTime)
         {
-            t = timer / moveTime;
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            Debug.DrawLine(startPosition, endPosition);
+            t = Mathf.Clamp01(timer / moveTime);
+
+            float lerpedX = Mathf.SmoothStep(startPosition.x, endPosition.x, t);
+            float lerpedY = Mathf.SmoothStep(startPosition.y, endPosition.y, t);
+            float lerpedZ = Mathf.SmoothStep(startPosition.z, endPosition.z, t);
+            transform.position = new Vector3(lerpedX, lerpedY, lerpedZ);
+
+            Quaternion lerpedRot = Quaternion.Lerp(startRotation, endRotation, t);
+            //transform.rotation = lerpedRot;
+
             timer += Time.deltaTime;
             yield return null;
         }
         transform.position = endPosition;
+        //transform.rotation = endRotation;
         PlayerBalloonTree.AddBalloon(slot);
         Destroy(gameObject);
     }
