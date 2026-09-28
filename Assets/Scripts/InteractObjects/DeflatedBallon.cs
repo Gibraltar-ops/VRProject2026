@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.IO.Compression;
 using Unity.Mathematics;
@@ -24,8 +25,8 @@ public class DeflatedBallon : MonoBehaviour
     Rigidbody rb;
     Vector3 _startScale;
     State state;
-    
-    
+    public event Action OnPickup;
+
     // Audio Systems
     public AudioClip[] inflateSounds;
     public AudioClip[] deflatedSounds;
@@ -38,6 +39,8 @@ public class DeflatedBallon : MonoBehaviour
     private AudioSource source;
 
     public AudioMixerGroup sfxGroup;
+
+
 
     enum State
     {
@@ -73,9 +76,9 @@ public class DeflatedBallon : MonoBehaviour
         if (_isInflating)
         {
             _timer += Time.deltaTime;
-            
-            
-            
+
+
+
             if (_timer < _firstPhaseTime)
             {
                 // float t = _timer / _firstPhaseTime;
@@ -104,15 +107,20 @@ public class DeflatedBallon : MonoBehaviour
     public void AttachToHelium()
     {
         _isInflating = true;
-        
+
         PlayRandomSound(inflateSounds);
     }
 
     public void DetachFromHelium()
     {
         PlayRandomSound(creakingSounds);
-        
+
         _isInflating = false;
+    }
+
+    public void Pickup()
+    {
+        OnPickup?.Invoke();
     }
 
     public void OnRelease()
@@ -127,7 +135,15 @@ public class DeflatedBallon : MonoBehaviour
         else if (state == State.Complete)
         {
             BalloonInfo slot = PlayerBalloonTree.GetFreeBalloonSlot();
+
             _isInflating = false;
+
+            if (slot == null)
+            {
+                Pop();
+                return;
+            }
+
             StartCoroutine(AddBalloonToCanopy(slot));
             Debug.Log("Dropped Full Balloon.");
         }
@@ -136,7 +152,7 @@ public class DeflatedBallon : MonoBehaviour
     IEnumerator RapidDeflate()
     {
         PlayRandomSound(deflatedSounds);
-        
+
         _interactable = false;
         state = State.Deflated;
         float timeToDeflate = 0.2f;
@@ -159,8 +175,10 @@ public class DeflatedBallon : MonoBehaviour
 
     IEnumerator AddBalloonToCanopy(BalloonInfo slot)
     {
+
         PlayRandomSound(creakingSounds);
-        
+
+
         float moveTime = 2f;
         float timer = 0f;
         float t = 0f;
@@ -203,5 +221,12 @@ public class DeflatedBallon : MonoBehaviour
 
         source.clip = audioArray[randomIndex];
         source.Play();
+    }
+
+    void Pop()
+    {
+        Instantiate(_vfx, _inflatableTransform.transform.position, Quaternion.identity);
+        PlayRandomSound(poppingSounds);
+        Destroy(gameObject);
     }
 }
