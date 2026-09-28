@@ -11,7 +11,7 @@ public class CloudController : MonoBehaviour
     [Header("Particle control")] [Tooltip("Partiklar per sekund när vi är i molnen")] [SerializeField]
     private float maxEmissionRate = 50f;
     
-    [Tooltip("X-axeln: 0 (Mitt i molnet) till 1 (Utanför molnet). Y-axeln: Emission multiplier (0 till 1).")] [SerializeField] 
+    [Tooltip("X-axeln: 0 (Mitt i moln) till 1 (Utanför moln). Y: Emission multiplier (0 - 1).")] [SerializeField] 
     private AnimationCurve emissionCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
 
     private ParticleSystem.EmissionModule emissionModule;
@@ -29,7 +29,7 @@ public class CloudController : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Referens till partikelsystem saknas ");
+            Debug.LogError("Saknar referens till partikelsystem ");
         }
     }
 

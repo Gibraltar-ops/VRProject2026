@@ -52,17 +52,17 @@ Material:
     m_Ints: []
     m_Floats:
     - _ClipThreshold: 0.35
-    - _CloudDensity: 1.8
+    - _CloudDensity: 1.5
     - _CloudScale: 80
     - _DisplacementHeight: 100
-    - _DistortScale: 17.76
+    - _DistortScale: 100
     - _EdgeSoftness: 0.15
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - _CloudColor: {r: 1, g: 1, b: 1, a: 1}
     - _CloudSpeed: {r: 0.002, g: 0.0051, b: 0, a: 0}
-    - _DistortSpeed: {r: -0.0001, g: 0.01, b: 0, a: 0}
-    - _SkyColor: {r: 0.34922743, g: 0.42245635, b: 0.5396226, a: 1}
+    - _DistortSpeed: {r: -0.0002, g: 0.001, b: 0, a: 0}
+    - _SkyColor: {r: 0.34901962, g: 0.42352942, b: 0.5411765, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

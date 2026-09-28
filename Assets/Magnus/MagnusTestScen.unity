@@ -884,6 +884,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CloudParticles
       objectReference: {fileID: 0}
+    - target: {fileID: 4123457151421466158, guid: 06af458ee1d549943be1179c4803f598, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5211205929828379053, guid: 06af458ee1d549943be1179c4803f598, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
