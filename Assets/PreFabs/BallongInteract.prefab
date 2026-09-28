@@ -293,7 +293,19 @@ MonoBehaviour:
       m_Calls: []
   m_SelectExited:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2146493592721169925}
+        m_TargetAssemblyTypeName: DeflatedBallon, Assembly-CSharp
+        m_MethodName: OnRelease
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_FirstFocusEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -434,8 +446,8 @@ MonoBehaviour:
   _inflatableTransform: {fileID: 5691163696680541352}
   _timer: 0
   _isInflating: 0
-  _firstPhaseTime: 2
-  _secondPhaseTime: 8
+  _firstPhaseTime: 1
+  _secondPhaseTime: 2
   destoryAfterTime: 4
   _vfx: {fileID: 4790004038812169528, guid: 0b6ca83481ecf524d82b558be4015c4f, type: 3}
 --- !u!1 &5113861264164906924
