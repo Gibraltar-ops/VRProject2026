@@ -7,6 +7,8 @@ public class EnemySpawner : MonoBehaviour
     private float _altitude = GameManager.instance.Altitude;
     private float WinAltitude = GameManager.instance.WinAltitude;
 
+    public int enemiesSpawned;
+
     [Header("Enemy PreFabs")]
     public EnemyParentClass bird;
 
@@ -14,6 +16,7 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
+        enemiesSpawned = 0;
         timer = 0;
     }
 
@@ -55,6 +58,7 @@ public class EnemySpawner : MonoBehaviour
         if(timer >= frequency)
         {
             Instantiate(prefab, new Vector3(0,-5,0), quaternion.identity);
+            enemiesSpawned++;
             timer = 0;
         }
     }
