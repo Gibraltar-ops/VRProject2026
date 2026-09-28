@@ -15910,10 +15910,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BallongInteract (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 7463652337547594427, guid: 9cbd6d80dbfc9034bb0e76f78bfb6502, type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
