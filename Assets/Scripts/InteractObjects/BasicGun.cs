@@ -9,7 +9,7 @@ public class BasicGun : MonoBehaviour
     public GameObject vfx;
     public void Fire()
     {
-        Instantiate(vfx,transform.position, Quaternion.LookRotation(transform.up * -1, transform.right * -1) );
+        Instantiate(vfx, RaycastOrigin.position, Quaternion.LookRotation(transform.up * -1, transform.right * -1));
 
         RaycastHit hit;
         if (Physics.Raycast(RaycastOrigin.position, transform.up * -1, out hit, Mathf.Infinity))
@@ -22,7 +22,7 @@ public class BasicGun : MonoBehaviour
             OnGunHit?.Invoke(hit.collider.gameObject); // ballon tree is listening to this
 
             Health health = hit.collider.gameObject.GetComponent<Health>();
-            if (health != null) 
+            if (health != null)
             {
                 health.TakeDamage(1);
             }
