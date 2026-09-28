@@ -2,8 +2,10 @@ using System.Collections;
 using System.IO.Compression;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class DeflatedBallon : MonoBehaviour
 {
 
@@ -22,6 +24,20 @@ public class DeflatedBallon : MonoBehaviour
     Rigidbody rb;
     Vector3 _startScale;
     State state;
+    
+    
+    // Audio Systems
+    public AudioClip[] inflateSounds;
+    public AudioClip[] deflatedSounds;
+    public AudioClip[] creakingSounds;
+    public AudioClip[] poppingSounds;
+
+    public float minPitch = 0.9f;
+    public float maxPitch;
+
+    private AudioSource source;
+
+    public AudioMixerGroup sfxGroup;
 
     enum State
     {
@@ -38,6 +54,16 @@ public class DeflatedBallon : MonoBehaviour
         state = State.Deflated;
         PlayerBalloonTree = GameManager.instance.PlayerBaloonTree;
         rb = GetComponent<Rigidbody>();
+
+        // Audio setup
+        source = GetComponent<AudioSource>();
+        source.spatialBlend = 1f;
+        source.playOnAwake = false;
+
+        if (sfxGroup != null)
+        {
+            source.outputAudioMixerGroup = sfxGroup;
+        }
     }
 
     // Update is called once per frame
@@ -47,10 +73,12 @@ public class DeflatedBallon : MonoBehaviour
         if (_isInflating)
         {
             _timer += Time.deltaTime;
-
+            
+            
+            
             if (_timer < _firstPhaseTime)
             {
-                float t = _timer / _firstPhaseTime;
+                // float t = _timer / _firstPhaseTime;
                 _inflatableTransform.localScale = Vector3.Lerp(_startScale, _targetScale1, _timer);
             }
             else if (_timer > _firstPhaseTime && _timer < (_secondPhaseTime + _firstPhaseTime))
@@ -65,6 +93,7 @@ public class DeflatedBallon : MonoBehaviour
             else if (_timer > (_firstPhaseTime + _secondPhaseTime + destoryAfterTime))
             {
                 Instantiate(_vfx, _inflatableTransform.transform.position, Quaternion.identity);
+                PlayRandomSound(poppingSounds);
                 Destroy(gameObject);
             }
             // translate in world space?
@@ -75,10 +104,14 @@ public class DeflatedBallon : MonoBehaviour
     public void AttachToHelium()
     {
         _isInflating = true;
+        
+        PlayRandomSound(inflateSounds);
     }
 
     public void DetachFromHelium()
     {
+        PlayRandomSound(creakingSounds);
+        
         _isInflating = false;
     }
 
@@ -102,6 +135,8 @@ public class DeflatedBallon : MonoBehaviour
 
     IEnumerator RapidDeflate()
     {
+        PlayRandomSound(deflatedSounds);
+        
         _interactable = false;
         state = State.Deflated;
         float timeToDeflate = 0.2f;
@@ -124,6 +159,8 @@ public class DeflatedBallon : MonoBehaviour
 
     IEnumerator AddBalloonToCanopy(BalloonInfo slot)
     {
+        PlayRandomSound(creakingSounds);
+        
         float moveTime = 2f;
         float timer = 0f;
         float t = 0f;
@@ -155,5 +192,16 @@ public class DeflatedBallon : MonoBehaviour
         //transform.rotation = endRotation;
         PlayerBalloonTree.AddBalloon(slot);
         Destroy(gameObject);
+    }
+
+    private void PlayRandomSound(AudioClip[] audioArray)
+    {
+        if (audioArray == null || audioArray.Length == 0) return;
+
+        source.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        int randomIndex = UnityEngine.Random.Range(0, audioArray.Length);
+
+        source.clip = audioArray[randomIndex];
+        source.Play();
     }
 }
