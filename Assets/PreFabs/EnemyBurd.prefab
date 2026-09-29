@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 3200892716744820395}
   - component: {fileID: 7374406080681346328}
   - component: {fileID: 1734315865829678719}
+  - component: {fileID: 2777991897977361946}
   m_Layer: 0
   m_Name: EnemyBurd
   m_TagString: Untagged
@@ -79,12 +80,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBird
   targetBalloonTree: {fileID: 0}
+  spawnerForThis: {fileID: 0}
   _health: {fileID: 1734315865829678719}
   _circleRadius: 0
   _circleSpeed: 0
   _heightAboveTarget: 0
   _attackingSpeed: 50
   currentRadius: 0
+  circleDirection: 0
 --- !u!114 &1734315865829678719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +102,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 1
   currentHealth: 1
+--- !u!135 &2777991897977361946
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7737398126917831155}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.3
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &7830827457855882786
 PrefabInstance:
   m_ObjectHideFlags: 0

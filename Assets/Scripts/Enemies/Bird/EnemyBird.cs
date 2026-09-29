@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SphereCollider))]
 public class EnemyBird : EnemyParentClass
 {
     public Health _health;
@@ -13,6 +14,7 @@ public class EnemyBird : EnemyParentClass
     public float _attackingSpeed = 50f;
 
     public float currentRadius;
+    public int circleDirection;
 
     public StateMachine _stateMachine = new StateMachine();
     public BirdAttackState _birdAttackState;
@@ -21,9 +23,8 @@ public class EnemyBird : EnemyParentClass
 
     override public void Start()
     {
-        _birdAttackState     = new BirdAttackState(this, target, currentRadius);
+        _birdAttackState     = new BirdAttackState(this, target);
         _birdCircleState     = new BirdCircleState(this);
-        //_birdDisengageState  = new BirdDisengageState();
         _birdDeadState       = new BirdDeadState(this);
 
         _stateMachine.EnterState(_birdCircleState);
@@ -55,6 +56,14 @@ public class EnemyBird : EnemyParentClass
     private void EnterDeadState()
     {
         _stateMachine.ChangeState(_birdDeadState);
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Balloon"))
+        {
+            Debug.Log("Pop");
+        }
     }
 
 }
