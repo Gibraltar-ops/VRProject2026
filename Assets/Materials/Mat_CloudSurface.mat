@@ -60,6 +60,7 @@ Material:
     - _EdgeSoftness: 0.15
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _XRMotionVectorsPass: 1
     m_Colors:
     - _CloudColor: {r: 1, g: 1, b: 1, a: 1}
     - _CloudSpeed: {r: 0.002, g: 0.0051, b: 0, a: 0}

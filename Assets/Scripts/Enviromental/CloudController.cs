@@ -8,6 +8,9 @@ public class CloudController : MonoBehaviour
     [Header("Cloud config")] [Tooltip("Avstånd i Y-led från det att molnen påverkar spelaren")] [SerializeField]
     private float cloudThickness = 100.0f;
 
+    [SerializeField] private float cloudBaseAltitude = 1200f; // Maybe gamemanager later
+    [SerializeField] private float cloudParticleOffset = 50f;
+
     [Header("Particle control")] [Tooltip("Partiklar per sekund när vi är i molnen")] [SerializeField]
     private float maxEmissionRate = 50f;
     
@@ -38,7 +41,9 @@ public class CloudController : MonoBehaviour
         if (GameManager.instance == null) return;
         
         float currentAltitude = GameManager.instance.Altitude;
-        float cloudBaseAltitude = GameManager.instance.CloudBaseAltitude;
+
+        //float cloudBaseAltitude = GameManager.instance.CloudBaseAltitude; // Turn on agin later
+
         float currentVerticalVelocity = GameManager.instance.VerticalVelocity;
 
         float newYPosition = cloudBaseAltitude - currentAltitude;
@@ -56,7 +61,7 @@ public class CloudController : MonoBehaviour
         // totalt avstånd från origo till molnets centrum
         float distanceToCloudCenter = Mathf.Abs(cloudYPosition);
 
-        float normalizedDistance = distanceToCloudCenter / (cloudThickness * 0.5f);
+        float normalizedDistance = distanceToCloudCenter / (cloudThickness * 0.5f + cloudParticleOffset);
         normalizedDistance = Mathf.Clamp01(normalizedDistance);
 
         float evaluatedMultiplier = emissionCurve.Evaluate(normalizedDistance);

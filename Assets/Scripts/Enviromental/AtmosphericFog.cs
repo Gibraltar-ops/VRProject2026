@@ -12,6 +12,11 @@ public class AtmosphericFog : MonoBehaviour
 
     public Camera playerCamera;
 
+    private void Start()
+    {
+        playerCamera = Camera.main;
+    }
+
     void Update()
     {
         if (GameManager.instance == null) return;
