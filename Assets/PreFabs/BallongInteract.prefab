@@ -484,7 +484,7 @@ MonoBehaviour:
   minPitch: 0.9
   maxPitch: 1.1
   sfxGroup: {fileID: 7721132474655496399, guid: 928d96293023bf743a181c01563cfc47, type: 2}
-  _vfx: {fileID: 4790004038812169528, guid: 0b6ca83481ecf524d82b558be4015c4f, type: 3}
+  _vfx: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
 --- !u!82 &7359061709211399574
 AudioSource:
   m_ObjectHideFlags: 0

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 
-[RequireComponent(typeof(AudioSource))]
+
 public class BasicGun : MonoBehaviour
 {
     public Transform RaycastOrigin;
@@ -11,31 +11,16 @@ public class BasicGun : MonoBehaviour
     public bool _debug = false;
     public GameObject vfx;
     
-    public AudioClip gunShootSound;
-    public float minPitch = 0.9f;
-    public float maxPitch = 1.1f;
-    
-    private AudioSource source;
-    public AudioMixerGroup sfxGroup;
+  
     
     void Start()
     {
        
-        source = GetComponent<AudioSource>();
-        
-       
-        source.playOnAwake = false;
-        source.spatialBlend = 1f; 
-
-        if (sfxGroup != null)
-        {
-            source.outputAudioMixerGroup = sfxGroup;
-        }
+     
     }
     
     public void Fire()
     {
-        PlayGunSFX(gunShootSound);
         
         Instantiate(vfx, RaycastOrigin.position, Quaternion.LookRotation(transform.up * -1, transform.right * -1));
 
@@ -65,14 +50,4 @@ public class BasicGun : MonoBehaviour
         }
     }
     
-    private void PlayGunSFX(AudioClip clipToPlay)
-    {
-        if (clipToPlay == null)
-        {
-            return;
-        }
-        
-        source.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
-        source.PlayOneShot(clipToPlay);
-    }
 }

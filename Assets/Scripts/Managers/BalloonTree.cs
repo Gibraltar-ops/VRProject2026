@@ -170,13 +170,13 @@ public class BalloonTree : MonoBehaviour
     {
         if (balloon == null) return;
         balloon.state = BalloonInfo.BalloonState.Dead;
-        PlayPoppingSound(poppingSounds);
         balloon.transform.gameObject.SetActive(false);
         Instantiate(PopParticles, balloon.transform.position, quaternion.identity, transform);
         OnBalloonPopped?.Invoke(balloon);
         Debug.Log("Popped Balloon with id: " + balloon.ID);
         ActiveBalloons--;
 
+        PlayPoppingSound(poppingSounds);
     }
 
     public void PopBalloon(GameObject balloonGameObject)
@@ -253,7 +253,7 @@ public class BalloonTree : MonoBehaviour
     {
         if (audioArray == null || audioArray.Length == 0) return;
         
-        source.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        
         
         int randomIndex = UnityEngine.Random.Range(0, audioArray.Length);
         AudioClip selectedClip = audioArray[randomIndex];
