@@ -65,7 +65,7 @@ public class EnemySpawner : MonoBehaviour
         if(timer >= frequency)
         {
             Debug.Log("Ran Spawned enemy function");
-            prefab.SpawnEnemy(prefab, this, treeToTarget);
+            prefab.SpawnBird(prefab, this, treeToTarget);
             timer = 0;
         }
     }

@@ -20,7 +20,7 @@ public class EnemyParentClass : MonoBehaviour
     {
     }
 
-    public void SpawnEnemy(EnemyParentClass enemyToSpawn, EnemySpawner enemySpawner, BalloonTree targetTree)
+    public void SpawnBird(EnemyParentClass enemyToSpawn, EnemySpawner enemySpawner, BalloonTree targetTree)
     {
         spawnerForThis = enemySpawner;
         spawnerForThis.enemiesSpawned.Add(this);
