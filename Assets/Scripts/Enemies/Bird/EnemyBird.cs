@@ -11,7 +11,7 @@ public class EnemyBird : EnemyParentClass
     public float _heightAboveTarget;
 
     [Header("Attacking")]
-    public float _attackingSpeed = 50f;
+    public float _attackingSpeed = 5f;
 
     public float currentRadius;
     public int circleDirection;
@@ -20,6 +20,8 @@ public class EnemyBird : EnemyParentClass
     public BirdAttackState _birdAttackState;
     public BirdCircleState _birdCircleState;
     public BirdDeadState _birdDeadState;
+
+    public bool hasAttacked;
 
     override public void Start()
     {
@@ -58,11 +60,17 @@ public class EnemyBird : EnemyParentClass
         _stateMachine.ChangeState(_birdDeadState);
     }
 
-    void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Balloon"))
+        if (!hasAttacked)
         {
-            Debug.Log("Pop");
+            if (other.gameObject.CompareTag("Balloon"))
+            {
+                Debug.Log("Pop");
+                _targetBalloonTree.PopBalloon(target);
+                hasAttacked = true;
+            }
+            
         }
     }
 

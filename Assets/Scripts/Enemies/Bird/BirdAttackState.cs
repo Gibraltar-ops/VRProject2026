@@ -1,9 +1,18 @@
 using UnityEngine;
 public class BirdAttackState : IState{
     public BirdAttackState(EnemyBird bird, BalloonInfo target)
-    { this.bird = bird;this.target = target; }
+    {
+        this.bird = bird;
+        this.target = target;
+    }
     
-    private enum AttackPhase { MoveToTarget, Hover, Dive }
+    private enum AttackPhase
+    { 
+        MoveToTarget,
+        Hover,
+        Dive
+    }
+
     private EnemyBird bird;
     private BalloonInfo target;
     private AttackPhase phase;
@@ -19,15 +28,23 @@ public class BirdAttackState : IState{
     private float hoverTime = 2.5f;
     private float hoverTimer;
     
-    public void OnEntry(){ 
+    public void OnEntry()
+    { 
+        bird.hasAttacked = false;
         hoverTimer = hoverTime; 
+
         Vector3 fromTarget = (bird.transform.position - target.transform.position).normalized;
+
         hoverPos = target.transform.position + fromTarget * (bird._circleRadius * 0.5f); 
         attackDir = (target.transform.position - hoverPos).normalized;
+
         Vector3 tangent = Vector3.Cross( Vector3.up, fromTarget ) * bird.circleDirection;
         attackVelocity = tangent.normalized; 
+
         moveSpeed = bird._circleSpeed * 3f;
-        phase = AttackPhase.MoveToTarget; }
+
+        phase = AttackPhase.MoveToTarget;
+    }
         
     public void OnExit() { } 
     

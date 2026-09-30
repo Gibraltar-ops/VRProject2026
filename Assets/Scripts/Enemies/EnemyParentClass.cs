@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyParentClass : MonoBehaviour
 {
-    public BalloonTree targetBalloonTree;
+    public BalloonTree _targetBalloonTree;
     public BalloonInfo target;
 
     public EnemySpawner spawnerForThis;
@@ -25,7 +25,7 @@ public class EnemyParentClass : MonoBehaviour
         spawnerForThis = enemySpawner;
         spawnerForThis.enemiesSpawned.Add(this);
         Instantiate(enemyToSpawn, enemySpawner.transform.position - Vector3.down * 5, Quaternion.identity);
-        targetBalloonTree = targetTree;
+        _targetBalloonTree = targetTree;
     }
 
     public void KillEnemy()
