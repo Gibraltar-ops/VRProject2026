@@ -9,7 +9,7 @@ public class BalloonDispenser : MonoBehaviour
     [SerializeField] private Transform _spawnPoint;
     [SerializeField] private float _waitUntilNextSpawn = 1f;
     private DeflatedBallon _currentSpawn;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         SpawnItem(_balloonPrefab);
@@ -27,15 +27,14 @@ public class BalloonDispenser : MonoBehaviour
     {
         _currentSpawn.OnPickup -= StartSpawningNew;
         _currentSpawn = null;
-        StartCoroutine(Wait(_waitUntilNextSpawn, () =>
+        StartCoroutine(WaitForSeconds(_waitUntilNextSpawn, () =>
         {
             SpawnItem(_balloonPrefab);
         }));
     }
 
-    IEnumerator Wait(float waitTime, Action callback)
+    IEnumerator WaitForSeconds(float waitTime, Action callback)
     {
-        float seconds = waitTime;
         float timer = 0f;
         while (timer <= waitTime)
         {
