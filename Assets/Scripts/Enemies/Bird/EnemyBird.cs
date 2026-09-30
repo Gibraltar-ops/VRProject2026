@@ -1,8 +1,9 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SphereCollider))]
 public class EnemyBird : EnemyParentClass
 {
-    private Health _health;
+    public Health _health;
 
     [Header("Circleing")]
     public float _circleRadius;
@@ -10,25 +11,22 @@ public class EnemyBird : EnemyParentClass
     public float _heightAboveTarget;
 
     [Header("Attacking")]
-    public float _attackingSpeed = 50f;
-
+    public float _attackingSpeed = 5f;
 
     public float currentRadius;
+    public int circleDirection;
 
     public StateMachine _stateMachine = new StateMachine();
     public BirdAttackState _birdAttackState;
     public BirdCircleState _birdCircleState;
     public BirdDeadState _birdDeadState;
 
-    
+    public bool hasAttacked;
 
-
-    override public void Awake()
+    override public void Start()
     {
-        SetInitTarget();
-        _birdAttackState     = new BirdAttackState(this, target, currentRadius);
+        _birdAttackState     = new BirdAttackState(this, target);
         _birdCircleState     = new BirdCircleState(this);
-        //_birdDisengageState  = new BirdDisengageState();
         _birdDeadState       = new BirdDeadState(this);
 
         _stateMachine.EnterState(_birdCircleState);
@@ -62,8 +60,18 @@ public class EnemyBird : EnemyParentClass
         _stateMachine.ChangeState(_birdDeadState);
     }
 
-    public void KillBird()
+    private void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
+        if (!hasAttacked)
+        {
+            if (other.gameObject.CompareTag("Balloon"))
+            {
+                Debug.Log("Pop");
+                _targetBalloonTree.PopBalloon(target);
+                hasAttacked = true;
+            }
+            
+        }
     }
+
 }
