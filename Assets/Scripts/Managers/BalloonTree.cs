@@ -50,10 +50,12 @@ public class BalloonTree : MonoBehaviour
     void OnEnable()
     {
         BasicGun.OnGunHit += HandleBalloonHit;
+        ProjectileBird.OnCannonProjectileHit += HandleBalloonHit;
     }
     void OnDisable()
     {
         BasicGun.OnGunHit -= HandleBalloonHit;
+        ProjectileBird.OnCannonProjectileHit -= HandleBalloonHit;
     }
 
     void Start()

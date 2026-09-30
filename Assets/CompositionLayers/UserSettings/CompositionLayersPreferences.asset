@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: CompositionLayersPreferences
   m_EditorClassIdentifier: 
   m_DisplayAnglesAs: 0
-  m_EmulationInScene: 1
-  m_EmulationInPlayMode: 1
+  m_EmulationInScene: 0
+  m_EmulationInPlayMode: 0

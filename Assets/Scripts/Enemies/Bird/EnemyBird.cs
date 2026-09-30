@@ -4,6 +4,8 @@ using UnityEngine;
 public class EnemyBird : EnemyParentClass
 {
     public Health _health;
+    public GameObject particleVFX;
+    public bool isAlive;
 
     [Header("Circleing")]
     public float _circleRadius;
@@ -25,21 +27,18 @@ public class EnemyBird : EnemyParentClass
 
     override public void Start()
     {
-        _birdAttackState     = new BirdAttackState(this, target);
-        _birdCircleState     = new BirdCircleState(this);
-        _birdDeadState       = new BirdDeadState(this);
 
-        _stateMachine.EnterState(_birdCircleState);
-        
-    }
-
-    override public void Update()
-    {
-        _stateMachine._currentState.StateUpdate();
     }
 
     void OnEnable()
     {
+        _birdAttackState = new BirdAttackState(this, target);
+        _birdCircleState = new BirdCircleState(this);
+        _birdDeadState = new BirdDeadState(this);
+
+        isAlive = true;
+        _stateMachine.EnterState(_birdCircleState);
+
         BalloonTree.OnBalloonPopped += HandleTargetChange;
         _health.Die += EnterDeadState;
     }
@@ -50,14 +49,52 @@ public class EnemyBird : EnemyParentClass
         _health.Die -= EnterDeadState;
     }
 
+    public string GetCurrentStateDebug()
+    {
+        if(_stateMachine._currentState == _birdAttackState)
+        {
+            return "Attack - State";
+        }
+        if (_stateMachine._currentState == _birdCircleState)
+        {
+            return "Circle - State";
+        }
+        if (_stateMachine._currentState == _birdDeadState)
+        {
+            return "Dead - State";
+        }
+        return "No State";
+    }
+
+    public string GetCurrentAlive()
+    {
+        if (isAlive) { return "Alive"; }
+        else { return "Dead"; }
+    }
+
+    override public void Update()
+    {
+        if (isAlive == false) 
+        {
+            if (_birdDeadState != _stateMachine._currentState)
+            {
+                ChangeBirdState(_birdDeadState);
+                Debug.LogWarning("Extra Change state run - to dead state");
+            }
+        }
+        _stateMachine._currentState.StateUpdate();
+    }
+
     private void HandleTargetChange(BalloonInfo balloon)
     {
-        _stateMachine.EnterState(_birdCircleState);
+        ChangeBirdState(_birdCircleState);
     }
 
     private void EnterDeadState()
     {
-        _stateMachine.ChangeState(_birdDeadState);
+        Instantiate(particleVFX, transform.position, Quaternion.identity);
+        ChangeBirdState(_birdDeadState);
+        isAlive = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -66,7 +103,6 @@ public class EnemyBird : EnemyParentClass
         {
             if (other.gameObject.CompareTag("Balloon"))
             {
-                Debug.Log("Pop");
                 _targetBalloonTree.PopBalloon(target);
                 hasAttacked = true;
             }
@@ -74,4 +110,27 @@ public class EnemyBird : EnemyParentClass
         }
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+        if (!hasAttacked)
+        {
+            if (other.gameObject.CompareTag("Balloon"))
+            {
+                _targetBalloonTree.PopBalloon(target);
+                hasAttacked = true;
+            }
+        }
+    }
+
+    public void ChangeBirdState(IState newState)
+    {
+        if (isAlive)
+        {
+            _stateMachine.ChangeState(newState);
+        }
+        else
+        {
+            Debug.LogWarning("Bird is dead and trying to change State!");
+        }
+    }
 }
