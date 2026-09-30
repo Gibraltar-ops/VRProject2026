@@ -12171,7 +12171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3caa262849ffcfd4a85cf6b222dfeea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  treeToTarget: {fileID: 0}
+  treeToTarget: {fileID: 1676828860}
   enemiesSpawned: []
   bird: {fileID: 7374406080681346328, guid: 080584e2e30915b4b9a8b3d757db8408, type: 3}
 --- !u!114 &906050393
@@ -12186,9 +12186,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3975a4093fc4db44a98b1ca2aece0b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAircraft
-  _targetBalloonTree: {fileID: 0}
-  spawnerForThis: {fileID: 0}
-  _playerBalloonTree: {fileID: 0}
+  _targetBalloonTree: {fileID: 1676828860}
+  spawnerForThis: {fileID: 906050392}
+  _playerBalloonTree: {fileID: 661041926}
   _enemySpawner: {fileID: 906050392}
 --- !u!1 &934659305
 GameObject:
