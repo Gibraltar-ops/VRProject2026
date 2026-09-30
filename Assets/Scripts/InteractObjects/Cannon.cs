@@ -6,11 +6,9 @@ using UnityEngine.Audio;
 
 public class Cannon : MonoBehaviour
 {
-    public Transform InstantiateOrigin;
-    public GameObject vfx;
-    private GameObject projectile;
-
-
+    [SerializeField] private Transform _instantiateOrigin;
+    [SerializeField] private GameObject _vfx;
+    [SerializeField] private GameObject _projectile;
 
     void Start()
     {
@@ -18,8 +16,10 @@ public class Cannon : MonoBehaviour
 
     }
 
-    void Fire(int x, int y, int z)
+    public void Fire()
     {
+        GameObject projectile = Instantiate(_projectile, _instantiateOrigin.position, Quaternion.identity);
+        projectile.GetComponent<Rigidbody>().AddForce(_instantiateOrigin.forward * 1000);
 
     }
 
