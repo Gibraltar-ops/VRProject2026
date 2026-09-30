@@ -19,6 +19,9 @@ public class BalloonDispenser : MonoBehaviour
     {
         GameObject currentBalloon = Instantiate(_balloonPrefab, _spawnPoint.position, Quaternion.identity);
         _currentSpawn = currentBalloon.GetComponent<DeflatedBallon>();
+        currentBalloon.GetComponent<Rigidbody>().isKinematic = true;
+
+
         _currentSpawn.OnPickup += StartSpawningNew;
 
     }
@@ -26,6 +29,7 @@ public class BalloonDispenser : MonoBehaviour
     void StartSpawningNew()
     {
         _currentSpawn.OnPickup -= StartSpawningNew;
+        _currentSpawn.GetComponent<Rigidbody>().isKinematic = false;
         _currentSpawn = null;
         StartCoroutine(WaitForSeconds(_waitUntilNextSpawn, () =>
         {
