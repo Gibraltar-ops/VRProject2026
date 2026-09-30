@@ -54,6 +54,7 @@ public class BirdCircleState : IState
             if (bird.target == null) 
             {
                 bird.target = bird._targetBalloonTree.GetOutmostBalloon();
+                return;
             } 
         }
         CircleTarget();
@@ -77,7 +78,15 @@ public class BirdCircleState : IState
             Mathf.Sin( angle * bird.circleDirection ) * bird._circleRadius
             );
 
+        if(bird.target == null)
+        {
+            bird.transform.position = bird._targetBalloonTree.gameObject.transform.position + offset;
+        }
+        else
+        {
             bird.transform.position = bird.target.transform.position + offset;
+        }
+
     }
 
     private void UpdateRotation()

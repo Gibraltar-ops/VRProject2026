@@ -106,3 +106,4 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ss]ceneDependencyCache*
 /_build
 Assets/XR/Settings/OpenXRPackageSettings.asset
+Assets/XR/Settings/OpenXRPackageSettings.asset
