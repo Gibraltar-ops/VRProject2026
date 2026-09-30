@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyAircraft : EnemyParentClass
 {
     [Header("References")]
-    public BalloonTree _playerBalloonTree;
+    public BalloonTree ownBalloonTree;
     public EnemySpawner _enemySpawner;
 
     [Header("StateMachine")]
@@ -13,7 +13,6 @@ public class EnemyAircraft : EnemyParentClass
     public EnemyRefillState         _enemyRefillState;
 
     [Header("Stats")]
-    private int enemiesKilled;
     public float accuracy {get;}          = .6f;
     public float aimTime {get;}           = 3f;
     public float timeToFillBalloon {get;} = 5f;
@@ -35,7 +34,7 @@ public class EnemyAircraft : EnemyParentClass
 
     public override void Start()
     {
-        _playerBalloonTree = GameManager.instance.PlayerBaloonTree;
+        _targetBalloonTree = GameManager.instance.PlayerBaloonTree;
         _statemachine.EnterState(_enemyRefillState);
     }
 
@@ -86,7 +85,7 @@ public class EnemyAircraft : EnemyParentClass
             return _enemyFireAtBird;
         }
 
-        switch (_playerBalloonTree.ActiveBalloons)
+        switch (ownBalloonTree.ActiveBalloons)
         {
             case < 10:
                 _playerChance = 0;
@@ -133,7 +132,9 @@ public class EnemyAircraft : EnemyParentClass
 
     public void ChangeTask()
     {
-        _statemachine.ChangeState(MakeDecition());
+        IState newState = MakeDecition();
+        _statemachine.ChangeState(newState);
+        Debug.Log("Changed task to: " + newState);
     }
 
 }
