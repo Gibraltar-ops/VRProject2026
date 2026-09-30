@@ -112,7 +112,7 @@ public class BirdAttackState : IState{
         
         if (distancePastTarget >= bird._circleRadius * 0.5f)
         {
-            bird._stateMachine.ChangeState( bird._birdCircleState );
+            bird.ChangeBirdState( bird._birdCircleState );
         } 
     } 
 }

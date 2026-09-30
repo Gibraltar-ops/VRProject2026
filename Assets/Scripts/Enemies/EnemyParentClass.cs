@@ -24,8 +24,8 @@ public class EnemyParentClass : MonoBehaviour
     {
         spawnerForThis = enemySpawner;
         spawnerForThis.enemiesSpawned.Add(this);
-        Instantiate(enemyToSpawn, enemySpawner.transform.position - Vector3.down * 5, Quaternion.identity);
-        _targetBalloonTree = targetTree;
+        EnemyParentClass newBird = Instantiate(enemyToSpawn, enemySpawner.transform.position - Vector3.down * 5, Quaternion.identity);
+        newBird._targetBalloonTree = targetTree;
     }
 
     public void KillEnemy()

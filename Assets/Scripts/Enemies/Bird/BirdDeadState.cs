@@ -9,15 +9,18 @@ public class BirdDeadState : IState
     }
 
     private EnemyBird bird;
-    private float fallingSpeed = 10f;
-
+    //private float fallingSpeed = 10f;
+    private float time = 0;
 
     private Vector3 gravePos;
+    private Vector3 startPos;
 
     public void OnEntry()
     {
         //Play a sound
-        gravePos = bird.transform.position - new Vector3(0,-100,0);
+        startPos = bird.transform.position;
+        gravePos = bird.transform.position + new Vector3(0f, -10f, 0f);
+        time = 0f;
     }
 
     public void OnExit()
@@ -27,8 +30,12 @@ public class BirdDeadState : IState
 
     public void StateUpdate()
     {
-        bird.transform.position += Vector3.Lerp(bird.transform.position, gravePos, fallingSpeed);
-        if(Vector3.Distance(bird.transform.position, gravePos) < 5f)
+        time += (Time.deltaTime / 5f); // fall for 5 sek
+
+        bird.transform.position = Vector3.Lerp(startPos, gravePos, time);
+
+        //if(Vector3.Distance(bird.transform.position, gravePos) < 5f)
+        if (time >= 1)
         {
             bird.KillEnemy();
         }

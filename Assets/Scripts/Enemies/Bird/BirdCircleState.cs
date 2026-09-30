@@ -11,7 +11,7 @@ public class BirdCircleState : IState
     [Header("Circling")]
     private float _circleMaxRadius = 15f;
     private float _circleMinRadius = 10f;
-    private float _circleMaxSpeed = 1f;
+    private float _circleMaxSpeed = 0.5f;
     private float _circleMinSpeed = 0.25f;
     private float _minHeightAboveTarget = -2f;
     private float _maxHeightAboveTarget = 0f;
@@ -31,7 +31,6 @@ public class BirdCircleState : IState
 
             if(bird.circleDirection == 1)
             {
-                Debug.Log("Flipped");
                 bird.gameObject.transform.GetChild(0).transform.rotation = Quaternion.Euler(0,180,0);
             }
             else
@@ -63,7 +62,7 @@ public class BirdCircleState : IState
         if (timer <= 0f)
         { 
             bird._birdAttackState = new BirdAttackState( bird, bird.target );
-            bird._stateMachine.ChangeState( bird._birdAttackState );
+            bird.ChangeBirdState( bird._birdAttackState );
         }
     } 
 
