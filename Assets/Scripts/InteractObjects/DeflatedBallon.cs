@@ -1,6 +1,12 @@
+using System;
 using System.Collections;
+using System.IO.Compression;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Audio;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class DeflatedBallon : MonoBehaviour
 {
 
@@ -16,8 +22,25 @@ public class DeflatedBallon : MonoBehaviour
     public float _firstPhaseTime = 2f;
     public float _secondPhaseTime = 8f;
     public float destoryAfterTime = 4f;
+    Rigidbody rb;
     Vector3 _startScale;
     State state;
+    public event Action OnPickup;
+
+    // Audio Systems
+    public AudioClip[] inflateSounds;
+    public AudioClip[] deflatedSounds;
+    public AudioClip[] creakingSounds;
+    public AudioClip[] poppingSounds;
+
+    public float minPitch = 0.9f;
+    public float maxPitch = 1.1f;
+
+    private AudioSource source;
+
+    public AudioMixerGroup sfxGroup;
+
+
 
     enum State
     {
@@ -33,6 +56,17 @@ public class DeflatedBallon : MonoBehaviour
         _startScale = _inflatableTransform.localScale;
         state = State.Deflated;
         PlayerBalloonTree = GameManager.instance.PlayerBaloonTree;
+        rb = GetComponent<Rigidbody>();
+
+        // Audio setup
+        source = GetComponent<AudioSource>();
+        source.spatialBlend = 1f;
+        source.playOnAwake = false;
+
+        if (sfxGroup != null)
+        {
+            source.outputAudioMixerGroup = sfxGroup;
+        }
     }
 
     // Update is called once per frame
@@ -43,9 +77,11 @@ public class DeflatedBallon : MonoBehaviour
         {
             _timer += Time.deltaTime;
 
+
+
             if (_timer < _firstPhaseTime)
             {
-                float t = _timer / _firstPhaseTime;
+                // float t = _timer / _firstPhaseTime;
                 _inflatableTransform.localScale = Vector3.Lerp(_startScale, _targetScale1, _timer);
             }
             else if (_timer > _firstPhaseTime && _timer < (_secondPhaseTime + _firstPhaseTime))
@@ -60,6 +96,7 @@ public class DeflatedBallon : MonoBehaviour
             else if (_timer > (_firstPhaseTime + _secondPhaseTime + destoryAfterTime))
             {
                 Instantiate(_vfx, _inflatableTransform.transform.position, Quaternion.identity);
+                PlayRandomSound(poppingSounds);
                 Destroy(gameObject);
             }
             // translate in world space?
@@ -70,11 +107,20 @@ public class DeflatedBallon : MonoBehaviour
     public void AttachToHelium()
     {
         _isInflating = true;
+
+        PlayRandomSound(inflateSounds);
     }
 
     public void DetachFromHelium()
     {
+        PlayRandomSound(creakingSounds);
+
         _isInflating = false;
+    }
+
+    public void Pickup()
+    {
+        OnPickup?.Invoke();
     }
 
     public void OnRelease()
@@ -89,7 +135,15 @@ public class DeflatedBallon : MonoBehaviour
         else if (state == State.Complete)
         {
             BalloonInfo slot = PlayerBalloonTree.GetFreeBalloonSlot();
+
             _isInflating = false;
+
+            if (slot == null)
+            {
+                Pop();
+                return;
+            }
+
             StartCoroutine(AddBalloonToCanopy(slot));
             Debug.Log("Dropped Full Balloon.");
         }
@@ -97,6 +151,8 @@ public class DeflatedBallon : MonoBehaviour
 
     IEnumerator RapidDeflate()
     {
+        PlayRandomSound(deflatedSounds);
+
         _interactable = false;
         state = State.Deflated;
         float timeToDeflate = 0.2f;
@@ -119,22 +175,58 @@ public class DeflatedBallon : MonoBehaviour
 
     IEnumerator AddBalloonToCanopy(BalloonInfo slot)
     {
+
+        PlayRandomSound(creakingSounds);
+
+
         float moveTime = 2f;
         float timer = 0f;
-        float t;
+        float t = 0f;
 
-        Vector3 startPosition = new Vector3(_inflatableTransform.position.x, _inflatableTransform.position.y, _inflatableTransform.position.z);
-        Vector3 endPosition = slot.transform.position;
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = slot.transform.position - (_inflatableTransform.position - _attachmentPoint.position);
+        Quaternion startRotation = transform.rotation;
+        Quaternion endRotation = slot.transform.rotation;
+
+        rb.isKinematic = true;
 
         while (timer < moveTime)
         {
-            t = timer / moveTime;
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+            Debug.DrawLine(startPosition, endPosition);
+            t = Mathf.Clamp01(timer / moveTime);
+
+            float lerpedX = Mathf.SmoothStep(startPosition.x, endPosition.x, t);
+            float lerpedY = Mathf.SmoothStep(startPosition.y, endPosition.y, t);
+            float lerpedZ = Mathf.SmoothStep(startPosition.z, endPosition.z, t);
+            transform.position = new Vector3(lerpedX, lerpedY, lerpedZ);
+
+            Quaternion lerpedRot = Quaternion.Lerp(startRotation, endRotation, t);
+            //transform.rotation = lerpedRot;
+
             timer += Time.deltaTime;
             yield return null;
         }
         transform.position = endPosition;
+        //transform.rotation = endRotation;
         PlayerBalloonTree.AddBalloon(slot);
+        Destroy(gameObject);
+    }
+
+    private void PlayRandomSound(AudioClip[] audioArray)
+    {
+        if (audioArray == null || audioArray.Length == 0) return;
+
+        source.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        int randomIndex = UnityEngine.Random.Range(0, audioArray.Length);
+
+        source.clip = audioArray[randomIndex];
+        source.Play();
+    }
+
+    void Pop()
+    {
+        Instantiate(_vfx, _inflatableTransform.transform.position, Quaternion.identity);
+        PlayRandomSound(poppingSounds);
         Destroy(gameObject);
     }
 }

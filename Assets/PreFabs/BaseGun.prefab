@@ -244,7 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BasicGun
   RaycastOrigin: {fileID: 3742879791285527102}
   _debug: 0
-  vfx: {fileID: 1650085540578459987, guid: 41be3d5ea06bd4b4e95ba9af4e92ea31, type: 3}
+  vfx: {fileID: 7461628633024732316, guid: 19ecd94c04e60de48992e378e5102d5d, type: 3}
 --- !u!1 &3851751173424664993
 GameObject:
   m_ObjectHideFlags: 0
