@@ -101,6 +101,7 @@ Material:
     - _Smoothness1: 1
     - _Smoothness2: 1
     - _Smoothness3: 1
+    - _XRMotionVectorsPass: 1
     m_Colors:
     - _SunColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

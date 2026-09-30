@@ -1,16 +1,13 @@
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
-
-public class BirdAttackState : IState
-{
-    public BirdAttackState(EnemyBird bird, BalloonInfo target, float currentRadius)
+public class BirdAttackState : IState{
+    public BirdAttackState(EnemyBird bird, BalloonInfo target)
     {
         this.bird = bird;
         this.target = target;
     }
-
+    
     private enum AttackPhase
-    {
+    { 
         MoveToTarget,
         Hover,
         Dive
@@ -18,94 +15,104 @@ public class BirdAttackState : IState
 
     private EnemyBird bird;
     private BalloonInfo target;
-
     private AttackPhase phase;
-    
+
+    // Attack positioning 
     private Vector3 hoverPos;
-    private Vector3 attackDir;
-    private Quaternion diveRotation;
+    private Vector3 attackDir; 
+
+    // Movement
+    private Vector3 attackVelocity;
+    private float moveSpeed;
 
     private float hoverTime = 2.5f;
     private float hoverTimer;
-
+    
     public void OnEntry()
-    {
-        hoverTimer = hoverTime;
-        Vector3 toTarget = (bird.transform.position - bird.target.transform.position).normalized;
+    { 
+        bird.hasAttacked = false;
+        hoverTimer = hoverTime; 
 
-        hoverPos = target.transform.position + toTarget * (bird._circleRadius) * .5f;
+        Vector3 fromTarget = (bird.transform.position - target.transform.position).normalized;
+
+        hoverPos = target.transform.position + fromTarget * (bird._circleRadius * 0.5f); 
         attackDir = (target.transform.position - hoverPos).normalized;
-        diveRotation = Quaternion.LookRotation(attackDir);
+
+        Vector3 tangent = Vector3.Cross( Vector3.up, fromTarget ) * bird.circleDirection;
+        attackVelocity = tangent.normalized; 
+
+        moveSpeed = bird._circleSpeed * 3f;
 
         phase = AttackPhase.MoveToTarget;
     }
-
-    public void OnExit()
-    {
         
-    }
-
-    public void StateUpdate()
-    {
-        switch(phase)
-        {
-            case AttackPhase.MoveToTarget:
+    public void OnExit() { } 
+    
+    public void StateUpdate(){ 
+        switch (phase){ 
+            case AttackPhase.MoveToTarget: 
                 MoveToTarget();
                 break;
             
             case AttackPhase.Hover:
                 Hover();
                 break;
-
+                
             case AttackPhase.Dive:
                 Dive();
                 break;
-        }
-    }
-
-    
+        } }
+        
     private void MoveToTarget()
     {
-        bird.transform.position = Vector3.MoveTowards(
-            bird.transform.position,
-            hoverPos,
-            bird._circleSpeed * 3.14f * Time.deltaTime
-        );
+        Vector3 toHover = hoverPos - bird.transform.position;
+        float distanceToHover = toHover.magnitude;
 
-        bird.transform.rotation = Quaternion.Slerp(bird.transform.rotation, TargetRotation(hoverPos + attackDir), Time.deltaTime);
+        if(distanceToHover > 0.01f)
+            { 
+                Vector3 desiredDirection = toHover.normalized;
+                    attackVelocity = Vector3.Slerp( attackVelocity, desiredDirection, 2f * Time.deltaTime ).normalized;
+            }
 
-        if(Vector3.Distance(bird.transform.position, hoverPos) < 0.1f)
+        bird.transform.position += attackVelocity * moveSpeed * Time.deltaTime;
+        if(attackVelocity.sqrMagnitude > 0.001f)
         {
-            phase = AttackPhase.Hover;
+            Quaternion targetRotation = Quaternion.LookRotation(attackVelocity);
+            bird.transform.rotation = Quaternion.Slerp( bird.transform.rotation, targetRotation, 5f * Time.deltaTime );
         }
-    }
 
+        if (distanceToHover < 0.1f)
+        { 
+            bird.transform.position = hoverPos; phase = AttackPhase.Hover; 
+        } 
+    }
+        
     private void Hover()
     {
         hoverTimer -= Time.deltaTime;
-        bird.transform.rotation = Quaternion.Slerp(bird.transform.rotation, TargetRotation(attackDir), Time.deltaTime * 2);
+        Vector3 toTarget = target.transform.position - bird.transform.position;
 
-        if(hoverTimer <= 0f)
+        if (toTarget.sqrMagnitude > 0.001f)
         {
-            bird.transform.rotation = diveRotation;
+            Quaternion targetRotation = Quaternion.LookRotation( toTarget.normalized );
+            bird.transform.rotation = Quaternion.Slerp( bird.transform.rotation, targetRotation, 3f * Time.deltaTime );
+        } 
+        if (hoverTimer <= 0f)
+        { 
             phase = AttackPhase.Dive;
         }
     }
-
+        
     private void Dive()
     {
         bird.transform.position += attackDir * bird._attackingSpeed * Time.deltaTime;
-        float distance_past_target = Vector3.Dot(bird.transform.position - target.transform.position, attackDir);
-
-        if(distance_past_target >= bird._circleRadius * .5f)
+        Quaternion targetRotation = Quaternion.LookRotation(attackDir);
+        bird.transform.rotation = Quaternion.Slerp( bird.transform.rotation, targetRotation, 10f * Time.deltaTime ); 
+        float distancePastTarget = Vector3.Dot( bird.transform.position - target.transform.position, attackDir );
+        
+        if (distancePastTarget >= bird._circleRadius * 0.5f)
         {
-            bird._stateMachine.ChangeState(bird._birdCircleState);
-        }
-    }
-
-    private Quaternion TargetRotation(Vector3 pointToLookAt)
-    {
-        return Quaternion.LookRotation(pointToLookAt);
-    }
-
+            bird._stateMachine.ChangeState( bird._birdCircleState );
+        } 
+    } 
 }
