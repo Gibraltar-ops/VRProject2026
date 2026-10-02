@@ -39,7 +39,8 @@ public class BirdDeadState : IState
         Rigidbody rb = bird.gameObject.GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.useGravity = true;
-        rb.AddForce(bird._health.Impulse, ForceMode.Impulse);
+        //rb.AddForce(bird._health.Impulse, ForceMode.Impulse);
+
 
         //if(Vector3.Distance(bird.transform.position, gravePos) < 5f)
         if (time >= 1)

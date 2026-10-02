@@ -49,9 +49,12 @@ public class Trash : MonoBehaviour
 
     public void Die()
     {
+        _isAlive = false;
+
         Rigidbody rb = gameObject.GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.useGravity = true;
+        Debug.Log("Health impulse" + health.Impulse);
         rb.AddForce(health.Impulse, ForceMode.Impulse);
 
 
