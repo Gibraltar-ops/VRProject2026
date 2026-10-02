@@ -82,15 +82,25 @@ public class EnemyAircraft : EnemyParentClass
             return;
         }
 
+        //Top cap
         if(relativeDistance >= RelativeDistanceCap)
         {
             relativeDistance = RelativeDistanceCap;
         }
+
+        //Bottom cap
         if(relativeDistance <= -1 * RelativeDistanceCap)
         {
             relativeDistance = -1 * RelativeDistanceCap;
         }
 
+        /*
+        //Dont fall trough ground check
+        if(relativeDistance <= -1 * GameManager.instance.Altitude)
+        {
+            relativeDistance = GameManager.instance.Altitude;
+        }
+        */
 
         gameObject.transform.position = new Vector3
         (
