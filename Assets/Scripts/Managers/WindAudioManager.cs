@@ -40,6 +40,12 @@ public class WindAudioManager : MonoBehaviour
     void Update()
     {
         if (gameManager == null) return;
+        
+        if (gameManager.Altitude <= 0.01f)
+        {
+            windAudioSource.volume = 0f;
+            return; 
+        }
 
         float currentVelocity = gameManager.VerticalVelocity;
         float targetVolume = 0f;
@@ -47,12 +53,9 @@ public class WindAudioManager : MonoBehaviour
         if (currentVelocity < 0f)
         {
             float normalizedSpeed = Mathf.Clamp01(Mathf.Abs(currentVelocity) / maxFallSpeed);
-
             targetVolume = Mathf.Pow(normalizedSpeed, logarithmicFactor) * maxVolume;
-            
         }
-
+        
         windAudioSource.volume = Mathf.Lerp(windAudioSource.volume, targetVolume, volumeLerpSpeed * Time.deltaTime);
-
     }
 }

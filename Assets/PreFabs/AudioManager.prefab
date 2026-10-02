@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4466587571443513968
+--- !u!1 &1206165134833142696
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 9185941159885697539}
-  - component: {fileID: 831126018042116238}
-  - component: {fileID: 1947514668501675852}
+  - component: {fileID: 3605512027052149480}
+  - component: {fileID: 924689099519737967}
+  - component: {fileID: 4624612534419500734}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -18,33 +18,33 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &9185941159885697539
+--- !u!4 &3605512027052149480
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4466587571443513968}
+  m_GameObject: {fileID: 1206165134833142696}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.73114, y: 6.29461, z: 3.08219}
+  m_LocalPosition: {x: 0, y: 1.549, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &831126018042116238
+--- !u!82 &924689099519737967
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4466587571443513968}
+  m_GameObject: {fileID: 1206165134833142696}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2013283422958109100, guid: 928d96293023bf743a181c01563cfc47, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: edee3efbe2304bb49b7bcbac36d74b3c, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -55,7 +55,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 2.81
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -90,7 +90,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -130,13 +130,13 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1947514668501675852
+--- !u!114 &4624612534419500734
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4466587571443513968}
+  m_GameObject: {fileID: 1206165134833142696}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62f55ef55fd2e754c8ea630c2c54de25, type: 3}
@@ -144,6 +144,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WindAudioManager
   gameManager: {fileID: 0}
   maxFallSpeed: 30
-  volumeLerpSpeed: 5
-  maxVolume: 1
+  volumeLerpSpeed: 1.2
+  maxVolume: 0.25
   logarithmicFactor: 2
