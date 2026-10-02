@@ -4,8 +4,15 @@ using static UnityEngine.Audio.ControlContext;
 
 public class BirdAnimation : MonoBehaviour
 {
+    
     public Animator _animator;
 
+    public AudioSource _audioSource;
+    public AudioClip _wingFlapClip;
+    public AudioClip _attackClip;
+    public float _flapInterval = 0.4f;
+    private float _flapTimer = 0f;
+    
     float time = 0f;
 
     int BIRD_ATTACK = Animator.StringToHash("Attack");
@@ -25,6 +32,12 @@ public class BirdAnimation : MonoBehaviour
         {
             _animator = gameObject.GetComponent<Animator>();
         }
+        
+        if (_audioSource == null)
+        {
+            _audioSource = gameObject.GetComponent<AudioSource>();
+        }
+        
         _currentState = BIRD_FLYING;
         _enemyBirdState = EnemyBird.BirdStateEnum.Flying;
         _currentEnemyBirdState = EnemyBird.BirdStateEnum.Flying;
@@ -43,6 +56,7 @@ public class BirdAnimation : MonoBehaviour
                     _currentEnemyBirdState = _enemyBirdState;
                     break;
                 case EnemyBird.BirdStateEnum.Attacking:
+                    PlayAttackSound();
                     PlayAttack();
                     _currentEnemyBirdState = _enemyBirdState;
                     break;
@@ -54,6 +68,39 @@ public class BirdAnimation : MonoBehaviour
                     Debug.Log("Missing enemy state in animator!");
                     break;
             }
+        }
+        
+        if (_currentEnemyBirdState == EnemyBird.BirdStateEnum.Flying)
+        {
+            _flapTimer += Time.deltaTime;
+            
+            if (_flapTimer >= _flapInterval)
+            {
+                PlayWingFlapSound();
+                _flapTimer = 0f; 
+            }
+        }
+        
+    }
+    
+    private void PlayAttackSound()
+    {
+        if (_audioSource != null && _attackClip != null)
+        {
+            _audioSource.pitch = Random.Range(0.9f, 1.1f);
+            _audioSource.volume = 1.0f;
+            _audioSource.PlayOneShot(_attackClip);
+        }
+    }
+    
+    private void PlayWingFlapSound()
+    {
+        if (_audioSource != null && _wingFlapClip != null)
+        {
+            _audioSource.pitch = Random.Range(0.85f, 1.15f);
+            _audioSource.volume = Random.Range(0.8f, 1.0f);
+
+            _audioSource.PlayOneShot(_wingFlapClip);
         }
     }
 

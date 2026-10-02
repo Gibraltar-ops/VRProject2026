@@ -5,6 +5,7 @@ public class EnemySpawner : MonoBehaviour
 {
     [Header("Information")]
     public BalloonTree treeToTarget;
+    [SerializeField] private int birdCap = 10;
     private float _altitude;
     private float WinAltitude;
 
@@ -24,19 +25,23 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
-        _altitude = GameManager.instance.Altitude;
         WinAltitude = GameManager.instance.WinAltitude;
         timer = 0;
     }
 
     void Update()
     {
+        _altitude = GameManager.instance.Altitude;
         HandleEnemySpawn();
         timer += Time.deltaTime;
     }
 
     private void HandleEnemySpawn()
     {
+        if(enemiesSpawned.Count >= birdCap)
+        {
+            return;
+        }
         float progress = _altitude / WinAltitude;
 
         if (_useDebugProgress) { progress = _debugProgress; }
@@ -72,6 +77,18 @@ public class EnemySpawner : MonoBehaviour
             Debug.Log("Ran Spawned enemy function");
             prefab.SpawnBird(prefab, this, treeToTarget);
             timer = 0;
+        }
+    }
+
+    public void SpawnDisaster(int amountOfBirds)
+    {
+        for (int i = 0; i < amountOfBirds; i++)
+        {
+            if(enemiesSpawned.Count >= birdCap)
+            {
+                return;
+            }
+            bird.SpawnBird(bird, this, treeToTarget);
         }
     }
 }

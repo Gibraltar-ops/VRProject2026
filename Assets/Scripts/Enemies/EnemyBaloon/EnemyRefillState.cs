@@ -22,6 +22,11 @@ public class EnemyRefillState : IState
 
     public void StateUpdate()
     {
+        if(enemyAircraft.ownBalloonTree.ActiveBalloons >= 24)
+        {
+            enemyAircraft.ChangeTask();
+        }
+        
         timer += Time.deltaTime;
         if(timer >= enemyAircraft.timeToFillBalloon)
         {
