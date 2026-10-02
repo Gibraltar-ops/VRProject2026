@@ -41,6 +41,7 @@ public class ProjectileBird : MonoBehaviour
         if(health != null )
         {
             health.TakeDamage(1);
+            health.AddImpulse(collision.impulse);
         }
 
         OnCannonProjectileHit?.Invoke(collision.collider.gameObject); // ballon tree is listening to this

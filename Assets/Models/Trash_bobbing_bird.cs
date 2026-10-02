@@ -3,6 +3,7 @@ using UnityEngine;
 public class Trash : MonoBehaviour
 {
     bool _isCatched = false;
+    bool _isAlive = true;
     float _randomTimeOffset;
     float _amplitude;
     float _speed;
@@ -20,6 +21,7 @@ public class Trash : MonoBehaviour
         _amplitude = Random.value + 1.0f;
         _startPos = transform.position;
         _speed = Random.value + 1f;
+        _isAlive = true;
 
         health.Die += Health_Die;
     }
@@ -30,13 +32,14 @@ public class Trash : MonoBehaviour
 
     private void Health_Die()
     {
+
         Die();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if ((_isCatched == false))
+        if ( (_isCatched == false && _isAlive == true) )
         {
             float yOffset = Mathf.Sin((Time.time + _randomTimeOffset) * _speed) * _amplitude;
             transform.position = new Vector3(_startPos.x, _startPos.y + yOffset, _startPos.z);
@@ -46,8 +49,14 @@ public class Trash : MonoBehaviour
 
     public void Die()
     {
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        rb.AddForce(health.Impulse, ForceMode.Impulse);
+
+
         Instantiate(particleVFX,transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        Destroy(gameObject,2f);
     }
 
     private void OnCollisionEnter(Collision collision)

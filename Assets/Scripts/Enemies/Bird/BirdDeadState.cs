@@ -34,7 +34,12 @@ public class BirdDeadState : IState
     {
         time += (Time.deltaTime / 3f); // fall for 5 sek
 
-        bird.transform.position = Vector3.Lerp(startPos, gravePos, time);
+        //bird.transform.position = Vector3.Lerp(startPos, gravePos, time);
+
+        Rigidbody rb = bird.gameObject.GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        rb.AddForce(bird._health.Impulse, ForceMode.Impulse);
 
         //if(Vector3.Distance(bird.transform.position, gravePos) < 5f)
         if (time >= 1)

@@ -38,6 +38,7 @@ public class BasicGun : MonoBehaviour
             if (health != null)
             {
                 health.TakeDamage(1);
+                health.AddImpulse(hit.normal * 10f);
             }
         }
         else

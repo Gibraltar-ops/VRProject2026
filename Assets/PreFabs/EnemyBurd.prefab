@@ -301,6 +301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBird
   _targetBalloonTree: {fileID: 0}
   spawnerForThis: {fileID: 0}
+  _birdStateEnum: 0
   _health: {fileID: 1734315865829678719}
   particleVFX: {fileID: 4790004038812169528, guid: 0b6ca83481ecf524d82b558be4015c4f, type: 3}
   isAlive: 1
@@ -354,7 +355,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7737398126917831155}
   serializedVersion: 5
-  m_Mass: 0.0000001
+  m_Mass: 2
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
