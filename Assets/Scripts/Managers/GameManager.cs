@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("Accelerering för fritt fall - 9.8 = jordens tyngdkraft")]
     [SerializeField] private float freefallAcceleration = 9.8f;
 
+    [SerializeField] private float VelocityCap = 15;
+
+
 
     void Awake()
     {
@@ -74,6 +77,11 @@ public class GameManager : MonoBehaviour
         {
             int missingBalloons = hoverThreshold - personalBalloons;
             targetVelocity = -(missingBalloons * (gravityMultiplier / (hoverThreshold - freefallThreshold))); 
+        }
+
+        if(targetVelocity > VelocityCap)
+        {
+            targetVelocity = VelocityCap;
         }
 
         float currentAcceleration = (personalBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
