@@ -27,7 +27,7 @@ public class BalloonTree : MonoBehaviour
 {
     public Transform CenterPoint;
     public Transform BalloonParent;
-    
+
     public AudioClip[] poppingSounds;
     public float minPitch = 0.9f;
     public float maxPitch = 1.1f;
@@ -45,6 +45,7 @@ public class BalloonTree : MonoBehaviour
     public GameObject PopParticles;
 
     public static event Action<BalloonInfo> OnBalloonPopped;
+    public event Action OnInitialized;
 
     void OnEnable()
     {
@@ -67,7 +68,7 @@ public class BalloonTree : MonoBehaviour
         {
             source.outputAudioMixerGroup = sfxGroup;
         }
-        
+
         List<BalloonInfo> unsorted = new();
         _balloons = new();
         foreach (Transform balloon in BalloonParent)
@@ -106,6 +107,7 @@ public class BalloonTree : MonoBehaviour
             }
         }
         ActiveBalloons = counter;
+        OnInitialized?.Invoke();
     }
 
     // Update is called once per frame
@@ -166,6 +168,28 @@ public class BalloonTree : MonoBehaviour
         _balloons[closest].state = BalloonInfo.BalloonState.MarkedForDeath;
         return GetBalloonFromIndex(closest);
     }
+
+    public BalloonInfo GetClosestBallon(Vector3 origin, List<BalloonInfo> excluded)
+    {
+        int closest = -1;
+        float closestDist = float.MaxValue;
+
+        for (int i = 0; i < _balloons.Count; i++)
+        {
+            if (excluded.Contains(_balloons[i])) continue;
+            float dist = Vector3.SqrMagnitude(_balloons[i].transform.position - origin);
+
+            if (dist < closestDist)
+            {
+                closestDist = dist;
+                closest = i;
+            }
+        }
+        if (closest < 0) return null;
+        _balloons[closest].state = BalloonInfo.BalloonState.MarkedForDeath;
+        return GetBalloonFromIndex(closest);
+    }
+
 
 
     public void PopBalloon(BalloonInfo balloon)
@@ -254,12 +278,12 @@ public class BalloonTree : MonoBehaviour
     private void PlayPoppingSound(AudioClip[] audioArray)
     {
         if (audioArray == null || audioArray.Length == 0) return;
-        
-        
-        
+
+
+
         int randomIndex = UnityEngine.Random.Range(0, audioArray.Length);
         AudioClip selectedClip = audioArray[randomIndex];
-        
+
         source.PlayOneShot(selectedClip);
     }
 

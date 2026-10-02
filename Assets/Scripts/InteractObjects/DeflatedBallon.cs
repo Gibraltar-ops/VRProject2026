@@ -164,7 +164,6 @@ public class DeflatedBallon : MonoBehaviour
                 Pop();
                 return;
             }
-
             StartCoroutine(AddBalloonToCanopy(slot));
             Debug.Log("Dropped Full Balloon.");
         }
@@ -173,15 +172,14 @@ public class DeflatedBallon : MonoBehaviour
     void FlyAway()
     {
         rb.isKinematic = true;
-        // rb.AddForce(transform.forward * FlySpeed);
-        StartCoroutine(ControlledFlight(2f, 10f));
+        StartCoroutine(ControlledFlight(2f, 10f, 10f));
         StartCoroutine(WaitForSeconds(2f, () =>
         {
             Pop();
         }));
     }
 
-    IEnumerator ControlledFlight(float flightTime, float speed)
+    IEnumerator ControlledFlight(float flightTime, float speed, float maxAngle)
     {
         float timer = 0f;
 
@@ -196,12 +194,11 @@ public class DeflatedBallon : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            // Smooth noise values between -1 and 1
             float nx = Mathf.PerlinNoise(noiseOffsetX, Time.time) * 2f - 1f;
             float ny = Mathf.PerlinNoise(noiseOffsetY, Time.time) * 2f - 1f;
 
             // Combine into a small steering vector
-            Vector3 steering = new Vector3(nx, ny, 0f) * 20f; // steering strength
+            Vector3 steering = new Vector3(nx, ny, 0f) * maxAngle * 2f; // steering strength
 
             // Apply steering to forward direction
             forward += steering * Time.deltaTime;
