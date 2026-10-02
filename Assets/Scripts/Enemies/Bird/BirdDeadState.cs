@@ -21,7 +21,7 @@ public class BirdDeadState : IState
 
         //Play a sound
         startPos = bird.transform.position;
-        gravePos = bird.transform.position + new Vector3(0f, -10f, 0f);
+        gravePos = bird.transform.position + new Vector3(0f, -20f, 0f);
         time = 0f;
     }
 
@@ -32,7 +32,7 @@ public class BirdDeadState : IState
 
     public void StateUpdate()
     {
-        time += (Time.deltaTime / 5f); // fall for 5 sek
+        time += (Time.deltaTime / 3f); // fall for 5 sek
 
         bird.transform.position = Vector3.Lerp(startPos, gravePos, time);
 

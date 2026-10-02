@@ -30,7 +30,7 @@ public class BirdAttackState : IState{
     
     public void OnEntry()
     {
-        bird._birdStateEnum = EnemyBird.BirdStateEnum.Attacking;
+        
 
         bird.hasAttacked = false;
         hoverTimer = hoverTime; 
@@ -54,14 +54,17 @@ public class BirdAttackState : IState{
         switch (phase){ 
             case AttackPhase.MoveToTarget: 
                 MoveToTarget();
+                bird._birdStateEnum = EnemyBird.BirdStateEnum.Flying;
                 break;
             
             case AttackPhase.Hover:
                 Hover();
+                bird._birdStateEnum = EnemyBird.BirdStateEnum.Flying;
                 break;
                 
             case AttackPhase.Dive:
                 Dive();
+                bird._birdStateEnum = EnemyBird.BirdStateEnum.Attacking;
                 break;
         } }
         
@@ -70,7 +73,7 @@ public class BirdAttackState : IState{
         Vector3 toHover = hoverPos - bird.transform.position;
         float distanceToHover = toHover.magnitude;
 
-        if(distanceToHover > 0.01f)
+        if(distanceToHover > 0.02f)
             { 
                 Vector3 desiredDirection = toHover.normalized;
                     attackVelocity = Vector3.Slerp( attackVelocity, desiredDirection, 2f * Time.deltaTime ).normalized;
@@ -83,7 +86,7 @@ public class BirdAttackState : IState{
             bird.transform.rotation = Quaternion.Slerp( bird.transform.rotation, targetRotation, 5f * Time.deltaTime );
         }
 
-        if (distanceToHover < 0.1f)
+        if (distanceToHover < 0.2f)
         { 
             bird.transform.position = hoverPos; phase = AttackPhase.Hover; 
         } 
