@@ -17,6 +17,11 @@ public class EnemyAircraft : EnemyParentClass
     public float aimTime {get;}           = 3f;
     public float timeToFillBalloon {get;} = 5f;
 
+    [Header("Altitude")]
+    private float enemyAltitude;
+    private float enemyVelocity;
+    private Vector3 startPos;
+
     [Header("Decitions")]
     private float _birdChance;
     private float _refillChance;
@@ -36,6 +41,9 @@ public class EnemyAircraft : EnemyParentClass
     {
         _targetBalloonTree = GameManager.instance.PlayerBaloonTree;
         _statemachine.EnterState(_enemyRefillState);
+        enemyAltitude = 0;
+        enemyVelocity = 0;
+        startPos = gameObject.transform.position;
     }
 
     public override void Update()
@@ -46,7 +54,21 @@ public class EnemyAircraft : EnemyParentClass
 
     private void UpdateAltitude()
     {
-        //Handle enemy altitude change
+        enemyVelocity = GameManager.instance.CalculateVelocity(ownBalloonTree.ActiveBalloons, enemyVelocity);
+        enemyAltitude += enemyVelocity * Time.fixedDeltaTime;
+
+        if(enemyAltitude <= 0)
+        {
+            enemyAltitude = 0;
+            return;
+        }
+        gameObject.transform.position = new Vector3
+        (
+            startPos.x,
+            enemyAltitude - GameManager.instance.Altitude,
+            startPos.z
+        );
+        
 
     }
     private IState MakeDecition()
@@ -93,8 +115,8 @@ public class EnemyAircraft : EnemyParentClass
                 break;
             
             case < 15:
-                _playerChance = 1/3 * _remaningChance;
-                _refillChance = 2/3 * _remaningChance;
+                _playerChance = 1f / 3f * _remaningChance;
+                _refillChance = 2f / 3f * _remaningChance;
                 break;
 
             case 15:
@@ -103,8 +125,8 @@ public class EnemyAircraft : EnemyParentClass
                 break;
 
             case < 18:
-                _playerChance = 2/3 * _remaningChance;
-                _refillChance = 1/3 * _remaningChance;
+                _playerChance = 2f / 3f * _remaningChance;
+                _refillChance = 1f / 3f * _remaningChance;
                 break;
 
             case >= 18:
