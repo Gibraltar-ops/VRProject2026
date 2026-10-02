@@ -5512,6 +5512,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bird_prototype (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 4544289100353059966, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: forceMult
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10272,6 +10276,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bird_prototype (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 4544289100353059966, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: forceMult
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12011,6 +12019,10 @@ PrefabInstance:
     - target: {fileID: 2259958211159256268, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
       propertyPath: m_Name
       value: Bird_prototype
+      objectReference: {fileID: 0}
+    - target: {fileID: 4544289100353059966, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: forceMult
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14036,6 +14048,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bird_prototype (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 4544289100353059966, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: forceMult
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14817,7 +14833,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3068843633885735267, guid: 614e6d0ee1c2ee54a94abdae667703c1, type: 3}
       propertyPath: _debug
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3896146738758861110, guid: 614e6d0ee1c2ee54a94abdae667703c1, type: 3}
       propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.size
@@ -21518,6 +21534,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bird_prototype (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 4544289100353059966, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: forceMult
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -23733,6 +23753,10 @@ PrefabInstance:
     - target: {fileID: 2259958211159256268, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
       propertyPath: m_Name
       value: Bird_prototype (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4544289100353059966, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: forceMult
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -27542,6 +27566,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bird_prototype (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4544289100353059966, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: forceMult
+      value: 1.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -28287,6 +28315,10 @@ PrefabInstance:
     - target: {fileID: 2259958211159256268, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
       propertyPath: m_Name
       value: Bird_prototype (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4544289100353059966, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: forceMult
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -29423,6 +29455,10 @@ PrefabInstance:
     - target: {fileID: 2259958211159256268, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
       propertyPath: m_Name
       value: Bird_prototype (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4544289100353059966, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: forceMult
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
