@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 7268369846606156122}
   - component: {fileID: 5637559757537283027}
   - component: {fileID: -8814001357109435633}
+  - component: {fileID: 1681591330288179138}
   m_Layer: 0
   m_Name: CannonBallBird
   m_TagString: Untagged
@@ -90,6 +91,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileBird
   _lifetime: 10
+  _audioSource: {fileID: 1681591330288179138}
+  _fireSounds:
+  - {fileID: 8300000, guid: 9d01e56d6e390cc4fa9748728dbc1efa, type: 3}
+  - {fileID: 8300000, guid: 6190702458809f0448885f94a584f081, type: 3}
+  - {fileID: 8300000, guid: 1287d72250c90014ba09aaea7436784d, type: 3}
+  - {fileID: 8300000, guid: c7916d39813a22b4e82c86b8b1e6e4b7, type: 3}
+  - {fileID: 8300000, guid: 03d973ad91ca43640b5f9f0a6b1dfded, type: 3}
+  - {fileID: 8300000, guid: c7916d39813a22b4e82c86b8b1e6e4b7, type: 3}
+  - {fileID: 8300000, guid: 125e47afe0c7ba84db43e538cae0b05f, type: 3}
+  _pitchVariation: 0.1
 --- !u!135 &5637559757537283027
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -103,7 +114,7 @@ SphereCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
@@ -138,6 +149,103 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!82 &1681591330288179138
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4556507709605652794}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 7721132474655496399, guid: 928d96293023bf743a181c01563cfc47, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 0.3
+  MinDistance: 1
+  MaxDistance: 100
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5466158189037112131
 GameObject:
   m_ObjectHideFlags: 0
