@@ -12,7 +12,7 @@ public class Trash : MonoBehaviour
     public GameObject particleVFX;
 
     public Health health;
-    
+    public float forceMult = 10f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -54,12 +54,12 @@ public class Trash : MonoBehaviour
         Rigidbody rb = gameObject.GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.useGravity = true;
-        Debug.Log("Health impulse" + health.Impulse);
-        rb.AddForce(health.Impulse, ForceMode.Impulse);
-
+        Debug.Log("Health impulse" + health.Impulse + "  -  forceMult " + forceMult + "  - new impulse : " + health.Impulse.normalized * forceMult);
+        rb.AddForce(health.Impulse.normalized * forceMult, ForceMode.Impulse);
+        rb.AddTorque(new Vector3(Random.value * 2f - 1, Random.value * 2f - 1, Random.value * 2f - 1) * 2f, ForceMode.Impulse);
 
         Instantiate(particleVFX,transform.position, Quaternion.identity);
-        Destroy(gameObject,2f);
+        //Destroy(gameObject,2f);
     }
 
     private void OnCollisionEnter(Collision collision)

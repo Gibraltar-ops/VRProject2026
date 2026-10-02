@@ -309,7 +309,7 @@ MonoBehaviour:
   _circleRadius: 0
   _circleSpeed: 0
   _heightAboveTarget: 0
-  _attackingSpeed: 50
+  _attackingSpeed: 20
   currentRadius: 0
   circleDirection: 0
   hasAttacked: 0
@@ -327,6 +327,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 1
   currentHealth: 1
+  Impulse: {x: 0, y: 0, z: 0}
 --- !u!135 &2777991897977361946
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -422,7 +423,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -433,7 +434,7 @@ AudioSource:
   MinDistance: 3
   MaxDistance: 30
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0

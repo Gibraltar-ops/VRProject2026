@@ -7472,6 +7472,7 @@ MonoBehaviour:
   acceleration: 2
   maxFreeFallSpeed: 30
   freefallAcceleration: 9.8
+  VelocityCap: 2
 --- !u!114 &593945697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7762,7 +7763,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9055301627580642384, guid: fd9941e7c5d25694b8ff586797f3ab7b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.25766945
+      value: -0.035
       objectReference: {fileID: 0}
     - target: {fileID: 9055301627580642384, guid: fd9941e7c5d25694b8ff586797f3ab7b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12500,9 +12501,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   treeToTarget: {fileID: 1676828860}
+  birdCap: 10
   enemiesSpawned: []
   bird: {fileID: 7374406080681346328, guid: 080584e2e30915b4b9a8b3d757db8408, type: 3}
-  _useDebugProgress: 0
+  _useDebugProgress: 1
   _debugProgress: 0.5
 --- !u!114 &906050393
 MonoBehaviour:
@@ -12511,7 +12513,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 906050390}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3975a4093fc4db44a98b1ca2aece0b4, type: 3}
   m_Name: 
@@ -12520,6 +12522,10 @@ MonoBehaviour:
   spawnerForThis: {fileID: 906050392}
   ownBalloonTree: {fileID: 1676828860}
   _enemySpawner: {fileID: 906050392}
+  debug: 0
+  RelativeDistanceCap: 50
+  rangePhase: 0
+  relativeDistance: 0
 --- !u!1 &934659305
 GameObject:
   m_ObjectHideFlags: 0
@@ -14811,7 +14817,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3068843633885735267, guid: 614e6d0ee1c2ee54a94abdae667703c1, type: 3}
       propertyPath: _debug
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3896146738758861110, guid: 614e6d0ee1c2ee54a94abdae667703c1, type: 3}
       propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.size
@@ -23861,7 +23867,7 @@ MonoBehaviour:
   minPitch: 0.9
   maxPitch: 1.1
   sfxGroup: {fileID: 0}
-  startBalloons: 7
+  startBalloons: 9
   PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
 --- !u!82 &1676828861
 AudioSource:
@@ -27488,6 +27494,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 411706426893110431, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1658000941037971198, guid: d8143fc87d6e6d34ea8aabc9812a5d92, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.883
