@@ -22,6 +22,8 @@ public class BirdCircleState : IState
     
     public void OnEntry()
     {
+        bird._birdStateEnum = EnemyBird.BirdStateEnum.Flying;
+
         if (bird._circleRadius <= 0f)
         {
             bird._circleRadius = Random.Range( _circleMinRadius, _circleMaxRadius );
@@ -29,14 +31,14 @@ public class BirdCircleState : IState
             bird._heightAboveTarget = Random.Range( _minHeightAboveTarget, _maxHeightAboveTarget ); 
             bird.circleDirection = Random.Range(0, 2) == 0 ? -1 : 1;
 
-            if(bird.circleDirection == 1)
-            {
-                bird.gameObject.transform.GetChild(0).transform.rotation = Quaternion.Euler(0,180,0);
-            }
-            else
-            {
-                bird.gameObject.transform.GetChild(0).transform.rotation = Quaternion.identity;
-            }
+            //if( bird.circleDirection == 1)
+            //{
+                //bird.gameObject.transform.GetChild(0).transform.rotation = Quaternion.Euler(0,180,0);
+            //}
+            //else
+            //{
+            //    bird.gameObject.transform.GetChild(0).transform.rotation = Quaternion.identity;
+            //}
         }
         
         timer = Random.Range(10, 15); 
@@ -91,7 +93,7 @@ public class BirdCircleState : IState
     private void UpdateRotation()
     { /* * Direction toward the target. */
         Vector3 direction = ( bird.target.transform.position - bird.transform.position ).normalized; /* * Tangent to the orbit. */
-        Vector3 perpendicularDir = Vector3.Cross( direction, Vector3.up ).normalized;
+        Vector3 perpendicularDir = Vector3.Cross( direction, -Vector3.up ).normalized;
         perpendicularDir *= bird.circleDirection;
         if(perpendicularDir != Vector3.zero)
         {

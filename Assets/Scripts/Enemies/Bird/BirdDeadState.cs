@@ -17,6 +17,8 @@ public class BirdDeadState : IState
 
     public void OnEntry()
     {
+        bird._birdStateEnum = EnemyBird.BirdStateEnum.Dead;
+
         //Play a sound
         startPos = bird.transform.position;
         gravePos = bird.transform.position + new Vector3(0f, -10f, 0f);

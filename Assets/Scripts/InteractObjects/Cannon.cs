@@ -18,7 +18,7 @@ public class Cannon : MonoBehaviour
 
     public void Fire()
     {
-        GameObject projectile = Instantiate(_projectile, _instantiateOrigin.position, Quaternion.identity);
+        GameObject projectile = Instantiate(_projectile, _instantiateOrigin.position, Quaternion.LookRotation(_instantiateOrigin.forward) );
         projectile.GetComponent<Rigidbody>().AddForce(_instantiateOrigin.forward * 1000);
 
     }
