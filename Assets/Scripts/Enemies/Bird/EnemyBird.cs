@@ -3,6 +3,15 @@ using UnityEngine;
 [RequireComponent(typeof(SphereCollider))]
 public class EnemyBird : EnemyParentClass
 {
+    public enum BirdStateEnum
+    {
+        Flying,
+        Attacking,
+        Dead
+    }
+
+    public BirdStateEnum _birdStateEnum;
+
     public Health _health;
     public GameObject particleVFX;
     public bool isAlive;
@@ -25,9 +34,14 @@ public class EnemyBird : EnemyParentClass
 
     public bool hasAttacked;
 
+    public BirdStateEnum GetBirdStateEnum()
+    {
+        return _birdStateEnum;
+    }
+
     override public void Start()
     {
-
+        _birdStateEnum = BirdStateEnum.Flying;
     }
 
     void OnEnable()
@@ -38,6 +52,7 @@ public class EnemyBird : EnemyParentClass
 
         isAlive = true;
         _stateMachine.EnterState(_birdCircleState);
+        _birdStateEnum = BirdStateEnum.Flying;
 
         BalloonTree.OnBalloonPopped += HandleTargetChange;
         _health.Die += EnterDeadState;
@@ -130,6 +145,7 @@ public class EnemyBird : EnemyParentClass
         }
         else
         {
+            _birdStateEnum = BirdStateEnum.Dead;
             Debug.LogWarning("Bird is dead and trying to change State!");
         }
     }

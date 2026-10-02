@@ -29,7 +29,9 @@ public class BirdAttackState : IState{
     private float hoverTimer;
     
     public void OnEntry()
-    { 
+    {
+        bird._birdStateEnum = EnemyBird.BirdStateEnum.Attacking;
+
         bird.hasAttacked = false;
         hoverTimer = hoverTime; 
 

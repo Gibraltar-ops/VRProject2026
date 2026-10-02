@@ -15,6 +15,10 @@ public class BirdAnimation : MonoBehaviour
     int _currentState;
     float _lockedTill;
 
+    public EnemyBird _enemyBird;
+    EnemyBird.BirdStateEnum _enemyBirdState; // gets updated by getting the enemyStateEnum 
+    EnemyBird.BirdStateEnum _currentEnemyBirdState; // only used for comparison
+
     void Start()
     {
         if(_animator == null)
@@ -22,26 +26,54 @@ public class BirdAnimation : MonoBehaviour
             _animator = gameObject.GetComponent<Animator>();
         }
         _currentState = BIRD_FLYING;
+        _enemyBirdState = EnemyBird.BirdStateEnum.Flying;
+        _currentEnemyBirdState = EnemyBird.BirdStateEnum.Flying;
     }
 
     // Update is called once per frame
     void Update()
     {
+        _enemyBirdState = _enemyBird.GetBirdStateEnum();
+        if (_enemyBirdState != _currentEnemyBirdState) 
+        {
+            switch (_enemyBirdState) 
+            {
+                case EnemyBird.BirdStateEnum.Flying:
+                    PlayFlying();
+                    _currentEnemyBirdState = _enemyBirdState;
+                    break;
+                case EnemyBird.BirdStateEnum.Attacking:
+                    PlayAttack();
+                    _currentEnemyBirdState = _enemyBirdState;
+                    break;
+                case EnemyBird.BirdStateEnum.Dead:
+                    PlayDie();
+                    _currentEnemyBirdState = _enemyBirdState;
+                    break;
+                default:
+                    Debug.Log("Missing enemy state in animator!");
+                    break;
+            }
+        }
+    }
+
+    private void TestAnimations()
+    {
         time += Time.deltaTime;
 
-        if (time > 3f) 
+        if (time > 3f)
         {
             int anim_temp = Random.Range(0, 3);
-            switch (anim_temp) 
+            switch (anim_temp)
             {
                 case 0:
-                    PlayAttack(); 
+                    PlayAttack();
                     break;
                 case 1:
-                    PlayDie(); 
+                    PlayDie();
                     break;
                 case 2:
-                    PlayFlying(); 
+                    PlayFlying();
                     break;
                 default:
                     Debug.Log("Animation somthing went wrong");
