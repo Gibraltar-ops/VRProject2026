@@ -75,7 +75,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private void SpawnDisaster(int amountOfBirds)
+    public void SpawnDisaster(int amountOfBirds)
     {
         for (int i = 0; i < amountOfBirds; i++)
         {

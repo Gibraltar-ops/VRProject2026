@@ -35,7 +35,7 @@ public class EnemyAircraft : EnemyParentClass
     private float enemyAltitude;
     private float enemyVelocity;
     private Vector3 startPos;
-    private float relativeDistance;
+    [SerializeField] private float relativeDistance;
 
 
 
@@ -74,6 +74,7 @@ public class EnemyAircraft : EnemyParentClass
     {
         enemyVelocity = GameManager.instance.CalculateVelocity(ownBalloonTree.ActiveBalloons, enemyVelocity);
         enemyAltitude += enemyVelocity * Time.deltaTime;
+        relativeDistance = enemyAltitude - GameManager.instance.Altitude;
 
         if(enemyAltitude <= 0)
         {
@@ -81,14 +82,13 @@ public class EnemyAircraft : EnemyParentClass
             return;
         }
 
-        relativeDistance = enemyAltitude - GameManager.instance.Altitude;
-        if(relativeDistance > RelativeDistanceCap)
+        if(relativeDistance >= RelativeDistanceCap)
         {
             relativeDistance = RelativeDistanceCap;
         }
-        if(relativeDistance < -RelativeDistanceCap)
+        if(relativeDistance <= -1 * RelativeDistanceCap)
         {
-            relativeDistance = -RelativeDistanceCap;
+            relativeDistance = -1 * RelativeDistanceCap;
         }
 
 
