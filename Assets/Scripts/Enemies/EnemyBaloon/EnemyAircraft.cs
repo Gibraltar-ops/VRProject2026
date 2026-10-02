@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyAircraft : EnemyParentClass
 {
     [Header("References")]
-    public BalloonTree _enemyBalloonTree;
+    public BalloonTree ownBalloonTree;
     public EnemySpawner _enemySpawner;
 
     [Header("StateMachine")]
@@ -13,9 +13,8 @@ public class EnemyAircraft : EnemyParentClass
     public EnemyRefillState         _enemyRefillState;
 
     [Header("Stats")]
-    private int enemiesKilled;
-    public float accuracy {get;}    = .6f;
-    public float aimTime {get;}     = 3f;
+    public float accuracy {get;}          = .6f;
+    public float aimTime {get;}           = 3f;
     public float timeToFillBalloon {get;} = 5f;
 
     [Header("Decitions")]
@@ -27,7 +26,7 @@ public class EnemyAircraft : EnemyParentClass
 
     public override void Awake()
     {
-        _enemyFireAtBird         = new EnemyFireAtBird();
+        _enemyFireAtBird         = new EnemyFireAtBird(this, spawnerForThis);
         _enemyFireAtPlayerState  = new EnemyFireAtPlayerState(this);
         _enemyRefillState        = new EnemyRefillState(this);
     }
@@ -35,18 +34,24 @@ public class EnemyAircraft : EnemyParentClass
 
     public override void Start()
     {
+        _targetBalloonTree = GameManager.instance.PlayerBaloonTree;
         _statemachine.EnterState(_enemyRefillState);
-        target = _enemyBalloonTree.GetClosestAvailableBalloon(transform.position);
     }
 
     public override void Update()
     {
         _statemachine._currentState.StateUpdate();
+        UpdateAltitude();
     }
 
+    private void UpdateAltitude()
+    {
+        //Handle enemy altitude change
+
+    }
     private IState MakeDecition()
     {
-        int currentBirds = _enemySpawner.enemiesSpawned - enemiesKilled;
+        int currentBirds = _enemySpawner.enemiesSpawned.Count;
         switch (currentBirds)
         {
             case <= 0:
@@ -80,7 +85,7 @@ public class EnemyAircraft : EnemyParentClass
             return _enemyFireAtBird;
         }
 
-        switch (_balloonTree.ActiveBalloons)
+        switch (ownBalloonTree.ActiveBalloons)
         {
             case < 10:
                 _playerChance = 0;
@@ -127,7 +132,9 @@ public class EnemyAircraft : EnemyParentClass
 
     public void ChangeTask()
     {
-        _statemachine.ChangeState(MakeDecition());
+        IState newState = MakeDecition();
+        _statemachine.ChangeState(newState);
+        Debug.Log("Changed task to: " + newState);
     }
 
 }

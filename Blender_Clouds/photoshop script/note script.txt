@@ -1,0 +1,18 @@
+https://github.com/bogdanrybak/spritesheet-generator
+
+
+Download the raw version of the script
+
+Place Spritesheet generator.jsx script into:
+
+Windows - C:\Program Files\Adobe\Your photoshop version\Presets\Scripts
+Mac - Applications > Your photoshop version > Presets > Scripts
+Restart Photoshop if it was open.
+
+
+but rather use python script with pillow and
+just do it... fuck bridge to photoshop is slow!
+
+python py_make_sprite_sheet_unity.py
+
+just make sure you have the right settings

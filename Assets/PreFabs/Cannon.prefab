@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9055301627580642384}
   - component: {fileID: 2132589159304875960}
   - component: {fileID: 3896146738758861110}
-  - component: {fileID: 3068843633885735267}
+  - component: {fileID: 3539445733274926092}
   m_Layer: 0
   m_Name: Cannon
   m_TagString: Untagged
@@ -134,8 +134,8 @@ MonoBehaviour:
   m_Activated:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3068843633885735267}
-        m_TargetAssemblyTypeName: BasicGun, Assembly-CSharp
+      - m_Target: {fileID: 3539445733274926092}
+        m_TargetAssemblyTypeName: Cannon, Assembly-CSharp
         m_MethodName: Fire
         m_Mode: 1
         m_Arguments:
@@ -231,7 +231,7 @@ MonoBehaviour:
   m_LimitAngularVelocity: 0
   m_MaxLinearVelocityDelta: 10
   m_MaxAngularVelocityDelta: 20
---- !u!114 &3068843633885735267
+--- !u!114 &3539445733274926092
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -240,12 +240,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 499563634073976841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0d5f10bd680a4c4c815c214143e1b46, type: 3}
+  m_Script: {fileID: 11500000, guid: be2935341a987ff40892557af679c351, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BasicGun
-  RaycastOrigin: {fileID: 3742879791285527102}
-  _debug: 0
-  vfx: {fileID: 6247137828825406402}
+  m_EditorClassIdentifier: Assembly-CSharp::Cannon
+  _instantiateOrigin: {fileID: 3742879791285527102}
+  _vfx: {fileID: 0}
+  _projectile: {fileID: 4556507709605652794, guid: 4cf19674410922645a3caeae896cd77f, type: 3}
 --- !u!1 &2591805723471688593
 GameObject:
   m_ObjectHideFlags: 0
@@ -5207,7 +5207,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3851751173424664993}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -15396,7 +15396,7 @@ Transform:
   m_GameObject: {fileID: 7589271177633695188}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.03, y: -1.134, z: -0.012}
+  m_LocalPosition: {x: 0.03, y: -0.548, z: -0.012}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15477,8 +15477,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.06, y: 0.2241978, z: 0.06}
-  m_Center: {x: -0.05, y: -0.030879375, z: 0}
+  m_Size: {x: 0.24, y: 0.34, z: 0.22}
+  m_Center: {x: 0.01, y: -0.31, z: 0}
 --- !u!1001 &5876211959338150868
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,8 +1,11 @@
 using UnityEngine;
 
+[RequireComponent(typeof(SphereCollider))]
 public class EnemyBird : EnemyParentClass
 {
-    private Health _health;
+    public Health _health;
+    public GameObject particleVFX;
+    public bool isAlive;
 
     [Header("Circleing")]
     public float _circleRadius;
@@ -10,38 +13,32 @@ public class EnemyBird : EnemyParentClass
     public float _heightAboveTarget;
 
     [Header("Attacking")]
-    public float _attackingSpeed = 50f;
-
+    public float _attackingSpeed = 5f;
 
     public float currentRadius;
+    public int circleDirection;
 
     public StateMachine _stateMachine = new StateMachine();
     public BirdAttackState _birdAttackState;
     public BirdCircleState _birdCircleState;
     public BirdDeadState _birdDeadState;
 
-    
+    public bool hasAttacked;
 
-
-    override public void Awake()
+    override public void Start()
     {
-        SetInitTarget();
-        _birdAttackState     = new BirdAttackState(this, target, currentRadius);
-        _birdCircleState     = new BirdCircleState(this);
-        //_birdDisengageState  = new BirdDisengageState();
-        _birdDeadState       = new BirdDeadState(this);
 
-        _stateMachine.EnterState(_birdCircleState);
-        
-    }
-
-    override public void Update()
-    {
-        _stateMachine._currentState.StateUpdate();
     }
 
     void OnEnable()
     {
+        _birdAttackState = new BirdAttackState(this, target);
+        _birdCircleState = new BirdCircleState(this);
+        _birdDeadState = new BirdDeadState(this);
+
+        isAlive = true;
+        _stateMachine.EnterState(_birdCircleState);
+
         BalloonTree.OnBalloonPopped += HandleTargetChange;
         _health.Die += EnterDeadState;
     }
@@ -52,18 +49,88 @@ public class EnemyBird : EnemyParentClass
         _health.Die -= EnterDeadState;
     }
 
+    public string GetCurrentStateDebug()
+    {
+        if(_stateMachine._currentState == _birdAttackState)
+        {
+            return "Attack - State";
+        }
+        if (_stateMachine._currentState == _birdCircleState)
+        {
+            return "Circle - State";
+        }
+        if (_stateMachine._currentState == _birdDeadState)
+        {
+            return "Dead - State";
+        }
+        return "No State";
+    }
+
+    public string GetCurrentAlive()
+    {
+        if (isAlive) { return "Alive"; }
+        else { return "Dead"; }
+    }
+
+    override public void Update()
+    {
+        if (isAlive == false) 
+        {
+            if (_birdDeadState != _stateMachine._currentState)
+            {
+                ChangeBirdState(_birdDeadState);
+                Debug.LogWarning("Extra Change state run - to dead state");
+            }
+        }
+        _stateMachine._currentState.StateUpdate();
+    }
+
     private void HandleTargetChange(BalloonInfo balloon)
     {
-        _stateMachine.EnterState(_birdCircleState);
+        ChangeBirdState(_birdCircleState);
     }
 
     private void EnterDeadState()
     {
-        _stateMachine.ChangeState(_birdDeadState);
+        Instantiate(particleVFX, transform.position, Quaternion.identity);
+        ChangeBirdState(_birdDeadState);
+        isAlive = false;
     }
 
-    public void KillBird()
+    private void OnTriggerEnter(Collider other)
     {
-        Destroy(gameObject);
+        if (!hasAttacked)
+        {
+            if (other.gameObject.CompareTag("Balloon"))
+            {
+                _targetBalloonTree.PopBalloon(target);
+                hasAttacked = true;
+            }
+            
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (!hasAttacked)
+        {
+            if (other.gameObject.CompareTag("Balloon"))
+            {
+                _targetBalloonTree.PopBalloon(target);
+                hasAttacked = true;
+            }
+        }
+    }
+
+    public void ChangeBirdState(IState newState)
+    {
+        if (isAlive)
+        {
+            _stateMachine.ChangeState(newState);
+        }
+        else
+        {
+            Debug.LogWarning("Bird is dead and trying to change State!");
+        }
     }
 }

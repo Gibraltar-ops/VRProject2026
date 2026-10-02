@@ -1,22 +1,28 @@
-using Unity.Mathematics;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Information")]
-    private float _altitude = GameManager.instance.Altitude;
-    private float WinAltitude = GameManager.instance.WinAltitude;
+    public BalloonTree treeToTarget;
+    private float _altitude;
+    private float WinAltitude;
 
-    public int enemiesSpawned;
+    public List<EnemyParentClass> enemiesSpawned = new List<EnemyParentClass>();
 
     [Header("Enemy PreFabs")]
     public EnemyParentClass bird;
 
     private float timer;
 
+    void Awake()
+    {
+    }
+
     void Start()
     {
-        enemiesSpawned = 0;
+        _altitude = GameManager.instance.Altitude;
+        WinAltitude = GameManager.instance.WinAltitude;
         timer = 0;
     }
 
@@ -28,7 +34,8 @@ public class EnemySpawner : MonoBehaviour
 
     private void HandleEnemySpawn()
     {
-        float progress = _altitude / WinAltitude;
+        //float progress = _altitude / WinAltitude;
+        float progress = .4f;
         switch (progress)
         {
             case > .667f:
@@ -57,8 +64,8 @@ public class EnemySpawner : MonoBehaviour
     {
         if(timer >= frequency)
         {
-            Instantiate(prefab, new Vector3(0,-5,0), quaternion.identity);
-            enemiesSpawned++;
+            Debug.Log("Ran Spawned enemy function");
+            prefab.SpawnBird(prefab, this, treeToTarget);
             timer = 0;
         }
     }

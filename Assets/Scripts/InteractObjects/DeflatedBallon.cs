@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.IO.Compression;
+using System.Threading;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -16,6 +17,7 @@ public class DeflatedBallon : MonoBehaviour
     public bool _isInflating = false;
     private bool _interactable = true;
     private BalloonTree PlayerBalloonTree;
+    public ParticleSystem particles;
     Vector3 _targetScale1 = Vector3.one * 0.3f;
     Vector3 _targetScale2 = Vector3.one * 1.2f;
 
@@ -32,6 +34,7 @@ public class DeflatedBallon : MonoBehaviour
     public AudioClip[] deflatedSounds;
     public AudioClip[] creakingSounds;
     public AudioClip[] poppingSounds;
+    public float FlySpeed = 1000f;
 
     public float minPitch = 0.9f;
     public float maxPitch = 1.1f;
@@ -45,6 +48,7 @@ public class DeflatedBallon : MonoBehaviour
     enum State
     {
         Deflated,
+        Inflating,
         Attached,
         Complete
     }
@@ -77,19 +81,25 @@ public class DeflatedBallon : MonoBehaviour
         {
             _timer += Time.deltaTime;
 
-
-
-            if (_timer < _firstPhaseTime)
+            if (_timer < _firstPhaseTime / 2)
             {
+                state = State.Deflated;
+                _inflatableTransform.localScale = Vector3.Lerp(_startScale, _targetScale1, _timer);
+                return;
+            }
+            else if (_timer < _firstPhaseTime)
+            {
+                state = State.Inflating;
                 // float t = _timer / _firstPhaseTime;
                 _inflatableTransform.localScale = Vector3.Lerp(_startScale, _targetScale1, _timer);
             }
             else if (_timer > _firstPhaseTime && _timer < (_secondPhaseTime + _firstPhaseTime))
             {
+                state = State.Inflating;
                 float t = (_timer - _firstPhaseTime) / _secondPhaseTime;
                 _inflatableTransform.localScale = Vector3.Lerp(_targetScale1, _targetScale2, t);
             }
-            else if (_timer > (_firstPhaseTime + _secondPhaseTime) && state == State.Deflated)
+            else if (_timer > (_firstPhaseTime + _secondPhaseTime) && state == State.Inflating)
             {
                 state = State.Complete;
             }
@@ -125,15 +135,26 @@ public class DeflatedBallon : MonoBehaviour
 
     public void OnRelease()
     {
+
         if (state == State.Deflated)
         {
-
-            StartCoroutine(RapidDeflate());
+            rb.isKinematic = false;
+            source.Stop();
+            StartCoroutine(RapidDeflate(false));
             _isInflating = false;
-            Debug.Log("Dropped Half-filled balloon.");
+
+        }
+        else if (state == State.Inflating)
+        {
+            rb.isKinematic = true;
+            FlyAway();
+            StartCoroutine(RapidDeflate(true));
+            particles.Play();
+            _isInflating = false;
         }
         else if (state == State.Complete)
         {
+            rb.isKinematic = true;
             BalloonInfo slot = PlayerBalloonTree.GetFreeBalloonSlot();
 
             _isInflating = false;
@@ -143,15 +164,60 @@ public class DeflatedBallon : MonoBehaviour
                 Pop();
                 return;
             }
-
             StartCoroutine(AddBalloonToCanopy(slot));
             Debug.Log("Dropped Full Balloon.");
         }
     }
 
-    IEnumerator RapidDeflate()
+    void FlyAway()
     {
-        PlayRandomSound(deflatedSounds);
+        rb.isKinematic = true;
+        StartCoroutine(ControlledFlight(2f, 10f, 10f));
+        StartCoroutine(WaitForSeconds(2f, () =>
+        {
+            Pop();
+        }));
+    }
+
+    IEnumerator ControlledFlight(float flightTime, float speed, float maxAngle)
+    {
+        float timer = 0f;
+
+        // Start direction
+        Vector3 forward = transform.forward;
+
+        // Random noise offsets so each balloon behaves differently
+        float noiseOffsetX = UnityEngine.Random.value * 100f;
+        float noiseOffsetY = UnityEngine.Random.value * 100f;
+
+        while (timer < flightTime)
+        {
+            timer += Time.deltaTime;
+
+            float nx = Mathf.PerlinNoise(noiseOffsetX, Time.time) * 2f - 1f;
+            float ny = Mathf.PerlinNoise(noiseOffsetY, Time.time) * 2f - 1f;
+
+            // Combine into a small steering vector
+            Vector3 steering = new Vector3(nx, ny, 0f) * maxAngle * 2f; // steering strength
+
+            // Apply steering to forward direction
+            forward += steering * Time.deltaTime;
+            forward.Normalize();
+
+            // Move object
+            transform.position += forward * speed * Time.deltaTime;
+
+            // Optional: rotate object to face direction
+            transform.rotation = Quaternion.LookRotation(forward);
+
+            yield return null;
+        }
+    }
+
+
+    IEnumerator RapidDeflate(bool playSound)
+    {
+        if (playSound) PlayRandomSound(deflatedSounds);
 
         _interactable = false;
         state = State.Deflated;
@@ -228,5 +294,16 @@ public class DeflatedBallon : MonoBehaviour
         Instantiate(_vfx, _inflatableTransform.transform.position, Quaternion.identity);
         PlayRandomSound(poppingSounds);
         Destroy(gameObject);
+    }
+
+    IEnumerator WaitForSeconds(float seconds, Action callback)
+    {
+        float timer = 0f;
+        while (timer < seconds)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        callback.Invoke();
     }
 }

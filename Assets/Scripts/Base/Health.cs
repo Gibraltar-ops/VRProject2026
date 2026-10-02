@@ -10,11 +10,13 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
+        
         if (currentHealth <= 0) 
         {
             return; // Already dead!
         }
         currentHealth -= damageAmount;
+        Debug.Log("Remaining health: " + currentHealth);
         if (currentHealth <= 0) 
         {
             Die?.Invoke();
