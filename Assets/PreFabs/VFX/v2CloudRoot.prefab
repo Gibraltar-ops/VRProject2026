@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CloudController
   cloudParticles: {fileID: 4123457151421466158, guid: 06af458ee1d549943be1179c4803f598, type: 3}
-  cloudThickness: 800
+  cloudThickness: 2500
   cloudBaseAltitude: 1200
   cloudParticleOffset: 50
   maxEmissionRate: 50
