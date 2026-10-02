@@ -34,8 +34,8 @@ public class EnemySpawner : MonoBehaviour
 
     private void HandleEnemySpawn()
     {
-        //float progress = _altitude / WinAltitude;
-        float progress = .4f;
+        float progress = _altitude / WinAltitude;
+        
         switch (progress)
         {
             case > .667f:

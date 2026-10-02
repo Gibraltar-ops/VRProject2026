@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
     public float WinAltitude {get; private set; } = 15000f;
     
     [Header("Balans/Thresholds")]
-    [SerializeField] private float liftMultiplier = 2.0f;
+    [SerializeField] private float liftMultiplier = 1.5f;
     [SerializeField] private float gravityMultiplier = 5.0f;
 
     [Tooltip("Hur många ballonger som behövs för att hovra")]
@@ -30,7 +31,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int freefallThreshold = 3;
 
     [Tooltip("Hur mycket acceleration/lift multiplier påverkas per uppblåst ballong")]
-    [SerializeField] private float acceleration = 2.0f;
+    [SerializeField] private float acceleration = 1.25f;
     
     [Header("Fritt fall - justeringar")]
     [SerializeField] private float maxFreeFallSpeed = 30.0f;
@@ -52,10 +53,10 @@ public class GameManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        HandleAltitudeChange(ActivePlayerBalloons);
+        HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity));
     }
 
-    public void HandleAltitudeChange(int personalBalloons)
+    public float CalculateVelocity(int personalBalloons, float currentVel)
     {
         float targetVelocity = 0f;
 
@@ -77,17 +78,23 @@ public class GameManager : MonoBehaviour
 
         float currentAcceleration = (personalBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
         
-        VerticalVelocity = Mathf.MoveTowards(VerticalVelocity, targetVelocity, currentAcceleration * Time.fixedDeltaTime);
+        return Mathf.MoveTowards(currentVel, targetVelocity, currentAcceleration * Time.fixedDeltaTime);
 
-        Altitude += VerticalVelocity * Time.fixedDeltaTime;
+    }
+
+    private void HandlePlayerAltitude(float velocity)
+    {
+        VerticalVelocity = velocity; 
+        Altitude += velocity * Time.fixedDeltaTime;
         
         if (Altitude < 0f)
         {
             Altitude = 0f;
-            if (VerticalVelocity < 0f)
+            if (velocity < 0f)
             {
-                VerticalVelocity = 0f;
+                velocity = 0f;
             }
         }
+        
     }
 }
