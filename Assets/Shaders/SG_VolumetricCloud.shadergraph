@@ -50,6 +50,9 @@
         },
         {
             "m_Id": "786967078e0f4ebfafb96abe31203b3d"
+        },
+        {
+            "m_Id": "3cef7151bc8e4a7bbba29ee5c6ef18a6"
         }
     ],
     "m_GroupDatas": [],
@@ -81,6 +84,20 @@
                     "m_Id": "d136d951331d4b679d3dd6ecb6dd6892"
                 },
                 "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "3cef7151bc8e4a7bbba29ee5c6ef18a6"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "2b3b5b4fb849488cb4083719350b1232"
+                },
+                "m_SlotId": 8
             }
         },
         {
@@ -285,6 +302,22 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "10b9c3a576314b7bb1b720f51cc60f28",
+    "m_Id": 4,
+    "m_DisplayName": "Far Plane",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Far Plane",
+    "m_StageCapability": 3,
+    "m_Value": 1.0,
+    "m_DefaultValue": 1.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Texture3DMaterialSlot",
     "m_ObjectId": "177ed0bdf8fe479384421a6b279dcaaf",
     "m_Id": 0,
@@ -367,6 +400,9 @@
             "m_Id": "dff25545d3804446b88d543302baca02"
         },
         {
+            "m_Id": "7a025f2d8e6f4e97b23f0bc594cbf4e8"
+        },
+        {
             "m_Id": "d2c8ed8493fb468091c5211b67339867"
         },
         {
@@ -388,7 +424,7 @@
     "m_FunctionName": "RaymarchCloud",
     "m_FunctionSource": "",
     "m_FunctionSourceUsePragmas": true,
-    "m_FunctionBody": "float3 camPosWorld = _WorldSpaceCameraPos.xyz;\r\nfloat3 rayOrigin = mul(GetWorldToObjectMatrix(), float4(camPosWorld, 1.0)).xyz;\r\nfloat3 posObject = mul(GetWorldToObjectMatrix(), float4(posWorld, 1.0)).xyz;\r\nfloat3 rayDir = normalize(posObject - rayOrigin);\r\n\r\nfloat3 safeRayDir = rayDir + 0.000001; \r\nfloat3 invDir = 1.0 / safeRayDir;\r\n\r\nfloat3 t0 = (-0.5 - rayOrigin) * invDir;\r\nfloat3 t1 = (0.5 - rayOrigin) * invDir;\r\n\r\nfloat3 tmin = min(t0, t1);\r\nfloat3 tmax = max(t0, t1);\r\n\r\nfloat tNear = max(max(tmin.x, tmin.y), tmin.z);\r\nfloat tFar = min(min(tmax.x, tmax.y), tmax.z);\r\n\r\nfloat currentAlpha = 0;\r\nfloat maxSteps = 64;\r\ncloudAlpha = 0;\r\ncloudColor = float3(0, 0, 0);\r\n\r\nfloat distanceTraveled = max(0.0, tNear + 0.001);\r\nfloat totalDensity = 0;\r\nfloat accumulatedLighting = 0;\r\n\r\n[loop]\r\nfor (int i = 0; i < maxSteps; i++)\r\n{\r\n    if (distanceTraveled > tFar) \r\n    {\r\n        break;\r\n    }\r\n    \r\n    float3 currentPos = rayOrigin + (rayDir * distanceTraveled);\r\n    float3 uvw = currentPos + 0.5;\r\n    \r\n    if (uvw.x < -0.001 || uvw.x > 1.001 || uvw.y < -0.001 || uvw.y > 1.001 || uvw.z < -0.001 || uvw.z > 1.001)\r\n    {\r\n        break;\r\n    }\r\n    \r\n    float sdfDistance = SAMPLE_TEXTURE3D_LOD(_SDF_Volume, sampler_LinearClamp, uvw, 0).r;\r\n    \r\n    float timeVal = _Time.y * 0.15;\r\n    float3 noiseCoord = currentPos * 8.0 + float3(timeVal, timeVal * 0.5, timeVal);\r\n    float proceduralNoise = (sin(noiseCoord.x) * cos(noiseCoord.y) * sin(noiseCoord.z)) * 0.04;\r\n    float fluffySdf = sdfDistance + proceduralNoise;\r\n\r\n    if (fluffySdf < 0.03)\r\n    {\r\n        float densityStep = 0.4;\r\n        \r\n        float3 lightSamplePos = uvw + (lightDir * 0.05);\r\n        float lightSdf = SAMPLE_TEXTURE3D_LOD(_SDF_Volume, sampler_LinearClamp, lightSamplePos, 0).r;\r\n        \r\n        float shadowFactor = saturate(lightSdf * 3.0); \r\n        \r\n        totalDensity += densityStep * (shadowFactor + 0.2);\r\n        \r\n        // --- FÄRGBERÄKNING (NATURLIGA SKIFTNINGAR) ---\r\n        // Vi bygger upp ljusintensiteten baserat på solens skugga och höjd i volymen\r\n        float stepLight = shadowFactor * densityStep;\r\n        accumulatedLighting += stepLight;\r\n        \r\n        distanceTraveled += 0.015;\r\n        \r\n        if (totalDensity >= 1.0) break;\r\n    }\r\n    else\r\n    {\r\n        distanceTraveled += max(fluffySdf * 0.25, 0.01);\r\n    }\r\n}\r\n\r\ncloudAlpha = saturate(pow(totalDensity, 0.7));\r\n\r\n// Färgpalett: Vi skapar en tonad övergång mellan dämpad himmelskugga (blågrå) och solens faktiska färg\r\nfloat3 ambientShadowColor = float3(0.65, 0.72, 0.82); // Kall, mjuk skuggfärg inuti molnet\r\nfloat3 sunLitColor = lightColor * 1.2;                 // Solens direkta färg med lite extra tryck\r\n\r\nfloat lightingFactor = saturate(accumulatedLighting / (totalDensity + 0.001));\r\n\r\n// Blanda skugga och ljus baserat på hur träffad punkten blev av solljuset\r\ncloudColor = lerp(ambientShadowColor, sunLitColor, lightingFactor);"
+    "m_FunctionBody": "// camPosWorld tas nu emot som ett argument från grafen, vilket garanterar korrekt stereoposition för VR.\r\nfloat3 rayOrigin = mul(GetWorldToObjectMatrix(), float4(camPosWorld, 1.0)).xyz;\r\nfloat3 posObject = mul(GetWorldToObjectMatrix(), float4(posWorld, 1.0)).xyz;\r\nfloat3 rayDir = normalize(posObject - rayOrigin);\r\n\r\nfloat3 safeRayDir = rayDir + 0.000001; \r\nfloat3 invDir = 1.0 / safeRayDir;\r\n\r\nfloat3 t0 = (-0.5 - rayOrigin) * invDir;\r\nfloat3 t1 = (0.5 - rayOrigin) * invDir;\r\n\r\nfloat3 tmin = min(t0, t1);\r\nfloat3 tmax = max(t0, t1);\r\n\r\nfloat tNear = max(max(tmin.x, tmin.y), tmin.z);\r\nfloat tFar = min(min(tmax.x, tmax.y), tmax.z);\r\n\r\nfloat currentAlpha = 0;\r\nfloat maxSteps = 64;\r\ncloudAlpha = 0;\r\ncloudColor = float3(0, 0, 0);\r\n\r\nif (tNear <= tFar) \r\n{\r\n    float distanceTraveled = max(0.0, tNear + 0.001);\r\n    float totalDensity = 0;\r\n    float accumulatedLighting = 0;\r\n\r\n    [loop]\r\n    for (int i = 0; i < maxSteps; i++)\r\n    {\r\n        if (distanceTraveled > tFar) \r\n        {\r\n            break;\r\n        }\r\n        \r\n        float3 currentPos = rayOrigin + (rayDir * distanceTraveled);\r\n        float3 uvw = currentPos + 0.5;\r\n        \r\n        if (uvw.x < -0.001 || uvw.x > 1.001 || uvw.y < -0.001 || uvw.y > 1.001 || uvw.z < -0.001 || uvw.z > 1.001)\r\n        {\r\n            break;\r\n        }\r\n        \r\n        // --- BOX FADE ---\r\n        float3 distToEdge = min(uvw, 1.0 - uvw);\r\n        float minEdgeDist = min(min(distToEdge.x, distToEdge.y), distToEdge.z);\r\n        float boxFade = smoothstep(0.0, 0.05, minEdgeDist);\r\n        \r\n        float sdfDistance = SAMPLE_TEXTURE3D_LOD(_SDF_Volume, sampler_LinearClamp, uvw, 0).r;\r\n        \r\n        float timeVal = _Time.y * 0.15;\r\n        float3 noiseCoord = currentPos * 8.0 + float3(timeVal, timeVal * 0.5, timeVal);\r\n        float proceduralNoise = (sin(noiseCoord.x) * cos(noiseCoord.y) * sin(noiseCoord.z)) * 0.04;\r\n        float fluffySdf = sdfDistance + proceduralNoise;\r\n\r\n        if (fluffySdf < 0.03)\r\n        {\r\n            float densityStep = 0.4;\r\n            \r\n            float3 lightSamplePos = uvw + (lightDir * 0.05);\r\n            float lightSdf = SAMPLE_TEXTURE3D_LOD(_SDF_Volume, sampler_LinearClamp, lightSamplePos, 0).r;\r\n            \r\n            float shadowFactor = saturate(lightSdf * 3.0); \r\n            \r\n            float currentStepDensity = (densityStep * (shadowFactor + 0.2)) * boxFade;\r\n            totalDensity += currentStepDensity;\r\n            \r\n            float stepLight = (shadowFactor * densityStep) * boxFade;\r\n            accumulatedLighting += stepLight;\r\n            \r\n            distanceTraveled += 0.015;\r\n            \r\n            if (totalDensity >= 1.0) break;\r\n        }\r\n        else\r\n        {\r\n            distanceTraveled += max(fluffySdf * 0.25, 0.01);\r\n        }\r\n    }\r\n\r\n    cloudAlpha = saturate(pow(totalDensity, 0.7));\r\n\r\n    float3 ambientShadowColor = float3(0.65, 0.72, 0.82); \r\n    float3 sunLitColor = lightColor * 1.2;                 \r\n\r\n    float lightingFactor = saturate(accumulatedLighting / (totalDensity + 0.001));\r\n\r\n    cloudColor = lerp(ambientShadowColor, sunLitColor, lightingFactor);\r\n}"
 }
 
 {
@@ -439,6 +475,68 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "VertexDescription.Tangent"
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CameraNode",
+    "m_ObjectId": "3cef7151bc8e4a7bbba29ee5c6ef18a6",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Camera",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -745.333251953125,
+            "y": -73.99994659423828,
+            "width": 123.99993896484375,
+            "height": 246.6666259765625
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "c88330dfedef4954856c27ef4b722882"
+        },
+        {
+            "m_Id": "96ddd8e19103473ab84a36b15dc9a538"
+        },
+        {
+            "m_Id": "f2557e4218aa4ae98dcee885a65b7248"
+        },
+        {
+            "m_Id": "915bbe2bb3194de9961f0227a504dcc6"
+        },
+        {
+            "m_Id": "10b9c3a576314b7bb1b720f51cc60f28"
+        },
+        {
+            "m_Id": "729c3ee585694c6eb5c3504383e7acdb"
+        },
+        {
+            "m_Id": "7973a069061b4cf8a8f557bafff7738d"
+        },
+        {
+            "m_Id": "a0bce80a9ea14de0ad9023fd7407599d"
+        }
+    ],
+    "synonyms": [
+        "position",
+        "direction",
+        "orthographic",
+        "near plane",
+        "far plane",
+        "width",
+        "height"
+    ],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    }
 }
 
 {
@@ -587,6 +685,22 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "729c3ee585694c6eb5c3504383e7acdb",
+    "m_Id": 5,
+    "m_DisplayName": "Z Buffer Sign",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Z Buffer Sign",
+    "m_StageCapability": 3,
+    "m_Value": 1.0,
+    "m_DefaultValue": 1.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "786967078e0f4ebfafb96abe31203b3d",
     "m_Group": {
@@ -619,6 +733,45 @@
     "m_Property": {
         "m_Id": "7ecf750148d6402fb22028707d5e93ac"
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "7973a069061b4cf8a8f557bafff7738d",
+    "m_Id": 6,
+    "m_DisplayName": "Width",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Width",
+    "m_StageCapability": 3,
+    "m_Value": 1.0,
+    "m_DefaultValue": 1.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
+    "m_ObjectId": "7a025f2d8e6f4e97b23f0bc594cbf4e8",
+    "m_Id": 8,
+    "m_DisplayName": "camPosWorld",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "camPosWorld",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": []
 }
 
 {
@@ -746,6 +899,45 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "915bbe2bb3194de9961f0227a504dcc6",
+    "m_Id": 3,
+    "m_DisplayName": "Near Plane",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Near Plane",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
+    "m_ObjectId": "96ddd8e19103473ab84a36b15dc9a538",
+    "m_Id": 1,
+    "m_DisplayName": "Direction",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Direction",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.NormalMaterialSlot",
     "m_ObjectId": "97b5b80f6e5140398d103efa20b08437",
     "m_Id": 0,
@@ -766,6 +958,22 @@
     },
     "m_Labels": [],
     "m_Space": 0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "a0bce80a9ea14de0ad9023fd7407599d",
+    "m_Id": 7,
+    "m_DisplayName": "Height",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Height",
+    "m_StageCapability": 3,
+    "m_Value": 1.0,
+    "m_DefaultValue": 1.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
 }
 
 {
@@ -889,6 +1097,29 @@
             "m_Id": "7ecf750148d6402fb22028707d5e93ac"
         }
     ]
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
+    "m_ObjectId": "c88330dfedef4954856c27ef4b722882",
+    "m_Id": 0,
+    "m_DisplayName": "Position",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Position",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": []
 }
 
 {
@@ -1032,6 +1263,22 @@
         "z": 0.0
     },
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "f2557e4218aa4ae98dcee885a65b7248",
+    "m_Id": 2,
+    "m_DisplayName": "Orthographic",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Orthographic",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
 }
 
 {
