@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
 
         float currentAcceleration = (personalBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
         
-        return Mathf.MoveTowards(currentVel, targetVelocity, currentAcceleration * Time.fixedDeltaTime);
+        return Mathf.MoveTowards(currentVel, targetVelocity, currentAcceleration * Time.deltaTime);
 
     }
 
