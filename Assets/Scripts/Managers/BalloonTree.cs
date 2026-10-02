@@ -186,7 +186,6 @@ public class BalloonTree : MonoBehaviour
             }
         }
         if (closest < 0) return null;
-        _balloons[closest].state = BalloonInfo.BalloonState.MarkedForDeath;
         return GetBalloonFromIndex(closest);
     }
 
