@@ -1,10 +1,24 @@
+using System.Data.Common;
 using UnityEngine;
 
 public class EnemyAircraft : EnemyParentClass
 {
+    private enum RangePhase
+    {
+        FarAbove,
+        Above,
+        Sweetspot,
+        Below,
+        FarBelow
+    }
     [Header("References")]
     public BalloonTree ownBalloonTree;
     public EnemySpawner _enemySpawner;
+
+    [Header("Debug")]
+    [SerializeField] private bool debug;
+    [SerializeField] private float RelativeDistanceCap = 50;
+    [SerializeField] private RangePhase rangePhase;
 
     [Header("StateMachine")]
     public StateMachine _statemachine = new StateMachine();
@@ -13,20 +27,20 @@ public class EnemyAircraft : EnemyParentClass
     public EnemyRefillState         _enemyRefillState;
 
     [Header("Stats")]
-    public float accuracy {get;}          = .6f;
-    public float aimTime {get;}           = 3f;
-    public float timeToFillBalloon {get;} = 5f;
+    public float accuracy {get; private set;}    = .6f;
+    public float aimTime {get; private set;}     = 3f;
+    public float timeToFillBalloon {get;}        = 5f;
 
     [Header("Altitude")]
     private float enemyAltitude;
     private float enemyVelocity;
     private Vector3 startPos;
+    [SerializeField] private float relativeDistance;
 
-    [Header("Decitions")]
-    private float _birdChance;
-    private float _refillChance;
-    private float _playerChance;
-    private float _remaningChance;
+
+
+    private float timeSinceLastBoost;
+    private float boostCooldown = 10;
 
 
     public override void Awake()
@@ -44,103 +58,91 @@ public class EnemyAircraft : EnemyParentClass
         enemyAltitude = 0;
         enemyVelocity = 0;
         startPos = gameObject.transform.position;
+        timeSinceLastBoost = 0;
     }
 
     public override void Update()
     {
         _statemachine._currentState.StateUpdate();
+        timeSinceLastBoost += Time.deltaTime;
         UpdateAltitude();
+        SetRangePhase();
+
     }
 
     private void UpdateAltitude()
     {
         enemyVelocity = GameManager.instance.CalculateVelocity(ownBalloonTree.ActiveBalloons, enemyVelocity);
-        enemyAltitude += enemyVelocity * Time.fixedDeltaTime;
+        enemyAltitude += enemyVelocity * Time.deltaTime;
+        relativeDistance = enemyAltitude - GameManager.instance.Altitude;
 
         if(enemyAltitude <= 0)
         {
             enemyAltitude = 0;
             return;
         }
+
+        if(relativeDistance >= RelativeDistanceCap)
+        {
+            relativeDistance = RelativeDistanceCap;
+        }
+        if(relativeDistance <= -1 * RelativeDistanceCap)
+        {
+            relativeDistance = -1 * RelativeDistanceCap;
+        }
+
+
         gameObject.transform.position = new Vector3
         (
             startPos.x,
-            enemyAltitude - GameManager.instance.Altitude,
+            relativeDistance,
             startPos.z
         );
-        
 
+        if(relativeDistance > 50 || timeSinceLastBoost >= boostCooldown)
+        {
+           _enemySpawner.SpawnDisaster(Mathf.RoundToInt(relativeDistance/10));
+        }
+        if(relativeDistance < -50 || timeSinceLastBoost >= boostCooldown)
+        {
+            ownBalloonTree.AddBalloon();
+            ownBalloonTree.AddBalloon();
+            ownBalloonTree.AddBalloon();
+        }
     }
     private IState MakeDecition()
     {
-        int currentBirds = _enemySpawner.enemiesSpawned.Count;
-        switch (currentBirds)
+        switch (rangePhase)
         {
-            case <= 0:
-                _birdChance = 0;
-                break;
-
-            case 1:
-                _birdChance = 20;
-                break;
-
-            case 2:
-                _birdChance = 40;
-                break;
-                
-            case 3:
-                _birdChance = 60;
-                break;
-
-            case 4:
-                _birdChance = 80;   
-                break;
-                
-            case >= 5:
-                _birdChance = 100;
-                break;
-        }
-        _remaningChance = 100 -_birdChance;
-
-        if(_remaningChance <= 0)
-        {
-            return _enemyFireAtBird;
-        }
-
-        switch (ownBalloonTree.ActiveBalloons)
-        {
-            case < 10:
-                _playerChance = 0;
-                _refillChance = _remaningChance;
-                break;
+            case RangePhase.FarAbove:
+                return FarAboveDec();
             
-            case < 15:
-                _playerChance = 1f / 3f * _remaningChance;
-                _refillChance = 2f / 3f * _remaningChance;
-                break;
+            case RangePhase.Above:
+                return AboveDec();
 
-            case 15:
-                _playerChance = .5f * _remaningChance;
-                _refillChance = .5f * _remaningChance;
-                break;
+            case RangePhase.Sweetspot:
+                return SweetSpotDec();
 
-            case < 18:
-                _playerChance = 2f / 3f * _remaningChance;
-                _refillChance = 1f / 3f * _remaningChance;
-                break;
+            case RangePhase.Below:
+                return BelowDec();
+            
+            case RangePhase.FarBelow:
+                return FarBelowDec();
 
-            case >= 18:
-                _playerChance = _remaningChance;
-                _refillChance = 0;
-                break;
+            default:
+                return _enemyRefillState;
+
         }
+    }
 
-        float decition = Random.Range(1,101);
-        if(decition < _birdChance)
-        {
-            return _enemyFireAtBird;
-        }
-        else if(decition < _birdChance + _refillChance)
+    private IState FarAboveDec()
+    {
+        return _enemyFireAtBird;
+    }
+
+    private IState AboveDec()
+    {
+        if(ownBalloonTree.ActiveBalloons < 12)
         {
             return _enemyRefillState;
         }
@@ -148,15 +150,118 @@ public class EnemyAircraft : EnemyParentClass
         {
             return _enemyFireAtPlayerState;
         }
+    }
 
+    private IState SweetSpotDec()
+    {
+        bool change = minBalloonCheck();
+        if (!change)
+        {
+            return _enemyRefillState;
+        }
+    
+
+        float chance = Random.Range(0f,1f);
+        if(chance < 1f / 3f)
+        {
+            return _enemyRefillState;
+        }
+        else if(chance < 2f / 3f)
+        {
+            return _enemyFireAtBird;
+        }
+        else
+        {
+            return _enemyFireAtPlayerState;
+        }
 
     }
+
+    private IState BelowDec()
+    {
+        if(_enemySpawner.enemiesSpawned.Count <= 0)
+        {
+            return _enemyRefillState;
+        }
+
+        float probabilityForBird = Mathf.InverseLerp(-50f, -20f, relativeDistance);
+
+        if(Random.value < probabilityForBird)
+        {
+            return _enemyFireAtBird;
+        }
+        else
+        {
+            return _enemyRefillState;
+        }
+    }
+
+    private IState FarBelowDec()
+    {
+        if(_enemySpawner.enemiesSpawned.Count > 0)
+        {
+            accuracy = 1;
+            aimTime = 2;
+            return _enemyFireAtBird;
+        }
+        else
+        {
+            accuracy = .6f;
+            aimTime = 3;
+            return _enemyRefillState;
+        }
+    }
+
+    private bool minBalloonCheck()
+    {
+        if(ownBalloonTree.ActiveBalloons <= 10)
+        {
+            if (debug)
+            {
+                Debug.Log("Balloon Count < 10, proritizing Balloons");
+            }
+            return false;
+        }
+        return true;
+    }
+
+    private void SetRangePhase()
+    {
+        switch (relativeDistance)
+        {
+            case <= -50:
+                rangePhase = RangePhase.FarBelow;
+                break;
+            
+            case <= -20:
+                rangePhase = RangePhase.Below;
+                break;
+            
+            case <= 20:
+                rangePhase = RangePhase.Sweetspot;
+                break;
+            
+            case <= 30:
+                rangePhase = RangePhase.Above;
+                break;
+            
+            case > 30:
+                rangePhase = RangePhase.FarAbove;
+                break;
+        }
+        
+    }
+
+
 
     public void ChangeTask()
     {
         IState newState = MakeDecition();
         _statemachine.ChangeState(newState);
-        Debug.Log("Changed task to: " + newState);
+        if (debug)
+        {
+            Debug.Log("Changed task to: " + newState);
+        }
     }
 
 }
