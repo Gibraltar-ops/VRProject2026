@@ -16,7 +16,7 @@ MonoBehaviour:
   noiseLayers:
   - enabled: 1
     noiseSettings:
-      strenght: 0.12
+      strenght: 0.15
       numberOfLayers: 4
       baseRoughness: 0.55
       roughness: 2.34
@@ -25,10 +25,10 @@ MonoBehaviour:
       minValue: 1.06
   - enabled: 1
     noiseSettings:
-      strenght: 0.01
+      strenght: 0.11
       numberOfLayers: 3
-      baseRoughness: 3.08
-      roughness: 2.48
+      baseRoughness: 0.73
+      roughness: 3.28
       persistance: 0.5
-      center: {x: 0, y: 0, z: 0}
-      minValue: 0
+      center: {x: 0, y: 0.98, z: 0}
+      minValue: 1.25
