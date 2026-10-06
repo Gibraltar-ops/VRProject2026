@@ -41,7 +41,8 @@ public class RidgidNoiseFilter : INoiseFilter
             amplitude *= settings.persistance; // if percistance < 1 it will decrease each layer
         }
 
-        noiseValue = Mathf.Max(0, noiseValue - settings.minValue); // make a cuttof where its no new noise
+        //noiseValue = Mathf.Max(0, noiseValue - settings.minValue); // make a cuttof where its no new noise
+        noiseValue = noiseValue - settings.minValue; // make a cuttof where its no new noise
         return noiseValue * settings.strenght;
     }
 }

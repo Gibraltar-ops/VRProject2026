@@ -116,6 +116,14 @@ public class Planet : MonoBehaviour
     void GenerateColors()
     {
         colorGenerator.UpdateColors();
+
+        for (int i = 0; i < meshFilters.Length; i++)
+        {
+            if (meshFilters[i].gameObject.activeSelf) // if the gameobject is active generate new mesh
+            {
+                terrainFaces[i].UpdateUVs(colorGenerator); // update uvs to mach biomes
+            }
+        }
     }
 
 }
