@@ -15,20 +15,65 @@ MonoBehaviour:
   planetRadius: 2
   noiseLayers:
   - enabled: 1
+    useFirstLayerAsMask: 1
     noiseSettings:
-      strenght: 0.15
-      numberOfLayers: 4
-      baseRoughness: 0.55
-      roughness: 2.34
-      persistance: 0.54
-      center: {x: 0, y: 0, z: 0}
-      minValue: 1.06
+      filterType: 0
+      simpleNoiseSettings:
+        strenght: 0.1
+        numberOfLayers: 3
+        baseRoughness: 0.95
+        roughness: 2.21
+        persistance: 0.5
+        center: {x: 0, y: 0, z: 0}
+        minValue: 0.89
+      rigidNoiseSettings:
+        strenght: 1
+        numberOfLayers: 1
+        baseRoughness: 1
+        roughness: 2
+        persistance: 0.5
+        center: {x: 0, y: 0, z: 0}
+        minValue: 0
+        weightMultiplier: 0.8
   - enabled: 1
+    useFirstLayerAsMask: 1
     noiseSettings:
-      strenght: 0.11
-      numberOfLayers: 3
-      baseRoughness: 0.73
-      roughness: 3.28
-      persistance: 0.5
-      center: {x: 0, y: 0.98, z: 0}
-      minValue: 1.25
+      filterType: 0
+      simpleNoiseSettings:
+        strenght: 2.38
+        numberOfLayers: 2
+        baseRoughness: 2.5
+        roughness: 3.86
+        persistance: 0.69
+        center: {x: 0, y: 0.81, z: 0}
+        minValue: 1.04
+      rigidNoiseSettings:
+        strenght: 1
+        numberOfLayers: 1
+        baseRoughness: 1
+        roughness: 2
+        persistance: 0.5
+        center: {x: 0, y: 0, z: 0}
+        minValue: 0
+        weightMultiplier: 0.8
+  - enabled: 1
+    useFirstLayerAsMask: 1
+    noiseSettings:
+      filterType: 1
+      simpleNoiseSettings:
+        strenght: 1
+        numberOfLayers: 1
+        baseRoughness: 1
+        roughness: 2
+        persistance: 0.5
+        center: {x: 0, y: 0, z: 0}
+        minValue: 0
+      rigidNoiseSettings:
+        strenght: 1.47
+        numberOfLayers: 3
+        baseRoughness: 1.85
+        roughness: 2.88
+        persistance: 0.65
+        center: {x: 0, y: 0, z: 0}
+        minValue: 0.61
+        weightMultiplier: 0.76

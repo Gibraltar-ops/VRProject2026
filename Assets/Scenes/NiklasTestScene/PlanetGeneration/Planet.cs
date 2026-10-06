@@ -8,8 +8,10 @@ public class Planet : MonoBehaviour
 {
     [Range(2,256), Header("mesh resolution")]
     public int resolution = 10;
-    public Material material;
     public bool autoUpdate = true;
+
+    public enum FaceRenderMask { All, Top, Bottom, Left, Right, Front, Back };
+    public FaceRenderMask faceRenderMask;
 
     public ShapeSettings shapeSettings;
     public ColorSettings colorSettings;
@@ -19,21 +21,19 @@ public class Planet : MonoBehaviour
     [HideInInspector]
     public bool colorSettingsFoldout;
 
-    ShapeGenerator shapeGenerator; // does the vertex manipulation functions
+    ShapeGenerator shapeGenerator = new ShapeGenerator(); // does the vertex manipulation functions
+    ColorGenerator colorGenerator = new ColorGenerator(); // makes the texture for the shader
+
 
     [SerializeField, HideInInspector]
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
 
-    // for making it work in the editor - The editor script is handling this now PlanetEditor
-    //private void OnValidate()
-    //{
-    //    GeneratePlanet();
-    //}
 
     void Initialize()
     {
-        shapeGenerator = new ShapeGenerator(shapeSettings);
+        shapeGenerator.UpdateSettings(shapeSettings);
+        colorGenerator.UpdateSettings(colorSettings);
 
         if(meshFilters == null || meshFilters.Length == 0)
         {
@@ -59,15 +59,18 @@ public class Planet : MonoBehaviour
                 meshObj.transform.parent = transform;
                 meshObj.transform.localPosition = Vector3.zero;
                 //meshObj.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
-                meshObj.AddComponent<MeshRenderer>().sharedMaterial = material;
+                meshObj.AddComponent<MeshRenderer>();
 
                 meshFilters[i] = meshObj.AddComponent<MeshFilter>();
                 meshFilters[i].sharedMesh = new Mesh();
             }
-
+            meshFilters[i].GetComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
 
             terrainFaces[i] = new TerrainFace(shapeGenerator , meshFilters[i].sharedMesh,resolution, directions[i]);
 
+            // Render face bool for only displaying one of the planets faces at one time
+            bool renderFace = faceRenderMask == FaceRenderMask.All || (int)faceRenderMask - 1 == i;
+            meshFilters[i].gameObject.SetActive(renderFace);
         }
     }
 
@@ -99,19 +102,20 @@ public class Planet : MonoBehaviour
 
     void GenerateMesh()
     {
-        foreach (TerrainFace face in terrainFaces)
+        for (int i = 0; i < meshFilters.Length; i++) 
         {
-            face.ConstructMesh();
+            if (meshFilters[i].gameObject.activeSelf) // if the gameobject is active generate new mesh
+            {
+                terrainFaces[i].ConstructMesh();
+            }
         }
+        colorGenerator.UpdateElevation(shapeGenerator.elevationMinMax);
     }
 
 
     void GenerateColors()
     {
-        foreach(MeshFilter m in meshFilters)
-        {
-            m.GetComponent<MeshRenderer>().sharedMaterial.color = colorSettings.planetColor;
-        }
+        colorGenerator.UpdateColors();
     }
 
 }

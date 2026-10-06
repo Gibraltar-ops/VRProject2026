@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class NoiseFilter : MonoBehaviour
+public class SimpleNoiseFilter : INoiseFilter
 {
-    NoiseSettings settings;
+    NoiseSettings.SimpleNoiseSettings settings; // having the values from the class simplenoisesettings
     Noise noise = new Noise();
 
-    public NoiseFilter(NoiseSettings settings)
+    public SimpleNoiseFilter(NoiseSettings.SimpleNoiseSettings settings)
     {  
-        this.settings = settings; 
+        this.settings = settings;
     }
 
     public float Evaluate(Vector3 point)
