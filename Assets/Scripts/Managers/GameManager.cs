@@ -1,5 +1,7 @@
+using NUnit.Framework;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.XR.Haptics;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,13 +11,16 @@ public class GameManager : MonoBehaviour
 
     public BalloonTree PlayerBaloonTree;
 
-    public int ActivePlayerBalloons{
+    public int ActivePlayerBalloons
+    {
         get{return PlayerBaloonTree.ActiveBalloons;}
     }
 
     [Header("Altitude")]
     public float Altitude{get; private set;}
     public float VerticalVelocity { get; private set; }
+    
+    public float GroundAltitude { get; private set; }   
     
     public float CloudBaseAltitude{get;} = 900f;
     public float WinAltitude {get; private set; } = 3000f;
@@ -29,14 +34,23 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Hur få ballonger som behövs för att hamna i fritt fall")]
     [SerializeField] private int freefallThreshold = 3;
+    
 
     [Tooltip("Hur mycket acceleration/lift multiplier påverkas per uppblåst ballong")]
     [SerializeField] private float acceleration = 1.25f;
     
     [Header("Fritt fall - justeringar")]
-    [SerializeField] private float maxFreeFallSpeed = 30.0f;
+    [SerializeField] private float maxFreeFallSpeed = 40.0f;
     [Tooltip("Accelerering för fritt fall - 9.8 = jordens tyngdkraft")]
     [SerializeField] private float freefallAcceleration = 9.8f;
+    
+    [Header("Impact ")]
+    [SerializeField] private float fatalImpactVelocity = -20f;
+    [SerializeField] private AudioClip crashSound;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private ParticleSystem crashParticlePrefab;
+    
+    public bool IsGameOver { get; private set; }
 
     private float VelocityCap = 5;
 
@@ -56,6 +70,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (IsGameOver) return;
+        
         HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));
     }
 
@@ -104,14 +120,52 @@ public class GameManager : MonoBehaviour
         VerticalVelocity = velocity; 
         Altitude += velocity * Time.deltaTime;
         
-        if (Altitude < 0f)
+        if (Altitude <= 0f)
         {
             Altitude = 0f;
-            if (velocity < 0f)
+            
+            // Hastighet över fatal threshold - vi dör 
+            if (velocity <= fatalImpactVelocity)
             {
-                velocity = 0f;
+                TriggerGameOver();
+            }
+            else if (velocity < 0f)
+            {
+                // under fatal threshold - mjuk landning 
+                VerticalVelocity = 0f;
             }
         }
+    }
+
+    private void TriggerGameOver()
+    {
+        IsGameOver = true;
+        VerticalVelocity = 0f;
+
+        PlayImpactEffects();
         
+        // Här kan vi sätta in fadeout och haptiskt feedback 
+        
+     
+    }
+
+    private void PlayImpactEffects()
+    {
+        if (crashSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(crashSound);
+        }
+        
+        // Instansiera partiklar om prefab finns
+        if (crashParticlePrefab != null)
+        {
+            // Vi instansierar partiklarna i världens nollpunkt.
+            Instantiate(crashParticlePrefab, Vector3.zero, Quaternion.identity);
+        }
+    }
+    
+    public void UpdateGroundAltitude(float yPosition)
+    {
+        GroundAltitude = yPosition;
     }
 }

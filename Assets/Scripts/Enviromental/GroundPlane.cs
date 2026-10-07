@@ -48,25 +48,27 @@ public class GroundPlane : MonoBehaviour
             SetRenderersState(true);
             isVisible = true;
          }
-
-         // Flyttar marken neråt för att skapa parallax och avstånd
+         
          transform.position = new Vector3(0, -currentAltitude * moveMultiplier, 0);
-
-         // Beräknar hur mycket vi ska platta ut (skala ner Y) marken
+         
          float currentScale = currentAltitude * scaleMultiplier;
          
-         // VIKTIGT: Vi behåller initialScale för X och Z så att marken inte krymper 
-         // och blottar sina ytterkanter mot skyboxen. Vi subtraherar endast på Y-axeln.
          Vector3 newScale = initialScale;
-         newScale.y = initialScale.y - currentScale;
+         newScale.y = initialScale.y * currentScale;
          
          // Säkerställer att Y-axeln aldrig inverteras eller blir 0
          newScale.y = Mathf.Max(newScale.y, 0.01f);
 
          transform.localScale = newScale;
+
+         
+         if (GameManager.instance != null)
+         {
+            GameManager.instance.UpdateGroundAltitude(transform.position.y);
+         }
       }
    }
-   
+
    // hjälpmetod för att slå på och av grafik
    private void SetRenderersState(bool state)
    {
