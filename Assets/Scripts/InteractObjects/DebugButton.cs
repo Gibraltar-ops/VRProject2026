@@ -5,7 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 public class DebugButton : MonoBehaviour
 {
     //XRPokeInteractor interactor;
-    TMP_Text debug_text;
+    public TMP_Text debug_text;
 
     void Start()
     {
