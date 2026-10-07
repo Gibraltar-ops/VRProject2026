@@ -43,7 +43,7 @@ public class EnemyAircraft : EnemyParentClass
 
     public override void Awake()
     {
-        _enemyFireAtBird         = new EnemyFireAtBird(this, spawnerForThis);
+        _enemyFireAtBird         = new EnemyFireAtBird(this, _enemySpawner);
         _enemyFireAtPlayerState  = new EnemyFireAtPlayerState(this);
         _enemyRefillState        = new EnemyRefillState(this);
     }
@@ -67,7 +67,7 @@ public class EnemyAircraft : EnemyParentClass
         timeSinceLastBoost += Time.deltaTime;
         UpdateAltitude();
         SetRangePhase();
-        aiCapDiff = Mathf.Lerp(.5f, 1.5f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
+        aiCapDiff = Mathf.Lerp(1.5f, 5f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
     }
 
     private void UpdateAltitude()
