@@ -12,6 +12,8 @@ public class GroundPlane : MonoBehaviour
    [Header("Altitude visuals")] 
    [SerializeField] private float hideAltitude = 2000f;
    [SerializeField] private float moveMultiplier = 0.5f;
+   
+   // Agerar nu enbart som en utplattnings-faktor för terrängen.
    [SerializeField] private float scaleMultiplier = 0.001f;
 
    private Vector3 initialScale;
@@ -33,7 +35,7 @@ public class GroundPlane : MonoBehaviour
       // Dödar alla groundplane renderers när vi är tillräckligt högt upp
       if (currentAltitude >= hideAltitude)
       {
-         if (isVisible) // När vi åker över threshold är marken osynling
+         if (isVisible) // När vi åker över threshold är marken osynlig
          {
             SetRenderersState(false);
             isVisible = false;
@@ -47,17 +49,19 @@ public class GroundPlane : MonoBehaviour
             isVisible = true;
          }
 
-         // Flyttar marken neråt
+         // Flyttar marken neråt för att skapa parallax och avstånd
          transform.position = new Vector3(0, -currentAltitude * moveMultiplier, 0);
 
-         // Skalar ner marken 
+         // Beräknar hur mycket vi ska platta ut (skala ner Y) marken
          float currentScale = currentAltitude * scaleMultiplier;
-         Vector3 newScale = initialScale - (Vector3.one * currentScale);
          
+         // VIKTIGT: Vi behåller initialScale för X och Z så att marken inte krymper 
+         // och blottar sina ytterkanter mot skyboxen. Vi subtraherar endast på Y-axeln.
+         Vector3 newScale = initialScale;
+         newScale.y = initialScale.y - currentScale;
          
-         newScale.x = Mathf.Max(newScale.x, 0.01f);
+         // Säkerställer att Y-axeln aldrig inverteras eller blir 0
          newScale.y = Mathf.Max(newScale.y, 0.01f);
-         newScale.z = Mathf.Max(newScale.z, 0.01f);
 
          transform.localScale = newScale;
       }
@@ -74,5 +78,4 @@ public class GroundPlane : MonoBehaviour
          }
       }
    }
-
 }
