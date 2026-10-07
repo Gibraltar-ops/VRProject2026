@@ -4,7 +4,7 @@ using UnityEngine;
 public class AtmosphericFog : MonoBehaviour
 {
     [Header("Fog settings")]
-    public Color groundFogColor = new Color(0.8f, 0.85f, 0.9f);
+    public Color groundFogColor = new Color(0.88f, 0.85f, 0.9f);
     public Color highAltitudeColor = new Color(0.95f, 0.98f, 1.0f);
 
     public float groundFogEndDistance = 800f;
