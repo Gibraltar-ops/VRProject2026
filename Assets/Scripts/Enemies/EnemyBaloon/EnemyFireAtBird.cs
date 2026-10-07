@@ -64,6 +64,7 @@ public class EnemyFireAtBird : IState
             }
             else
             {
+                Debug.Log("Found no target");
                 enemyAircraft.ChangeTask();
             }
         }
