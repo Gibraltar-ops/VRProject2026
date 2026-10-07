@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class AtmosphericFog : MonoBehaviour
 {
+    [Header("Dependencies")] 
+    public Camera playerCamera;
+    [SerializeField] private Material skyboxMaterial;
+    
+    
     [Header("Fog settings")]
     public Color groundFogColor = new Color(0.88f, 0.85f, 0.9f);
     public Color highAltitudeColor = new Color(0.95f, 0.98f, 1.0f);
@@ -10,11 +15,16 @@ public class AtmosphericFog : MonoBehaviour
     public float groundFogEndDistance = 800f;
     public float highAltitudeEndDistance = 150f;
 
-    public Camera playerCamera;
-
+ 
     private void Start()
     {
-        playerCamera = Camera.main;
+        if (playerCamera == null)
+        {
+            playerCamera = Camera.main;
+        }
+
+        RenderSettings.fogMode = FogMode.Linear;
+        RenderSettings.fog = true;
     }
 
     void Update()
@@ -36,9 +46,11 @@ public class AtmosphericFog : MonoBehaviour
         {
             playerCamera.backgroundColor = currentFogColor;
         }
+
+        if (skyboxMaterial != null)
+        {
+            skyboxMaterial.SetColor("_Tint", currentFogColor);
+        }
     }
-
-
-
 }
 

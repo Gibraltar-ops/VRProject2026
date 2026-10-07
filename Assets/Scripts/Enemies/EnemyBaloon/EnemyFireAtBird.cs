@@ -12,13 +12,22 @@ public class EnemyFireAtBird : IState
     private EnemyAircraft enemyAircraft;
     private EnemyParentClass targetToFireAt;
     private float timer;
+    private bool hasTarget;
 
     
     public void OnEntry()
     {
         timer = 0;
         int index = Random.Range(0, enemySpawner.enemiesSpawned.Count);
-        targetToFireAt = enemySpawner.enemiesSpawned[index];
+        if(enemySpawner.enemiesSpawned.Count > 0)
+        {
+            targetToFireAt = enemySpawner.enemiesSpawned[index];
+            hasTarget = true;
+        }
+        else
+        {
+            hasTarget = false;
+        }
     }
 
     public void OnExit()
@@ -31,24 +40,32 @@ public class EnemyFireAtBird : IState
         timer += Time.deltaTime;
         if(timer >= enemyAircraft.aimTime)
         {
-            float hit = Random.Range(0f,1f);
-            if(hit <= enemyAircraft.accuracy)
+            if (hasTarget)
             {
-                //targetToFireAt.KillEnemy();
-                Health targetHealth = targetToFireAt.gameObject.GetComponent<Health>();
-                if (targetHealth != null)
+                float hit = Random.Range(0f,1f);
+                if(hit <= enemyAircraft.accuracy)
                 {
-                    targetHealth.TakeDamage(1);
+                    //targetToFireAt.KillEnemy();
+                    Health targetHealth = targetToFireAt.gameObject.GetComponent<Health>();
+                    if (targetHealth != null)
+                    {
+                        targetHealth.TakeDamage(1);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Missing target health");
+                    }
+                    enemyAircraft.ChangeTask();
                 }
                 else
                 {
-                    Debug.LogWarning("Missing target health");
+                    timer = 0;
                 }
-                enemyAircraft.ChangeTask();
             }
             else
             {
-                timer = 0;
+                Debug.Log("Found no target");
+                enemyAircraft.ChangeTask();
             }
         }
     }

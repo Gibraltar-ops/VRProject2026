@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a50d31483168e54fb3cc2e7604e3069, type: 3}
+  m_Name: shape_settings
+  m_EditorClassIdentifier: Assembly-CSharp::ShapeSettings
+  planetRadius: 2
+  noiseLayers:
+  - enabled: 1
+    useFirstLayerAsMask: 0
+    noiseSettings:
+      filterType: 0
+      simpleNoiseSettings:
+        strenght: 0.1
+        numberOfLayers: 3
+        baseRoughness: 1.2
+        roughness: 1.76
+        persistance: 0.6
+        center: {x: 2.91, y: 0, z: 0}
+        minValue: 0.98
+      rigidNoiseSettings:
+        strenght: 1
+        numberOfLayers: 1
+        baseRoughness: 1
+        roughness: 2
+        persistance: 0.5
+        center: {x: 0, y: 0, z: 0}
+        minValue: 0
+        weightMultiplier: 0.8
+  - enabled: 1
+    useFirstLayerAsMask: 1
+    noiseSettings:
+      filterType: 0
+      simpleNoiseSettings:
+        strenght: 1.1
+        numberOfLayers: 3
+        baseRoughness: 1.86
+        roughness: 3.07
+        persistance: 0.6
+        center: {x: 0, y: 0.81, z: 0}
+        minValue: 1
+      rigidNoiseSettings:
+        strenght: 1
+        numberOfLayers: 1
+        baseRoughness: 1
+        roughness: 2
+        persistance: 0.5
+        center: {x: 0, y: 0, z: 0}
+        minValue: 0
+        weightMultiplier: 0.8
+  - enabled: 1
+    useFirstLayerAsMask: 1
+    noiseSettings:
+      filterType: 1
+      simpleNoiseSettings:
+        strenght: 1
+        numberOfLayers: 1
+        baseRoughness: 1
+        roughness: 2
+        persistance: 0.5
+        center: {x: 0, y: 0, z: 0}
+        minValue: 0
+      rigidNoiseSettings:
+        strenght: 0.99
+        numberOfLayers: 3
+        baseRoughness: 1.85
+        roughness: 2.88
+        persistance: 0.65
+        center: {x: 0, y: 0, z: 0}
+        minValue: 0.61
+        weightMultiplier: 0.76
