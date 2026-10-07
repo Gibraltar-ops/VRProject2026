@@ -20,7 +20,7 @@ public class GroundPlane : MonoBehaviour
 
    private void Start()
    {
-      initialScale = this.transform.localScale;
+      initialScale = transform.localScale;
       
       // Drar in alla groundplanes (+childrens) renderers i arrayen vid start 
       allRenderers = GetComponentsInChildren<Renderer>();
@@ -54,7 +54,7 @@ public class GroundPlane : MonoBehaviour
          float currentScale = currentAltitude * scaleMultiplier;
          
          Vector3 newScale = initialScale;
-         newScale.y = initialScale.y * currentScale;
+         newScale.y = initialScale.y - currentScale;
          
          // Säkerställer att Y-axeln aldrig inverteras eller blir 0
          newScale.y = Mathf.Max(newScale.y, 0.01f);
