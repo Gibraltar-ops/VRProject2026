@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAircraft : EnemyParentClass
@@ -39,7 +40,14 @@ public class EnemyAircraft : EnemyParentClass
     [Header("Sway and rotation")]
     private float targetRotation;
     private float rotationSpeed;
-    private float rotationTimer;
+    private float swayTimer;
+
+    private List<Vector3> swayPoints = new List<Vector3>();
+    private Vector3 currentSwayPoint;
+    private float swaySpeed;
+    [SerializeField] private float swayRadius = 5;
+    private float swayChangeTime;
+    private float swayChange;
 
     private float timeSinceLastBoost;
     private float boostCooldown = 10;
@@ -58,6 +66,7 @@ public class EnemyAircraft : EnemyParentClass
     {
         _targetBalloonTree = GameManager.instance.PlayerBaloonTree;
         _statemachine.EnterState(_enemyRefillState);
+        SetSwayPoints();
 
         enemyAltitude = 0;
         enemyVelocity = 0;
@@ -66,7 +75,7 @@ public class EnemyAircraft : EnemyParentClass
         targetRotation = gameObject.transform.eulerAngles.y;
 
         timeSinceLastBoost = 0;
-        rotationTimer = 0;
+        swayTimer = 0;
 
         relativeDistance = 0;
 
@@ -81,13 +90,14 @@ public class EnemyAircraft : EnemyParentClass
         UpdateRotation();
         SetRangePhase();
         
-        aiCapDiff = Mathf.Lerp(1.15f, .85f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
+        aiCapDiff = Mathf.Lerp(1.25f, .75f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
     }
 
     private void UpdateAltitude()
     {
         enemyVelocity = GameManager.instance.CalculateVelocity(ownBalloonTree.ActiveBalloons, enemyVelocity, false, aiCapDiff);
         enemyAltitude += enemyVelocity * Time.deltaTime;
+        swayChangeTime += Time.deltaTime;
         relativeDistance = enemyAltitude - GameManager.instance.Altitude;
         
 
@@ -117,12 +127,19 @@ public class EnemyAircraft : EnemyParentClass
             relativeDistance = -GameManager.instance.Altitude;
         }
         
+        swaySpeed = Mathf.Lerp(.10f, .4f, Mathf.Sin(swayTimer) + 1f) / 2f;
+        if(swayChangeTime >= swayChange)
+        {
+            GetNewSwayPoint();
+            swayChangeTime = 0;
+            swayChange = Random.Range(10, 25);
+        }
 
         gameObject.transform.position = new Vector3
         (
-            startPos.x,
+            Mathf.Lerp(gameObject.transform.position.x, currentSwayPoint.x, swaySpeed*Time.deltaTime),
             relativeDistance,
-            startPos.z
+            Mathf.Lerp(gameObject.transform.position.z, currentSwayPoint.z, swaySpeed*Time.deltaTime)
         );
 
         if(relativeDistance >= RelativeDistanceCap && timeSinceLastBoost >= boostCooldown)
@@ -308,14 +325,28 @@ public class EnemyAircraft : EnemyParentClass
             targetRotation = Random.Range(0, 360);
         }
 
-        rotationTimer += Time.deltaTime;
-        rotationSpeed = Mathf.Lerp(2f, 8f, Mathf.Sin(rotationTimer) + 1f) / 2f;
+        swayTimer += Time.deltaTime;
+        rotationSpeed = Mathf.Lerp(2f, 8f, Mathf.Sin(swayTimer) + 1f) / 2f;
 
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation,
             Quaternion.Euler(0, targetRotation, 0),
             rotationSpeed * Time.deltaTime
         );
+    }
+
+    private void SetSwayPoints()
+    {
+        for (int i = 0; i <= 360; i += 30)
+        {
+            swayPoints.Add(gameObject.transform.position + new Vector3(Mathf.Cos(i), 0, Mathf.Sin(i))*swayRadius);
+        }
+    }
+
+    private void GetNewSwayPoint()
+    {
+        int index = Random.Range(0, swayPoints.Count);
+        currentSwayPoint = swayPoints[index];
     }
 
     public void ChangeTask()
