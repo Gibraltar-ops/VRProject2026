@@ -67,7 +67,7 @@ public class EnemyAircraft : EnemyParentClass
         timeSinceLastBoost += Time.deltaTime;
         UpdateAltitude();
         SetRangePhase();
-        aiCapDiff = Mathf.Lerp(1.5f, 5f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
+        aiCapDiff = Mathf.Lerp(1.15f, .85f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
     }
 
     private void UpdateAltitude()
@@ -86,12 +86,14 @@ public class EnemyAircraft : EnemyParentClass
         if(relativeDistance >= RelativeDistanceCap)
         {
             relativeDistance = RelativeDistanceCap;
+            enemyAltitude = GameManager.instance.Altitude + RelativeDistanceCap;
         }
 
         //Bottom cap
         if(relativeDistance <= -1 * RelativeDistanceCap)
         {
             relativeDistance = -1 * RelativeDistanceCap;
+            enemyAltitude = GameManager.instance.Altitude - RelativeDistanceCap;
         }
 
         
