@@ -45,11 +45,11 @@ public class EnemyFireAtBird : IState
                 float hit = Random.Range(0f,1f);
                 if(hit <= enemyAircraft.accuracy)
                 {
-                    //targetToFireAt.KillEnemy();
                     Health targetHealth = targetToFireAt.gameObject.GetComponent<Health>();
                     if (targetHealth != null)
                     {
                         targetHealth.TakeDamage(1);
+                        targetToFireAt.KillEnemy();
                     }
                     else
                     {
