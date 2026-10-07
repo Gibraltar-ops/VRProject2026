@@ -30,8 +30,8 @@ public class BalloonStringRenderer : MonoBehaviour
 
             closestBalloon = balloonTree.GetClosestBallon(AttachPoint[attachIndex].position, tiedBalloons);
             tiedBalloons.Add(closestBalloon);
-
-            LineRenderer newString = CreateString(closestBalloon.transform, AttachPoint[attachIndex]);
+            Transform balloonAttachPoint = closestBalloon.transform.Find("AttachPoint").transform;
+            LineRenderer newString = CreateString(balloonAttachPoint, AttachPoint[attachIndex]);
             balloonStrings.Add(newString);
 
 

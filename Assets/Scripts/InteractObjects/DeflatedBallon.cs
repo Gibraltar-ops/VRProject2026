@@ -263,9 +263,9 @@ public class DeflatedBallon : MonoBehaviour
         float t = 0f;
 
         Vector3 startPosition = transform.position;
-        Vector3 endPosition = slot.transform.position - (_inflatableTransform.position - _attachmentPoint.position);
+        Vector3 endPosition = slot.transform.position - new Vector3(0, Vector3.Magnitude((_inflatableTransform.position - _attachmentPoint.position)), 0);
         Quaternion startRotation = transform.rotation;
-        Quaternion endRotation = slot.transform.rotation;
+        Quaternion endRotation = slot.transform.GetChild(0).rotation;
 
         rb.isKinematic = true;
 
@@ -280,6 +280,7 @@ public class DeflatedBallon : MonoBehaviour
             transform.position = new Vector3(lerpedX, lerpedY, lerpedZ);
 
             Quaternion lerpedRot = Quaternion.Lerp(startRotation, endRotation, t);
+            transform.rotation = lerpedRot;
             //transform.rotation = lerpedRot;
 
             timer += Time.deltaTime;
