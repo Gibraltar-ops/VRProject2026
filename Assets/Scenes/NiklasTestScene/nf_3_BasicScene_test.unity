@@ -8683,6 +8683,8 @@ MonoBehaviour:
   sfxGroup: {fileID: 0}
   startBalloons: 9
   PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
+  NonInteractiveBalloon: {fileID: 0}
+  NonInteractiveBalloonSpawnPoint: {fileID: 0}
 --- !u!82 &661041927
 AudioSource:
   m_ObjectHideFlags: 0
@@ -11511,6 +11513,8 @@ MonoBehaviour:
   sfxGroup: {fileID: 0}
   startBalloons: 7
   PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
+  NonInteractiveBalloon: {fileID: 0}
+  NonInteractiveBalloonSpawnPoint: {fileID: 0}
 --- !u!82 &818517201
 AudioSource:
   m_ObjectHideFlags: 0
@@ -15159,6 +15163,8 @@ MonoBehaviour:
   sfxGroup: {fileID: 0}
   startBalloons: 7
   PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
+  NonInteractiveBalloon: {fileID: 0}
+  NonInteractiveBalloonSpawnPoint: {fileID: 0}
 --- !u!4 &1094892240
 Transform:
   m_ObjectHideFlags: 0
@@ -23893,6 +23899,8 @@ MonoBehaviour:
   sfxGroup: {fileID: 0}
   startBalloons: 9
   PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
+  NonInteractiveBalloon: {fileID: 0}
+  NonInteractiveBalloonSpawnPoint: {fileID: 0}
 --- !u!82 &1676828861
 AudioSource:
   m_ObjectHideFlags: 0
@@ -25592,7 +25600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1821025784}
   m_Layer: 0
-  m_Name: GAME SYSTEMS
+  m_Name: --- GAME SYSTEMS ---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
