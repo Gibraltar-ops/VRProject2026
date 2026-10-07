@@ -48,8 +48,8 @@ public class EnemyFireAtBird : IState
                     Health targetHealth = targetToFireAt.gameObject.GetComponent<Health>();
                     if (targetHealth != null)
                     {
-                        targetToFireAt.KillEnemy();
                         targetHealth.TakeDamage(1);
+                        targetToFireAt.KillEnemy();
                     }
                     else
                     {

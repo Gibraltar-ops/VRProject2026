@@ -122,9 +122,9 @@ public class EnemyAircraft : EnemyParentClass
 
         
         //Dont fall trough ground check
-        if(relativeDistance <= GameManager.instance.GroundAltitude)
+        if(relativeDistance <= -1 * GameManager.instance.Altitude)
         {
-            relativeDistance = GameManager.instance.GroundAltitude;
+            relativeDistance = -GameManager.instance.Altitude;
         }
         
         swaySpeed = Mathf.Lerp(.10f, .4f, Mathf.Sin(swayTimer) + 1f) / 2f;

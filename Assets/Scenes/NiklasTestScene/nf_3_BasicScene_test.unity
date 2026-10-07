@@ -6471,7 +6471,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &400508485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6510,7 +6510,6 @@ MonoBehaviour:
   RelativeDistanceCap: 50
   rangePhase: 0
   relativeDistance: 0
-  swayRadius: 5
   aiCapDiff: 0
 --- !u!4 &400508487
 Transform:
@@ -14956,7 +14955,6 @@ MonoBehaviour:
   RelativeDistanceCap: 50
   rangePhase: 0
   relativeDistance: 0
-  swayRadius: 5
   aiCapDiff: 0
 --- !u!1 &934659305
 GameObject:
