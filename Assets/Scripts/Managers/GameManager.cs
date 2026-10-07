@@ -72,7 +72,14 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                targetVelocity = Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap * aiDiff; 
+                if(aiDiff == 0)
+                {
+                    targetVelocity = Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap;
+                }
+                else
+                {
+                    targetVelocity = (Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap) * aiDiff; 
+                }
             }
         }
         
