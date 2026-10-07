@@ -38,28 +38,32 @@ public class EnemyFireAtBird : IState
     public void StateUpdate()
     {
         timer += Time.deltaTime;
+
         if(timer >= enemyAircraft.aimTime)
         {
+        /*'
             if (hasTarget)
             {
                 float hit = Random.Range(0f,1f);
                 if(hit <= enemyAircraft.accuracy)
                 {
                     Health targetHealth = targetToFireAt.gameObject.GetComponent<Health>();
+                    Debug.Log(targetHealth);
                     if (targetHealth != null)
                     {
-                        targetToFireAt.KillEnemy();
+                        Debug.LogWarning("Hit a bird");
                         targetHealth.TakeDamage(1);
+                        enemyAircraft.ChangeTask();
                     }
                     else
                     {
                         Debug.LogWarning("Missing target health");
                     }
-                    enemyAircraft.ChangeTask();
                 }
                 else
                 {
                     timer = 0;
+                    Debug.LogWarning("Missed bird");
                 }
             }
             else
@@ -67,6 +71,8 @@ public class EnemyFireAtBird : IState
                 Debug.Log("Found no target");
                 enemyAircraft.ChangeTask();
             }
+        */
+            enemyAircraft.testDeath();
         }
     }
 }

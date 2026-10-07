@@ -359,4 +359,15 @@ public class EnemyAircraft : EnemyParentClass
         }
     }
 
+    public void testDeath(){     
+        EnemyParentClass targetToFireAt = _enemySpawner.enemiesSpawned[0];            
+        Health targetHealth = targetToFireAt.gameObject.GetComponent<Health>();
+        Debug.Log(targetHealth);
+        if (targetHealth != null)
+        {
+            Debug.LogWarning("Hit a bird");
+            targetHealth.TakeDamage(1);
+            ChangeTask();
+        }
+    }
 }
