@@ -17,8 +17,8 @@ public class GameManager : MonoBehaviour
     public float Altitude{get; private set;}
     public float VerticalVelocity { get; private set; }
     
-    public float CloudBaseAltitude{get;} = 1200f;
-    public float WinAltitude {get; private set; } = 15000f;
+    public float CloudBaseAltitude{get;} = 900f;
+    public float WinAltitude {get; private set; } = 3000f;
     
     [Header("Balans/Thresholds")]
     [SerializeField] private float liftMultiplier = 1.5f;
