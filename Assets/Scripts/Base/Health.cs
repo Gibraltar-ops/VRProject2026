@@ -9,6 +9,11 @@ public class Health : MonoBehaviour
     public event Action Die; // event for nar vi dor, animation, particlar och statemachines kan lyssna pa
     public Vector3 Impulse;
 
+    private void OnEnable()
+    {
+        currentHealth = maxHealth;
+    }
+
     public int GetHealth()
     {
         return currentHealth;
