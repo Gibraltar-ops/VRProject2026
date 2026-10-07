@@ -56,10 +56,10 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true));
+        HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));
     }
 
-    public float CalculateVelocity(int personalBalloons, float currentVel, bool player)
+    public float CalculateVelocity(int personalBalloons, float currentVel, bool player, float aiDiff)
     {
         float targetVelocity = 0f;
 
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                targetVelocity = Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap; 
+                targetVelocity = Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap * aiDiff; 
             }
         }
         
