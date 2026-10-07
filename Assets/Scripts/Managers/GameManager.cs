@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     [Tooltip("Accelerering för fritt fall - 9.8 = jordens tyngdkraft")]
     [SerializeField] private float freefallAcceleration = 9.8f;
 
-    [SerializeField] private float VelocityCap = 15;
+    private float VelocityCap = 5;
 
 
 
@@ -54,19 +54,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity));
+        HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true));
     }
 
-    public float CalculateVelocity(int personalBalloons, float currentVel)
+    public float CalculateVelocity(int personalBalloons, float currentVel, bool player)
     {
         float targetVelocity = 0f;
 
-        if (personalBalloons > hoverThreshold)
+        if (personalBalloons >= hoverThreshold)
         {
             int extraBalloons = personalBalloons - hoverThreshold;
-            targetVelocity = extraBalloons * liftMultiplier;
+            if (player)
+            {
+                targetVelocity = Mathf.InverseLerp(0, 10, extraBalloons) * VelocityCap;
+            }
+            else
+            {
+                targetVelocity = Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap; 
+            }
         }
         
         else if (personalBalloons <= freefallThreshold)
@@ -79,11 +86,6 @@ public class GameManager : MonoBehaviour
             targetVelocity = -(missingBalloons * (gravityMultiplier / (hoverThreshold - freefallThreshold))); 
         }
 
-        if(targetVelocity > VelocityCap)
-        {
-            targetVelocity = VelocityCap;
-        }
-
         float currentAcceleration = (personalBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
         
         return Mathf.MoveTowards(currentVel, targetVelocity, currentAcceleration * Time.deltaTime);
@@ -93,7 +95,7 @@ public class GameManager : MonoBehaviour
     private void HandlePlayerAltitude(float velocity)
     {
         VerticalVelocity = velocity; 
-        Altitude += velocity * Time.fixedDeltaTime;
+        Altitude += velocity * Time.deltaTime;
         
         if (Altitude < 0f)
         {
