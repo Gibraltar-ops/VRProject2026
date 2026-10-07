@@ -16,6 +16,9 @@ public class EnemySpawner : MonoBehaviour
 
     private float timer;
 
+    public bool _useDebugProgress = false;
+    public float _debugProgress = 0.5f;
+
     void Awake()
     {
     }
@@ -40,7 +43,9 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
         float progress = _altitude / WinAltitude;
-        
+
+        if (_useDebugProgress) { progress = _debugProgress; }
+
         switch (progress)
         {
             case > .667f:

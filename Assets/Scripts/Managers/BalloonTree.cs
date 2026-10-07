@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
@@ -43,6 +44,10 @@ public class BalloonTree : MonoBehaviour
     private float _timer = 0;
     //public Transform TargetOrigin;
     public GameObject PopParticles;
+    public GameObject NonInteractiveBalloon;
+    public Transform NonInteractiveBalloonSpawnPoint;
+
+    public bool HasFreeSlot { get { return ActiveBalloons < _balloons.Count; } }
 
     public static event Action<BalloonInfo> OnBalloonPopped;
     public event Action OnInitialized;
@@ -284,6 +289,52 @@ public class BalloonTree : MonoBehaviour
         AudioClip selectedClip = audioArray[randomIndex];
 
         source.PlayOneShot(selectedClip);
+    }
+
+    public void InflateAndAddBalloon(float spawnTime)
+    {
+        BalloonInfo slot = GetFreeBalloonSlot();
+        if (slot == null) return;
+        GameObject balloonInstance = Instantiate(NonInteractiveBalloon, CenterPoint.position + (Vector3.down * 3f), Quaternion.identity);
+        StartCoroutine(InflateAndAdd(balloonInstance, slot, spawnTime));
+
+    }
+
+    IEnumerator InflateAndAdd(GameObject balloonToAdd, BalloonInfo slot, float spawnTime)
+    {
+        float timer = 0f;
+        float inflateTime = spawnTime / 2f;
+        float addToCanopyTime = spawnTime - inflateTime;
+        Vector3 finalScale = slot.transform.localScale;
+        Vector3 startScale = Vector3.zero;
+        Vector3 startPosition = balloonToAdd.transform.position;
+
+        balloonToAdd.transform.localScale = startScale;
+        while (timer < inflateTime)
+        {
+            timer += Time.deltaTime;
+            float t = timer / inflateTime;
+
+            balloonToAdd.transform.localScale = Vector3.Lerp(startScale, finalScale, t);
+            yield return null;
+
+        }
+
+        balloonToAdd.transform.localScale = finalScale;
+        timer = 0f;
+
+        while (timer < addToCanopyTime)
+        {
+            timer += Time.deltaTime;
+            float t = timer / addToCanopyTime;
+
+            balloonToAdd.transform.position = Vector3.Lerp(startPosition, slot.transform.position, t);
+            yield return null;
+        }
+
+        balloonToAdd.transform.position = finalScale;
+        AddBalloon(slot);
+        Destroy(balloonToAdd);
     }
 
 }

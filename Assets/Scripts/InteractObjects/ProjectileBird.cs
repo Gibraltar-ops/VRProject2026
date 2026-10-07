@@ -40,6 +40,7 @@ public class ProjectileBird : MonoBehaviour
         Health health = collision.gameObject.GetComponent<Health>();
         if(health != null )
         {
+            health.AddImpulse(collision.impulse);
             health.TakeDamage(1);
         }
 

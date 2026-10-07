@@ -24,6 +24,8 @@ public class DeflatedBallon : MonoBehaviour
     public float _firstPhaseTime = 2f;
     public float _secondPhaseTime = 8f;
     public float destoryAfterTime = 4f;
+    public float AddToCanopyTime = 2f;
+
     Rigidbody rb;
     Vector3 _startScale;
     State state;
@@ -112,6 +114,17 @@ public class DeflatedBallon : MonoBehaviour
             // translate in world space?
             _inflatableTransform.localPosition = _attachmentPoint.localPosition + new Vector3(_inflatableTransform.localScale.x / 2f, 0f, 0f);
         }
+    }
+
+    public void SetNormalizedTimers(float totalSequenceLength)
+    {
+        float unNormalizedTime = _firstPhaseTime + _secondPhaseTime + AddToCanopyTime;
+
+        float ratio = totalSequenceLength / unNormalizedTime;
+        _firstPhaseTime *= ratio;
+        _secondPhaseTime *= ratio;
+        AddToCanopyTime *= ratio;
+
     }
 
     public void AttachToHelium()

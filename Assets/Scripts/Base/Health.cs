@@ -6,7 +6,13 @@ public class Health : MonoBehaviour
     [SerializeField] private int maxHealth;
     [SerializeField] private int currentHealth;
 
-    public event Action Die; // event f�r n�r vi d�r, animation, particlar och statemachines kan lyssna p�
+    public event Action Die; // event for nar vi dor, animation, particlar och statemachines kan lyssna pa
+    public Vector3 Impulse;
+
+    public int GetHealth()
+    {
+        return currentHealth;
+    }
 
     public void TakeDamage(int damageAmount)
     {
@@ -21,5 +27,10 @@ public class Health : MonoBehaviour
         {
             Die?.Invoke();
         }
+    }
+
+    public void AddImpulse(Vector3 incomingImpulse)
+    {
+        Impulse = incomingImpulse;
     }
 }
