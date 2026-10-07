@@ -2,6 +2,9 @@ using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.XR.Haptics;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +18,11 @@ public class GameManager : MonoBehaviour
     {
         get{return PlayerBaloonTree.ActiveBalloons;}
     }
+
+    [Header("Haptics")] 
+    [SerializeField]public HapticImpulsePlayer leftHandHaptics;
+    [SerializeField]public HapticImpulsePlayer rightHandHaptics;
+    [SerializeField] private float maxHapticVelocity = -30f;
 
     [Header("Altitude")]
     public float Altitude{get; private set;}
@@ -73,6 +81,7 @@ public class GameManager : MonoBehaviour
         if (IsGameOver) return;
         
         HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));
+        HandleFallHaptics();
     }
 
     public float CalculateVelocity(int personalBalloons, float currentVel, bool player, float aiDiff)
@@ -133,6 +142,25 @@ public class GameManager : MonoBehaviour
             {
                 // under fatal threshold - mjuk landning 
                 VerticalVelocity = 0f;
+            }
+        }
+    }
+
+    private void HandleFallHaptics()
+    {
+        if (VerticalVelocity <= 0f)
+        {
+            float hapticIntensity = Mathf.InverseLerp(0f, maxHapticVelocity, VerticalVelocity);
+
+
+            if (leftHandHaptics != null)
+            {
+                leftHandHaptics.SendHapticImpulse(hapticIntensity, Time.deltaTime);
+            }
+
+            if (rightHandHaptics != null)
+            {
+                rightHandHaptics.SendHapticImpulse(hapticIntensity, Time.deltaTime);
             }
         }
     }
