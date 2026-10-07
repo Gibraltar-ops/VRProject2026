@@ -1,4 +1,3 @@
-using System.Data.Common;
 using UnityEngine;
 
 public class EnemyAircraft : EnemyParentClass
@@ -39,6 +38,7 @@ public class EnemyAircraft : EnemyParentClass
 
     private float timeSinceLastBoost;
     private float boostCooldown = 10;
+    [SerializeField]private float aiCapDiff;
 
 
     public override void Awake()
@@ -58,6 +58,7 @@ public class EnemyAircraft : EnemyParentClass
         startPos = gameObject.transform.position;
         timeSinceLastBoost = 0;
         relativeDistance = 0;
+        aiCapDiff = 0;
     }
 
     public override void Update()
@@ -66,14 +67,15 @@ public class EnemyAircraft : EnemyParentClass
         timeSinceLastBoost += Time.deltaTime;
         UpdateAltitude();
         SetRangePhase();
-
+        aiCapDiff = Mathf.Lerp(.5f, 1.5f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
     }
 
     private void UpdateAltitude()
     {
-        enemyVelocity = GameManager.instance.CalculateVelocity(ownBalloonTree.ActiveBalloons, enemyVelocity, false);
+        enemyVelocity = GameManager.instance.CalculateVelocity(ownBalloonTree.ActiveBalloons, enemyVelocity, false, aiCapDiff);
         enemyAltitude += enemyVelocity * Time.deltaTime;
         relativeDistance = enemyAltitude - GameManager.instance.Altitude;
+        
 
         if(enemyAltitude <= 0)
         {
@@ -200,6 +202,8 @@ public class EnemyAircraft : EnemyParentClass
 
     private IState BelowDec()
     {
+        accuracy = .6f;
+        aimTime = 3f;
         if(_enemySpawner.enemiesSpawned.Count <= 0)
         {
             return _enemyRefillState;
@@ -222,7 +226,7 @@ public class EnemyAircraft : EnemyParentClass
         if(_enemySpawner.enemiesSpawned.Count > 0)
         {
             accuracy = 1;
-            aimTime = 2;
+            aimTime = .5f;
             return _enemyFireAtBird;
         }
         else
