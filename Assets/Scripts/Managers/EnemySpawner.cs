@@ -8,6 +8,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int birdCap = 10;
     private float _altitude;
     private float WinAltitude;
+    private bool boostActive;
 
     public List<EnemyParentClass> enemiesSpawned = new List<EnemyParentClass>();
 
@@ -27,6 +28,7 @@ public class EnemySpawner : MonoBehaviour
     {
         WinAltitude = GameManager.instance.WinAltitude;
         timer = 0;
+        boostActive = false;
     }
 
     void Update()
@@ -39,6 +41,10 @@ public class EnemySpawner : MonoBehaviour
     private void HandleEnemySpawn()
     {
         if(enemiesSpawned.Count >= birdCap)
+        {
+            return;
+        }
+        if (boostActive)
         {
             return;
         }
@@ -74,7 +80,6 @@ public class EnemySpawner : MonoBehaviour
     {
         if(timer >= frequency)
         {
-            Debug.Log("Ran Spawned enemy function");
             prefab.SpawnBird(prefab, this, treeToTarget);
             timer = 0;
         }
@@ -90,5 +95,10 @@ public class EnemySpawner : MonoBehaviour
             }
             bird.SpawnBird(bird, this, treeToTarget);
         }
+    }
+
+    public void SetBoostValue(bool value)
+    {
+        boostActive = value;
     }
 }

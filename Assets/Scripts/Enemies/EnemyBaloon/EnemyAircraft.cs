@@ -37,8 +37,6 @@ public class EnemyAircraft : EnemyParentClass
     private Vector3 startPos;
     [SerializeField] private float relativeDistance;
 
-
-
     private float timeSinceLastBoost;
     private float boostCooldown = 10;
 
@@ -59,6 +57,7 @@ public class EnemyAircraft : EnemyParentClass
         enemyVelocity = 0;
         startPos = gameObject.transform.position;
         timeSinceLastBoost = 0;
+        relativeDistance = 0;
     }
 
     public override void Update()
@@ -72,25 +71,34 @@ public class EnemyAircraft : EnemyParentClass
 
     private void UpdateAltitude()
     {
-        enemyVelocity = GameManager.instance.CalculateVelocity(ownBalloonTree.ActiveBalloons, enemyVelocity);
+        enemyVelocity = GameManager.instance.CalculateVelocity(ownBalloonTree.ActiveBalloons, enemyVelocity, false);
         enemyAltitude += enemyVelocity * Time.deltaTime;
         relativeDistance = enemyAltitude - GameManager.instance.Altitude;
 
         if(enemyAltitude <= 0)
         {
             enemyAltitude = 0;
-            return;
         }
 
+        //Top cap
         if(relativeDistance >= RelativeDistanceCap)
         {
             relativeDistance = RelativeDistanceCap;
         }
+
+        //Bottom cap
         if(relativeDistance <= -1 * RelativeDistanceCap)
         {
             relativeDistance = -1 * RelativeDistanceCap;
         }
 
+        
+        //Dont fall trough ground check
+        if(relativeDistance <= -1 * GameManager.instance.Altitude)
+        {
+            relativeDistance = -GameManager.instance.Altitude;
+        }
+        
 
         gameObject.transform.position = new Vector3
         (
@@ -99,15 +107,26 @@ public class EnemyAircraft : EnemyParentClass
             startPos.z
         );
 
-        if(relativeDistance > 50 || timeSinceLastBoost >= boostCooldown)
+        if(relativeDistance >= RelativeDistanceCap && timeSinceLastBoost >= boostCooldown)
         {
+            if (debug)
+            {
+                Debug.Log("Activated penalty for AI");
+            }
            _enemySpawner.SpawnDisaster(Mathf.RoundToInt(relativeDistance/10));
+           timeSinceLastBoost = 0;
         }
-        if(relativeDistance < -50 || timeSinceLastBoost >= boostCooldown)
+        if(relativeDistance <= -RelativeDistanceCap && timeSinceLastBoost >= boostCooldown)
         {
+            if (debug)
+            {
+                Debug.Log("Activated boost for AI");
+            }
             ownBalloonTree.AddBalloon();
             ownBalloonTree.AddBalloon();
             ownBalloonTree.AddBalloon();
+            timeSinceLastBoost = 0;
+            
         }
     }
     private IState MakeDecition()
@@ -124,9 +143,11 @@ public class EnemyAircraft : EnemyParentClass
                 return SweetSpotDec();
 
             case RangePhase.Below:
+                _enemySpawner.SetBoostValue(false);
                 return BelowDec();
             
             case RangePhase.FarBelow:
+                _enemySpawner.SetBoostValue(true);
                 return FarBelowDec();
 
             default:
@@ -251,8 +272,6 @@ public class EnemyAircraft : EnemyParentClass
         }
         
     }
-
-
 
     public void ChangeTask()
     {
