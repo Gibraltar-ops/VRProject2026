@@ -36,6 +36,11 @@ public class EnemyAircraft : EnemyParentClass
     private Vector3 startPos;
     [SerializeField] private float relativeDistance;
 
+    [Header("Sway and rotation")]
+    private float targetRotation;
+    private float rotationSpeed;
+    private float rotationTimer;
+
     private float timeSinceLastBoost;
     private float boostCooldown = 10;
     [SerializeField]private float aiCapDiff;
@@ -53,11 +58,18 @@ public class EnemyAircraft : EnemyParentClass
     {
         _targetBalloonTree = GameManager.instance.PlayerBaloonTree;
         _statemachine.EnterState(_enemyRefillState);
+
         enemyAltitude = 0;
         enemyVelocity = 0;
+
         startPos = gameObject.transform.position;
+        targetRotation = gameObject.transform.eulerAngles.y;
+
         timeSinceLastBoost = 0;
+        rotationTimer = 0;
+
         relativeDistance = 0;
+
         aiCapDiff = 0;
     }
 
@@ -66,7 +78,9 @@ public class EnemyAircraft : EnemyParentClass
         _statemachine._currentState.StateUpdate();
         timeSinceLastBoost += Time.deltaTime;
         UpdateAltitude();
+        UpdateRotation();
         SetRangePhase();
+        
         aiCapDiff = Mathf.Lerp(1.15f, .85f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
     }
 
@@ -133,6 +147,9 @@ public class EnemyAircraft : EnemyParentClass
             
         }
     }
+
+    #region Decitions
+
     private IState MakeDecition()
     {
         switch (rangePhase)
@@ -277,6 +294,28 @@ public class EnemyAircraft : EnemyParentClass
                 break;
         }
         
+    }
+    #endregion
+
+    private void UpdateRotation()
+    {
+        if(enemyAltitude < 5)
+        {
+            return;
+        }
+        if(Quaternion.Angle(transform.rotation, Quaternion.Euler(0, targetRotation, 0)) < 1f)
+        {
+            targetRotation = Random.Range(0, 360);
+        }
+
+        rotationTimer += Time.deltaTime;
+        rotationSpeed = Mathf.Lerp(2f, 8f, Mathf.Sin(rotationTimer) + 1f) / 2f;
+
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            Quaternion.Euler(0, targetRotation, 0),
+            rotationSpeed * Time.deltaTime
+        );
     }
 
     public void ChangeTask()
