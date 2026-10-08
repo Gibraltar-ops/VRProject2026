@@ -39,29 +39,25 @@ public class SpeedGauge : MonoBehaviour
         float t;
         switch (playerBalloons)
         {
-            case < 3:
+            case <= 3:
                 targetRotation = freefallRotation;
                 break;
 
-            case < 10:
+            case <= 10:
                 t = Mathf.InverseLerp(freefallBalloons, hoverThreshHold, playerBalloons);
                 targetRotation = Quaternion.Lerp(freefallRotation, neutralSpeed, t);
-            break;
-
-            case 10:
-                targetRotation = neutralSpeed;
-            break;
+                break;
 
             case < 20:
                 t = Mathf.InverseLerp(hoverThreshHold, maxSpeedBalloons, playerBalloons);
-                targetRotation = Quaternion.Lerp(freefallRotation, neutralSpeed, t);
-            break;
+                targetRotation = Quaternion.Lerp(neutralSpeed, maxSpeedRotation, t);
+                break;
 
             case >= 20:
                 targetRotation = maxSpeedRotation;
                 break;
         }
 
-        needle.localRotation = Quaternion.Slerp(needle.rotation, targetRotation, needleSpeed);
+        needle.localRotation = Quaternion.Slerp(needle.localRotation, targetRotation, needleSpeed);
     }
 }

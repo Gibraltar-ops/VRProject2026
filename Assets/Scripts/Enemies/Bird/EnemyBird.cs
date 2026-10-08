@@ -102,7 +102,10 @@ public class EnemyBird : EnemyParentClass
 
     private void HandleTargetChange(BalloonInfo balloon)
     {
-        ChangeBirdState(_birdCircleState);
+        if(target == balloon)
+        {
+            ChangeBirdState(_birdCircleState);
+        }
     }
 
     private void EnterDeadState()
@@ -111,30 +114,6 @@ public class EnemyBird : EnemyParentClass
         ChangeBirdState(_birdDeadState);
         isAlive = false;
     }
-
-    /*
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!hasAttacked)
-        {
-            if (other.gameObject.CompareTag("Balloon"))
-            {
-                _targetBalloonTree.PopBalloon(target);
-                hasAttacked = true;
-            }
-            
-        }
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("Balloon"))
-        {
-            _targetBalloonTree.PopBalloon(target);
-            hasAttacked = true;
-        }
-    }
-    */
 
     public void ChangeBirdState(IState newState)
     {
