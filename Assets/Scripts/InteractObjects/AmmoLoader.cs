@@ -37,7 +37,7 @@ public class AmmoLoader : MonoBehaviour
         }
 
         ammo.AddToGun(attachPoint);
-
+        this.ammo = ammo; // assign to local ammo
     }
 
 }
