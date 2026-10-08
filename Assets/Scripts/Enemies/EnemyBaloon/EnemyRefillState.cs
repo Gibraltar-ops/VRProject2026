@@ -30,7 +30,7 @@ public class EnemyRefillState : IState
         timer += Time.deltaTime;
         if(timer >= enemyAircraft.timeToFillBalloon)
         {
-            enemyAircraft.ownBalloonTree.AddBalloon();
+            enemyAircraft.ownBalloonTree.InflateAndAddBalloon(enemyAircraft.timeToFillBalloon);
             enemyAircraft.ChangeTask();
         }
     }
