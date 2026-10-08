@@ -2,6 +2,7 @@ using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.XR.Haptics;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,18 +14,18 @@ public class GameManager : MonoBehaviour
 
     public int ActivePlayerBalloons
     {
-        get{return PlayerBaloonTree.ActiveBalloons;}
+        get { return PlayerBaloonTree.ActiveBalloons; }
     }
 
     [Header("Altitude")]
-    public float Altitude{get; private set;}
+    public float Altitude { get; private set; }
     public float VerticalVelocity { get; private set; }
-    
-    public float GroundAltitude { get; private set; }   
-    
-    public float CloudBaseAltitude{get;} = 700f;
-    public float WinAltitude {get; private set; } = 2000f;
-    
+
+    public float GroundAltitude { get; private set; }
+
+    public float CloudBaseAltitude { get; } = 700f;
+    public float WinAltitude { get; private set; } = 2000f;
+
     [Header("Balans/Thresholds")]
     [SerializeField] private float liftMultiplier = 1.5f;
     [SerializeField] private float gravityMultiplier = 5.0f;
@@ -34,23 +35,23 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Hur få ballonger som behövs för att hamna i fritt fall")]
     [SerializeField] private int freefallThreshold = 3;
-    
+
 
     [Tooltip("Hur mycket acceleration/lift multiplier påverkas per uppblåst ballong")]
     [SerializeField] private float acceleration = 1.25f;
-    
+
     [Header("Fritt fall - justeringar")]
     [SerializeField] private float maxFreeFallSpeed = 40.0f;
     [Tooltip("Accelerering för fritt fall - 9.8 = jordens tyngdkraft")]
     [SerializeField] private float freefallAcceleration = 9.8f;
-    
+
     [Header("Impact ")]
     [SerializeField] private float fatalImpactVelocity = -20f;
     [SerializeField] private AudioClip crashSound;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private ParticleSystem crashParticlePrefab;
     public bool isRunning;
-    
+
     public bool IsGameOver { get; private set; }
 
     private float VelocityCap = 5;
@@ -59,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (IsGameOver) return;
-        
+
         HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));
     }
 
@@ -89,17 +90,17 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                if(aiDiff == 0)
+                if (aiDiff == 0)
                 {
                     targetVelocity = Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap;
                 }
                 else
                 {
-                    targetVelocity = (Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap) * aiDiff; 
+                    targetVelocity = (Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap) * aiDiff;
                 }
             }
         }
-        
+
         else if (personalBalloons <= freefallThreshold)
         {
             targetVelocity = -maxFreeFallSpeed;
@@ -107,24 +108,24 @@ public class GameManager : MonoBehaviour
         else if (personalBalloons < hoverThreshold)
         {
             int missingBalloons = hoverThreshold - personalBalloons;
-            targetVelocity = -(missingBalloons * (gravityMultiplier / (hoverThreshold - freefallThreshold))); 
+            targetVelocity = -(missingBalloons * (gravityMultiplier / (hoverThreshold - freefallThreshold)));
         }
 
         float currentAcceleration = (personalBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
-        
+
         return Mathf.MoveTowards(currentVel, targetVelocity, currentAcceleration * Time.deltaTime);
 
     }
 
     private void HandlePlayerAltitude(float velocity)
     {
-        VerticalVelocity = velocity; 
+        VerticalVelocity = velocity;
         Altitude += velocity * Time.deltaTime;
-        
+
         if (Altitude <= 0f)
         {
             Altitude = 0f;
-            
+
             // Hastighet över fatal threshold - vi dör 
             if (velocity <= fatalImpactVelocity)
             {
@@ -144,10 +145,10 @@ public class GameManager : MonoBehaviour
         VerticalVelocity = 0f;
 
         PlayImpactEffects();
-        
+
         // Här kan vi sätta in fadeout och haptiskt feedback 
-        
-     
+
+
     }
 
     private void PlayImpactEffects()
@@ -156,7 +157,7 @@ public class GameManager : MonoBehaviour
         {
             audioSource.PlayOneShot(crashSound);
         }
-        
+
         // Instansiera partiklar om prefab finns
         if (crashParticlePrefab != null)
         {
@@ -164,7 +165,7 @@ public class GameManager : MonoBehaviour
             Instantiate(crashParticlePrefab, Vector3.zero, Quaternion.identity);
         }
     }
-    
+
     public void UpdateGroundAltitude(float yPosition)
     {
         GroundAltitude = yPosition;
@@ -173,5 +174,11 @@ public class GameManager : MonoBehaviour
     public void SetRunning(bool value)
     {
         isRunning = value;
+    }
+
+    public void ReloadScene()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
     }
 }
