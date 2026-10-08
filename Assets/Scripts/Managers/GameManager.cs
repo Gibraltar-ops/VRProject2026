@@ -1,12 +1,12 @@
-using NUnit.Framework;
-using TMPro;
+using System;
 using UnityEngine;
-using UnityEngine.InputSystem.XR.Haptics;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
+
+    public event Action GameComplete;
 
     [Header("Systems")]
 
@@ -72,6 +72,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if(Altitude >= WinAltitude)
+        {
+           IsGameOver = true;
+           GameComplete?.Invoke(); 
+           isRunning = false;
+        }
         if (IsGameOver) return;
 
         HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));

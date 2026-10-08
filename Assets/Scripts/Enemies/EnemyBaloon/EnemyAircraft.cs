@@ -82,6 +82,10 @@ public class EnemyAircraft : EnemyParentClass
 
     public override void Update()
     {
+        if (!GameManager.instance.isRunning)
+        {
+            return;
+        }
         _statemachine._currentState.StateUpdate();
         timeSinceLastBoost += Time.deltaTime;
         UpdateAltitude();
