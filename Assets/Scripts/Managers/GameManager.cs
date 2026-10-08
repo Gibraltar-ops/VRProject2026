@@ -27,7 +27,6 @@ public class GameManager : MonoBehaviour
     public float WinAltitude { get; private set; } = 2000f;
 
     [Header("Balans/Thresholds")]
-    [SerializeField] private float liftMultiplier = 1.5f;
     [SerializeField] private float gravityMultiplier = 5.0f;
 
     [Tooltip("Hur många ballonger som behövs för att hovra")]

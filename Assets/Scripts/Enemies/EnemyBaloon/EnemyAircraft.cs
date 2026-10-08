@@ -125,7 +125,14 @@ public class EnemyAircraft : EnemyParentClass
             relativeDistance = GameManager.instance.GroundAltitude;
         }
         
+        if(enemyAltitude < 5)
+        {
+            swaySpeed = 0;
+        }
+        else
+        {
         swaySpeed = Mathf.Lerp(.10f, .4f, Mathf.Sin(swayTimer) + 1f) / 2f;
+        }
         if(swayChangeTime >= swayChange)
         {
             GetNewSwayPoint();
