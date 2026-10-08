@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 
 
@@ -15,7 +16,7 @@ public class Cannon : MonoBehaviour
 
     public TMPro.TextMeshPro _debugText;
     public int ammo = 0;
-
+    public XRSocketInteractor socketInteractor;
 
     void Start()
     {
