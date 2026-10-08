@@ -23,6 +23,7 @@ public class EnemyParentClass : MonoBehaviour
     public void KillEnemy()
     {
         spawnerForThis.enemiesSpawned.Remove(this);
+        Destroy(this.gameObject);
     }
 
 
