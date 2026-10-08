@@ -38,7 +38,6 @@ public class BirdAttackState : IState{
         Vector3 fromTarget = (bird.transform.position - target.transform.position).normalized;
 
         hoverPos = target.transform.position + fromTarget * (bird._circleRadius * 0.5f); 
-        attackDir = (target.transform.position - hoverPos).normalized;
 
         Vector3 tangent = Vector3.Cross( Vector3.up, fromTarget ) * bird.circleDirection;
         attackVelocity = tangent.normalized; 
@@ -110,10 +109,16 @@ public class BirdAttackState : IState{
         
     private void Dive()
     {
+        attackDir = (target.transform.position - hoverPos).normalized;
         bird.transform.position += attackDir * bird._attackingSpeed * Time.deltaTime;
         Quaternion targetRotation = Quaternion.LookRotation(attackDir);
         bird.transform.rotation = Quaternion.Slerp( bird.transform.rotation, targetRotation, 10f * Time.deltaTime ); 
         float distancePastTarget = Vector3.Dot( bird.transform.position - target.transform.position, attackDir );
+
+        if(Vector3.Distance(bird.transform.position, target.transform.position) < 1)
+        {
+            bird._targetBalloonTree.PopBalloon(target);
+        }
         
         if (distancePastTarget >= bird._circleRadius * 0.5f)
         {

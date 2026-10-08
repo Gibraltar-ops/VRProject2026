@@ -30,10 +30,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float gravityMultiplier = 5.0f;
 
     [Tooltip("Hur många ballonger som behövs för att hovra")]
-    [SerializeField] private int hoverThreshold = 10;
+    public int hoverThreshold {get; private set;} = 10;
 
     [Tooltip("Hur få ballonger som behövs för att hamna i fritt fall")]
-    [SerializeField] private int freefallThreshold = 3;
+    public int freefallThreshold {get; private set;} = 3;
+    public int balloonsForVelocityCap {get; private set;} = 20;
     
 
     [Tooltip("Hur mycket acceleration/lift multiplier påverkas per uppblåst ballong")]

@@ -112,6 +112,7 @@ public class EnemyBird : EnemyParentClass
         isAlive = false;
     }
 
+    /*
     private void OnTriggerEnter(Collider other)
     {
         if (!hasAttacked)
@@ -127,12 +128,13 @@ public class EnemyBird : EnemyParentClass
 
     private void OnCollisionEnter(Collision other)
     {
-            if (other.gameObject.CompareTag("Balloon"))
-            {
-                _targetBalloonTree.PopBalloon(target);
-                hasAttacked = true;
-            }
+        if (other.gameObject.CompareTag("Balloon"))
+        {
+            _targetBalloonTree.PopBalloon(target);
+            hasAttacked = true;
+        }
     }
+    */
 
     public void ChangeBirdState(IState newState)
     {
