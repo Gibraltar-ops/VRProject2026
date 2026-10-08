@@ -15,18 +15,17 @@ public class Cannon : MonoBehaviour
     [SerializeField] private float _pitchVariation = 0.1f;
 
     public TMPro.TextMeshPro _debugText;
-    public int ammo = 0;
-    public XRSocketInteractor socketInteractor;
+
+    public AmmoLoader ammoLoader;
 
     void Start()
     {
-
 
     }
 
     public bool CheckAmmo()
     {
-        if(ammo > 0)
+        if(ammoLoader.GetAmmo())
         {
             _debugText.text = "Has Ammo";
             return true;
@@ -50,7 +49,10 @@ public class Cannon : MonoBehaviour
 
     public void Fire()
     {
-        CheckAmmo(); // temp
+        if (CheckAmmo() != false) // return no ammo
+        {
+            return;
+        }
 
         GameObject projectile = Instantiate(_projectile, _instantiateOrigin.position, Quaternion.LookRotation(_instantiateOrigin.forward) );
         

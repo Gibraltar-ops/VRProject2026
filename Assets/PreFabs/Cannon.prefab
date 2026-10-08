@@ -252,7 +252,7 @@ MonoBehaviour:
   _audioSource: {fileID: 527220086369442731}
   _pitchVariation: 0.1
   _debugText: {fileID: 6452112057485848207}
-  ammo: 0
+  ammoLoader: {fileID: 3255625916597551368}
 --- !u!82 &527220086369442731
 AudioSource:
   m_ObjectHideFlags: 0
@@ -574,6 +574,7 @@ GameObject:
   - component: {fileID: 6505598112290345735}
   - component: {fileID: 5139348256494823092}
   - component: {fileID: 5111012779868958448}
+  - component: {fileID: 3255625916597551368}
   m_Layer: 0
   m_Name: BirdLoader_Socket
   m_TagString: Untagged
@@ -604,7 +605,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2509074519643973220}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 60523e0647cc6ab43acc73cb266a32a7, type: 3}
   m_Name: 
@@ -690,6 +691,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.2, y: 0.2, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3255625916597551368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2509074519643973220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd4c3d4f79bcc7f428431afef387a13b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AmmoLoader
+  ammo: {fileID: 0}
+  attachPoint: {fileID: 2699571610771872224}
 --- !u!1 &2591805723471688593
 GameObject:
   m_ObjectHideFlags: 0
@@ -16122,7 +16137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1650085540578459987, guid: 41be3d5ea06bd4b4e95ba9af4e92ea31, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4867973620520093364, guid: 41be3d5ea06bd4b4e95ba9af4e92ea31, type: 3}
       propertyPath: m_LocalPosition.x
