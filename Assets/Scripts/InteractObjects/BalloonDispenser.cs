@@ -22,7 +22,8 @@ public class BalloonDispenser : MonoBehaviour
 
     void Start()
     {
-
+        if (!AutoSpawn) return;
+        SpawnItem();
     }
 
     public void SpawnItem()
