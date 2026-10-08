@@ -18,16 +18,7 @@ public class EnemyFireAtBird : IState
     public void OnEntry()
     {
         timer = 0;
-        int index = Random.Range(0, enemySpawner.enemiesSpawned.Count);
-        if(enemySpawner.enemiesSpawned.Count > 0)
-        {
-            targetToFireAt = enemySpawner.enemiesSpawned[index];
-            hasTarget = true;
-        }
-        else
-        {
-            hasTarget = false;
-        }
+        GetNewTarget();
     }
 
     public void OnExit()
@@ -42,7 +33,7 @@ public class EnemyFireAtBird : IState
         if(timer >= enemyAircraft.aimTime)
         {
         
-            if (hasTarget)
+            if (hasTarget && TargetIsValid())
             {
                 float hit = Random.Range(0f,1f);
                 if(hit <= enemyAircraft.accuracy)
@@ -70,5 +61,39 @@ public class EnemyFireAtBird : IState
                 enemyAircraft.ChangeTask();
             }
         }
+    }
+
+    private void GetNewTarget()
+    {
+        if(enemySpawner.enemiesSpawned.Count <= 0)
+        {
+            enemyAircraft.ChangeTask();
+            return;
+        }
+        int index = Random.Range(0, enemySpawner.enemiesSpawned.Count);
+        targetToFireAt = enemySpawner.enemiesSpawned[index];
+        
+        if(targetToFireAt == null)
+        {
+            hasTarget = false;
+            Debug.LogWarning("Tried to get target but its null");
+        }
+        else
+        {
+            hasTarget = true;
+        }
+    }
+
+    private bool TargetIsValid()
+    {
+        if(targetToFireAt == null)
+        {
+            return false;
+        }
+        if (!enemySpawner.enemiesSpawned.Contains(targetToFireAt))
+        {
+            return false;
+        }
+        return true;
     }
 }
