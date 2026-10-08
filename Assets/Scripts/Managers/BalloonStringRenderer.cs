@@ -1,9 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class BalloonString
+{
+    public LineRenderer lineRenderer;
+    public Transform startTransform;
+    public Transform endTransform;
+    public BalloonString(LineRenderer renderer, Transform start, Transform end)
+    {
+        this.lineRenderer = renderer;
+        this.startTransform = start;
+        this.endTransform = end;
+    }
+}
+
 public class BalloonStringRenderer : MonoBehaviour
 {
     private List<LineRenderer> balloonStrings = new();
+    private List<BalloonString> stringCollection = new();
     public List<Transform> AttachPoint;
     [SerializeField] private BalloonTree balloonTree;
     [SerializeField] private Material _lineMaterial;
@@ -41,6 +55,7 @@ public class BalloonStringRenderer : MonoBehaviour
 
     LineRenderer CreateString(Transform balloonTransform, Transform attachPosition)
     {
+
         LineRenderer balloonString = balloonTransform.gameObject.AddComponent<LineRenderer>();
         balloonString.positionCount = 2;
         balloonString.SetPosition(0, balloonTransform.position);
@@ -48,14 +63,19 @@ public class BalloonStringRenderer : MonoBehaviour
         balloonString.material = _lineMaterial;
         balloonString.startWidth = 0.02f;
         balloonString.endWidth = 0.02f;
-
+        stringCollection.Add(new BalloonString(balloonString, balloonTransform, attachPosition));
         balloonString.startColor = Color.rosyBrown;
         balloonString.endColor = Color.brown;
+
         return balloonString;
     }
     // Update is called once per frame
     void Update()
     {
-
+        foreach (BalloonString bString in stringCollection)
+        {
+            bString.lineRenderer.SetPosition(0, bString.startTransform.position);
+            bString.lineRenderer.SetPosition(1, bString.endTransform.position);
+        }
     }
 }
