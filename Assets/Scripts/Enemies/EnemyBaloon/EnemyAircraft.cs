@@ -27,7 +27,7 @@ public class EnemyAircraft : EnemyParentClass
     public EnemyRefillState         _enemyRefillState;
 
     [Header("Stats")]
-    public float accuracy {get; private set;}    = .6f;
+    public float accuracy {get; private set;}    = .0f;
     public float aimTime {get; private set;}     = 3f;
     public float timeToFillBalloon {get;}        = 5f;
 
@@ -122,9 +122,9 @@ public class EnemyAircraft : EnemyParentClass
 
         
         //Dont fall trough ground check
-        if(relativeDistance <= -1 * GameManager.instance.Altitude)
+        if(relativeDistance <= GameManager.instance.GroundAltitude)
         {
-            relativeDistance = -GameManager.instance.Altitude;
+            relativeDistance = GameManager.instance.GroundAltitude;
         }
         
         swaySpeed = Mathf.Lerp(.10f, .4f, Mathf.Sin(swayTimer) + 1f) / 2f;
@@ -358,5 +358,4 @@ public class EnemyAircraft : EnemyParentClass
             Debug.Log("Changed task to: " + newState);
         }
     }
-
 }

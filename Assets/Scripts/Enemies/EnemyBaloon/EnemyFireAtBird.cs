@@ -38,24 +38,26 @@ public class EnemyFireAtBird : IState
     public void StateUpdate()
     {
         timer += Time.deltaTime;
+
         if(timer >= enemyAircraft.aimTime)
         {
+        
             if (hasTarget)
             {
                 float hit = Random.Range(0f,1f);
                 if(hit <= enemyAircraft.accuracy)
                 {
                     Health targetHealth = targetToFireAt.gameObject.GetComponent<Health>();
+                    Debug.Log(targetHealth);
                     if (targetHealth != null)
                     {
                         targetHealth.TakeDamage(1);
-                        targetToFireAt.KillEnemy();
+                        enemyAircraft.ChangeTask();
                     }
                     else
                     {
                         Debug.LogWarning("Missing target health");
                     }
-                    enemyAircraft.ChangeTask();
                 }
                 else
                 {

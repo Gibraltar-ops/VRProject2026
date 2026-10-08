@@ -2,9 +2,6 @@ using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.XR.Haptics;
-using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
-
 
 public class GameManager : MonoBehaviour
 {
@@ -14,27 +11,20 @@ public class GameManager : MonoBehaviour
 
     public BalloonTree PlayerBaloonTree;
 
-    public bool Running { get; private set; }
-
     public int ActivePlayerBalloons
     {
-        get { return PlayerBaloonTree.ActiveBalloons; }
+        get{return PlayerBaloonTree.ActiveBalloons;}
     }
 
-    [Header("Haptics")]
-    [SerializeField] public HapticImpulsePlayer leftHandHaptics;
-    [SerializeField] public HapticImpulsePlayer rightHandHaptics;
-    [SerializeField] private float maxHapticVelocity = -30f;
-
     [Header("Altitude")]
-    public float Altitude { get; private set; }
+    public float Altitude{get; private set;}
     public float VerticalVelocity { get; private set; }
-
-    public float GroundAltitude { get; private set; }
-
-    public float CloudBaseAltitude { get; } = 900f;
-    public float WinAltitude { get; private set; } = 3000f;
-
+    
+    public float GroundAltitude { get; private set; }   
+    
+    public float CloudBaseAltitude{get;} = 700f;
+    public float WinAltitude {get; private set; } = 2000f;
+    
     [Header("Balans/Thresholds")]
     [SerializeField] private float liftMultiplier = 1.5f;
     [SerializeField] private float gravityMultiplier = 5.0f;
@@ -44,22 +34,23 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Hur få ballonger som behövs för att hamna i fritt fall")]
     [SerializeField] private int freefallThreshold = 3;
-
+    
 
     [Tooltip("Hur mycket acceleration/lift multiplier påverkas per uppblåst ballong")]
     [SerializeField] private float acceleration = 1.25f;
-
+    
     [Header("Fritt fall - justeringar")]
     [SerializeField] private float maxFreeFallSpeed = 40.0f;
     [Tooltip("Accelerering för fritt fall - 9.8 = jordens tyngdkraft")]
     [SerializeField] private float freefallAcceleration = 9.8f;
-
+    
     [Header("Impact ")]
     [SerializeField] private float fatalImpactVelocity = -20f;
     [SerializeField] private AudioClip crashSound;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private ParticleSystem crashParticlePrefab;
-
+    public bool isRunning;
+    
     public bool IsGameOver { get; private set; }
 
     private float VelocityCap = 5;
@@ -68,7 +59,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (instance == null)
+        if(instance == null)
         {
             instance = this;
         }
@@ -81,9 +72,8 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (IsGameOver) return;
-
+        
         HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));
-        HandleFallHaptics();
     }
 
     public float CalculateVelocity(int personalBalloons, float currentVel, bool player, float aiDiff)
@@ -99,17 +89,17 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                if (aiDiff == 0)
+                if(aiDiff == 0)
                 {
                     targetVelocity = Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap;
                 }
                 else
                 {
-                    targetVelocity = (Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap) * aiDiff;
+                    targetVelocity = (Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap) * aiDiff; 
                 }
             }
         }
-
+        
         else if (personalBalloons <= freefallThreshold)
         {
             targetVelocity = -maxFreeFallSpeed;
@@ -117,24 +107,24 @@ public class GameManager : MonoBehaviour
         else if (personalBalloons < hoverThreshold)
         {
             int missingBalloons = hoverThreshold - personalBalloons;
-            targetVelocity = -(missingBalloons * (gravityMultiplier / (hoverThreshold - freefallThreshold)));
+            targetVelocity = -(missingBalloons * (gravityMultiplier / (hoverThreshold - freefallThreshold))); 
         }
 
         float currentAcceleration = (personalBalloons <= freefallThreshold) ? freefallAcceleration : acceleration;
-
+        
         return Mathf.MoveTowards(currentVel, targetVelocity, currentAcceleration * Time.deltaTime);
 
     }
 
     private void HandlePlayerAltitude(float velocity)
     {
-        VerticalVelocity = velocity;
+        VerticalVelocity = velocity; 
         Altitude += velocity * Time.deltaTime;
-
+        
         if (Altitude <= 0f)
         {
             Altitude = 0f;
-
+            
             // Hastighet över fatal threshold - vi dör 
             if (velocity <= fatalImpactVelocity)
             {
@@ -148,35 +138,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void HandleFallHaptics()
-    {
-        if (VerticalVelocity <= 0f)
-        {
-            float hapticIntensity = Mathf.InverseLerp(0f, maxHapticVelocity, VerticalVelocity);
-
-
-            if (leftHandHaptics != null)
-            {
-                leftHandHaptics.SendHapticImpulse(hapticIntensity, Time.deltaTime);
-            }
-
-            if (rightHandHaptics != null)
-            {
-                rightHandHaptics.SendHapticImpulse(hapticIntensity, Time.deltaTime);
-            }
-        }
-    }
-
     private void TriggerGameOver()
     {
         IsGameOver = true;
         VerticalVelocity = 0f;
 
         PlayImpactEffects();
-
+        
         // Här kan vi sätta in fadeout och haptiskt feedback 
-
-
+        
+     
     }
 
     private void PlayImpactEffects()
@@ -185,7 +156,7 @@ public class GameManager : MonoBehaviour
         {
             audioSource.PlayOneShot(crashSound);
         }
-
+        
         // Instansiera partiklar om prefab finns
         if (crashParticlePrefab != null)
         {
@@ -193,14 +164,14 @@ public class GameManager : MonoBehaviour
             Instantiate(crashParticlePrefab, Vector3.zero, Quaternion.identity);
         }
     }
-
+    
     public void UpdateGroundAltitude(float yPosition)
     {
         GroundAltitude = yPosition;
     }
 
-    public void SetRunning(bool newState)
+    public void SetRunning(bool value)
     {
-        Running = newState;
+        isRunning = value;
     }
 }
