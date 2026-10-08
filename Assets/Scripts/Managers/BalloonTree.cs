@@ -279,6 +279,12 @@ public class BalloonTree : MonoBehaviour
 
     public void InflateAndAddBalloon(float spawnTime)
     {
+        if (NonInteractiveBalloon == null || NonInteractiveBalloonSpawnPoint == null)
+        {
+            Debug.LogWarning("Missing Inflate Prefab.");
+            AddBalloon();
+            return;
+        }
         BalloonInfo slot = GetFreeBalloonSlot();
         if (slot == null) return;
         GameObject balloonInstance = Instantiate(NonInteractiveBalloon, CenterPoint.position + (Vector3.down * 3f), Quaternion.identity);
