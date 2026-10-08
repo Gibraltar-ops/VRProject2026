@@ -97,7 +97,7 @@ public class EnemySpawner : MonoBehaviour
             {
                 return;
             }
-            bird.SpawnBird(bird, this, treeToTarget);
+            SpawnBird(bird, 0);
         }
     }
 

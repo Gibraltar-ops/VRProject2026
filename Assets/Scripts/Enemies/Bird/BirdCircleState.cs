@@ -31,14 +31,6 @@ public class BirdCircleState : IState
             bird._heightAboveTarget = Random.Range( _minHeightAboveTarget, _maxHeightAboveTarget ); 
             bird.circleDirection = Random.Range(0, 2) == 0 ? -1 : 1;
 
-            //if( bird.circleDirection == 1)
-            //{
-                //bird.gameObject.transform.GetChild(0).transform.rotation = Quaternion.Euler(0,180,0);
-            //}
-            //else
-            //{
-            //    bird.gameObject.transform.GetChild(0).transform.rotation = Quaternion.identity;
-            //}
         }
         
         timer = Random.Range(10, 15); 
