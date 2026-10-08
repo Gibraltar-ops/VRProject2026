@@ -287,7 +287,7 @@ public class BalloonTree : MonoBehaviour
         }
         BalloonInfo slot = GetFreeBalloonSlot();
         if (slot == null) return;
-        GameObject balloonInstance = Instantiate(NonInteractiveBalloon, CenterPoint.position + (Vector3.down * 3f), Quaternion.identity);
+        GameObject balloonInstance = Instantiate(NonInteractiveBalloon, CenterPoint.position + (Vector3.down * 2f), Quaternion.identity);
         StartCoroutine(InflateAndAdd(balloonInstance, slot, spawnTime));
 
     }
@@ -308,6 +308,7 @@ public class BalloonTree : MonoBehaviour
             float t = timer / inflateTime;
 
             balloonToAdd.transform.localScale = Vector3.Lerp(startScale, finalScale, t);
+            balloonToAdd.transform.position = CenterPoint.position + (Vector3.down * 2f);
             yield return null;
 
         }
@@ -319,12 +320,13 @@ public class BalloonTree : MonoBehaviour
         {
             timer += Time.deltaTime;
             float t = timer / addToCanopyTime;
-
-            balloonToAdd.transform.position = Vector3.Lerp(startPosition, slot.transform.position, t);
+            Vector3 lerped = Vector3.Lerp(startPosition, slot.transform.position, t);
+            lerped += balloonToAdd.transform.position - (CenterPoint.position + (Vector3.down * 2f));
+            balloonToAdd.transform.position = lerped;
             yield return null;
         }
 
-        balloonToAdd.transform.position = finalScale;
+        //balloonToAdd.transform.position = finalScale;
         AddBalloon(slot);
         Destroy(balloonToAdd);
     }
