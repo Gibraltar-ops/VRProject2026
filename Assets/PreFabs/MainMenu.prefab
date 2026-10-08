@@ -2022,7 +2022,6 @@ GameObject:
   - component: {fileID: 4997795357984694647}
   - component: {fileID: 5325041255936100773}
   - component: {fileID: 179930700232751781}
-  - component: {fileID: 4923680945344894645}
   m_Layer: 0
   m_Name: MainMenu
   m_TagString: Untagged
@@ -2336,21 +2335,6 @@ MonoBehaviour:
   m_MinAngleAllowed: 0.1
   m_MaxAngleAllowed: 5
   m_TimeUntilThresholdReachesMaxAngle: 3
---- !u!114 &4923680945344894645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7359088652341031347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c6308acc0b554949a783549e6bd7eb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DebugAltitude
-  TMP_currBallonCount: {fileID: 0}
-  TMP_currAltitude: {fileID: 3765159627393840527}
-  TMP_currVelocity: {fileID: 0}
 --- !u!1 &7415182544560179931
 GameObject:
   m_ObjectHideFlags: 0
