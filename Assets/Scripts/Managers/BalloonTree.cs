@@ -40,9 +40,6 @@ public class BalloonTree : MonoBehaviour
     public int ActiveBalloons { get; private set; }
     [SerializeField] private int startBalloons = 7;
 
-    private float _popInterval = 1.5f;
-    private float _timer = 0;
-    //public Transform TargetOrigin;
     public GameObject PopParticles;
     public GameObject NonInteractiveBalloon;
     public Transform NonInteractiveBalloonSpawnPoint;
