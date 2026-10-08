@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 public class Cannon : MonoBehaviour
 {
     [SerializeField] private Transform _instantiateOrigin;
-    [SerializeField] private GameObject _vfx;
+    [SerializeField] private ParticleSystem _vfx;
     [SerializeField] private GameObject _projectile;
     
     [SerializeField] private AudioSource _audioSource;
@@ -49,10 +49,12 @@ public class Cannon : MonoBehaviour
 
     public void Fire()
     {
-        if (CheckAmmo() != false) // return no ammo
-        {
-            return;
-        }
+        //if (CheckAmmo() == false) // return no ammo
+        //{
+        //    return;
+        //}
+
+        _vfx.Play();
 
         GameObject projectile = Instantiate(_projectile, _instantiateOrigin.position, Quaternion.LookRotation(_instantiateOrigin.forward) );
         

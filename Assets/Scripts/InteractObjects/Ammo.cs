@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 
 public class Ammo : MonoBehaviour
@@ -6,12 +7,14 @@ public class Ammo : MonoBehaviour
 
     public Collider colliderAmmo;
     public Transform attachedTransform;
-
+    public XRGrabInteractable grabInteractable;
 
     public bool _isAttachedToGun = false;
 
     public void AddToGun(Transform attachPoint)
     {
+        grabInteractable.enabled = false;
+
         _isAttachedToGun = true;
         colliderAmmo.enabled = false;
         attachedTransform = attachPoint;
