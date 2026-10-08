@@ -118,16 +118,6 @@ public class BalloonTree : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float dt = Time.deltaTime;
-
-        _timer += dt;
-
-        if (_timer >= _popInterval)
-        {
-            //PopBalloon(GetClosestAvailableBalloon(TargetOrigin.position));
-            //PopBalloon(GetOutmostBalloon());
-            _timer = 0f;
-        }
 
 
     }
@@ -217,7 +207,6 @@ public class BalloonTree : MonoBehaviour
             if (balloonInfo.transform.gameObject == balloonGameObject)
             {
                 PopBalloon(balloonInfo);
-                OnBalloonPopped?.Invoke(balloonInfo);
                 return;
             }
         }
