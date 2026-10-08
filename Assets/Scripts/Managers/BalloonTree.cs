@@ -289,6 +289,16 @@ public class BalloonTree : MonoBehaviour
 
     }
 
+    public void PopAllBalloons()
+    {
+        BalloonInfo[] balloonsToPop = _balloons.Where(b => b.state == BalloonInfo.BalloonState.Alive).ToArray();
+        
+        foreach (BalloonInfo balloon in balloonsToPop)
+        {
+            PopBalloon(balloon);
+        }
+    }
+    
     IEnumerator InflateAndAdd(GameObject balloonToAdd, BalloonInfo slot, float spawnTime)
     {
         float timer = 0f;

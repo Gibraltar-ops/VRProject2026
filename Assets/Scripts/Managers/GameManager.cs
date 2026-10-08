@@ -1,3 +1,4 @@
+using System.Collections;
 using NUnit.Framework;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,9 @@ public class GameManager : MonoBehaviour
     [Header("Systems")]
 
     public BalloonTree PlayerBaloonTree;
+    
+    [Header("VR Camera reference")]
+    [SerializeField] private Transform vrCameraTransform;
 
     public int ActivePlayerBalloons
     {
@@ -19,9 +23,7 @@ public class GameManager : MonoBehaviour
     [Header("Altitude")]
     public float Altitude{get; private set;}
     public float VerticalVelocity { get; private set; }
-    
     public float GroundAltitude { get; private set; }   
-    
     public float CloudBaseAltitude{get;} = 700f;
     public float WinAltitude {get; private set; } = 2000f;
     
@@ -49,9 +51,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip crashSound;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private ParticleSystem crashParticlePrefab;
+    
+    [Header("Win Sequence ")]
+    [SerializeField] private AudioClip winSound;
+    [SerializeField] private GameObject winUIPrefab;
+    
     public bool isRunning;
     
     public bool IsGameOver { get; private set; }
+    public bool IsGameWon { get; private set; }
 
     private float VelocityCap = 5;
 
@@ -126,7 +134,7 @@ public class GameManager : MonoBehaviour
             Altitude = 0f;
             
             // Hastighet över fatal threshold - vi dör 
-            if (velocity <= fatalImpactVelocity)
+            if (velocity <= fatalImpactVelocity && !IsGameWon)
             {
                 TriggerGameOver();
             }
@@ -135,6 +143,11 @@ public class GameManager : MonoBehaviour
                 // under fatal threshold - mjuk landning 
                 VerticalVelocity = 0f;
             }
+        }
+
+        if (Altitude >= WinAltitude && !IsGameWon)
+        {
+            TriggerGameWon();
         }
     }
 
@@ -149,6 +162,24 @@ public class GameManager : MonoBehaviour
         
      
     }
+    
+    private void TriggerGameWon()
+    {
+        IsGameWon = true;
+        StartCoroutine(WinSequenceTimeline());
+        
+    }
+
+    private IEnumerator WinSequenceTimeline()
+    {
+        if (winSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(winSound);
+        }
+        
+        LeftController.SendHapticImpulse(1.0f, 2.0f);
+        RightController.SendHapticImpulse(1.0f, 2.0f);
+    }
 
     private void PlayImpactEffects()
     {
@@ -157,10 +188,8 @@ public class GameManager : MonoBehaviour
             audioSource.PlayOneShot(crashSound);
         }
         
-        // Instansiera partiklar om prefab finns
         if (crashParticlePrefab != null)
         {
-            // Vi instansierar partiklarna i världens nollpunkt.
             Instantiate(crashParticlePrefab, Vector3.zero, Quaternion.identity);
         }
     }
