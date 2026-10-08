@@ -8,25 +8,24 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 public class Cannon : MonoBehaviour
 {
     [SerializeField] private Transform _instantiateOrigin;
-    [SerializeField] private GameObject _vfx;
+    [SerializeField] private ParticleSystem _vfx;
     [SerializeField] private GameObject _projectile;
     
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private float _pitchVariation = 0.1f;
 
     public TMPro.TextMeshPro _debugText;
-    public int ammo = 0;
-    public XRSocketInteractor socketInteractor;
+
+    public AmmoLoader ammoLoader;
 
     void Start()
     {
-
 
     }
 
     public bool CheckAmmo()
     {
-        if(ammo > 0)
+        if(ammoLoader.GetAmmo())
         {
             _debugText.text = "Has Ammo";
             return true;
@@ -50,7 +49,12 @@ public class Cannon : MonoBehaviour
 
     public void Fire()
     {
-        CheckAmmo(); // temp
+        //if (CheckAmmo() == false) // return no ammo
+        //{
+        //    return;
+        //}
+
+        _vfx.Play();
 
         GameObject projectile = Instantiate(_projectile, _instantiateOrigin.position, Quaternion.LookRotation(_instantiateOrigin.forward) );
         
