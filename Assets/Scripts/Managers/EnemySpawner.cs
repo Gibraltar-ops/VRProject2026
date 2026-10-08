@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -55,32 +56,35 @@ public class EnemySpawner : MonoBehaviour
         switch (progress)
         {
             case > .667f:
-                SpawnEnemy(bird, 3);
+                SpawnBird(bird, 3);
                 break;
             
             case > .5f:
-                SpawnEnemy(bird, 5);
+                SpawnBird(bird, 5);
                 break;
 
             case > .33f:
-                SpawnEnemy(bird, 10);
+                SpawnBird(bird, 10);
                 break;
             
             case > .10f:
-                SpawnEnemy(bird, 12.5f);
+                SpawnBird(bird, 12.5f);
                 break;
             
             case >= 0.001f:
-                SpawnEnemy(bird, 15);
+                SpawnBird(bird, 15);
                 break;
         }
     }
 
-    private void SpawnEnemy(EnemyParentClass prefab, float frequency)
+    private void SpawnBird(EnemyParentClass prefab, float frequency)
     {
         if(timer >= frequency)
         {
-            prefab.SpawnBird(prefab, this, treeToTarget);
+            EnemyParentClass birdToSpawn = Instantiate(prefab, gameObject.transform.position - new Vector3(0,-5,0), Quaternion.identity);
+            birdToSpawn._targetBalloonTree = treeToTarget;
+            birdToSpawn.spawnerForThis = this;
+            enemiesSpawned.Add(birdToSpawn);
             timer = 0;
         }
     }

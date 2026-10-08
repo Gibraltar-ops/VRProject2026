@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip crashSound;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private ParticleSystem crashParticlePrefab;
+    public bool isRunning;
     
     public bool IsGameOver { get; private set; }
 
@@ -167,5 +168,10 @@ public class GameManager : MonoBehaviour
     public void UpdateGroundAltitude(float yPosition)
     {
         GroundAltitude = yPosition;
+    }
+
+    public void SetRunning(bool value)
+    {
+        isRunning = value;
     }
 }

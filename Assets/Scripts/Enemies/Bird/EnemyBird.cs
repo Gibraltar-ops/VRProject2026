@@ -127,14 +127,11 @@ public class EnemyBird : EnemyParentClass
 
     private void OnCollisionEnter(Collision other)
     {
-        if (!hasAttacked)
-        {
             if (other.gameObject.CompareTag("Balloon"))
             {
                 _targetBalloonTree.PopBalloon(target);
                 hasAttacked = true;
             }
-        }
     }
 
     public void ChangeBirdState(IState newState)

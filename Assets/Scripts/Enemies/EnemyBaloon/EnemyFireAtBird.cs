@@ -41,7 +41,7 @@ public class EnemyFireAtBird : IState
 
         if(timer >= enemyAircraft.aimTime)
         {
-        /*'
+        
             if (hasTarget)
             {
                 float hit = Random.Range(0f,1f);
@@ -51,7 +51,6 @@ public class EnemyFireAtBird : IState
                     Debug.Log(targetHealth);
                     if (targetHealth != null)
                     {
-                        Debug.LogWarning("Hit a bird");
                         targetHealth.TakeDamage(1);
                         enemyAircraft.ChangeTask();
                     }
@@ -63,7 +62,6 @@ public class EnemyFireAtBird : IState
                 else
                 {
                     timer = 0;
-                    Debug.LogWarning("Missed bird");
                 }
             }
             else
@@ -71,8 +69,6 @@ public class EnemyFireAtBird : IState
                 Debug.Log("Found no target");
                 enemyAircraft.ChangeTask();
             }
-        */
-            enemyAircraft.testDeath();
         }
     }
 }

@@ -27,7 +27,7 @@ public class EnemyAircraft : EnemyParentClass
     public EnemyRefillState         _enemyRefillState;
 
     [Header("Stats")]
-    public float accuracy {get; private set;}    = .6f;
+    public float accuracy {get; private set;}    = .0f;
     public float aimTime {get; private set;}     = 3f;
     public float timeToFillBalloon {get;}        = 5f;
 
@@ -356,18 +356,6 @@ public class EnemyAircraft : EnemyParentClass
         if (debug)
         {
             Debug.Log("Changed task to: " + newState);
-        }
-    }
-
-    public void testDeath(){     
-        EnemyParentClass targetToFireAt = _enemySpawner.enemiesSpawned[0];            
-        Health targetHealth = targetToFireAt.gameObject.GetComponent<Health>();
-        Debug.Log(targetHealth);
-        if (targetHealth != null)
-        {
-            Debug.LogWarning("Hit a bird");
-            targetHealth.TakeDamage(1);
-            ChangeTask();
         }
     }
 }
