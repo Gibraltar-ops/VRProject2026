@@ -10,9 +10,13 @@ public class BasicGun : MonoBehaviour
     public static event Action<GameObject> OnGunHit;
     public bool _debug = false;
     public GameObject vfx;
+    public ParticleSystem vfx_local_particles;
 
     public LineRenderer _lineRenderObject;
     public GameObject _debug_Sphere;
+
+    float timer = 0;
+    bool lineIsReset = true;
 
     void Start()
     {
@@ -20,6 +24,9 @@ public class BasicGun : MonoBehaviour
         {
             _lineRenderObject.gameObject.SetActive(true);
             _debug_Sphere.gameObject.SetActive(true);
+            _debug_Sphere.transform.parent = null;
+            SetKnots(Vector3.down, Vector3.down);
+            lineIsReset = true;
         }
         else
         {
@@ -27,6 +34,17 @@ public class BasicGun : MonoBehaviour
             _debug_Sphere.gameObject.SetActive(false);
         }
      
+    }
+
+    private void Update()
+    {
+        timer += Time.deltaTime;
+        if (lineIsReset == false && timer > 0.2f)
+        {
+            SetKnots(Vector3.down, Vector3.down);
+            _debug_Sphere.transform.position = Vector3.down;
+            lineIsReset = true;
+        }
     }
 
     public void SetKnots(Vector3 start, Vector3 end)
@@ -38,8 +56,11 @@ public class BasicGun : MonoBehaviour
     
     public void Fire()
     {
-        
-        Instantiate(vfx, RaycastOrigin.position, Quaternion.LookRotation(transform.up * -1, transform.right * -1));
+        lineIsReset = false;
+        timer = 0;
+
+        //Instantiate(vfx, RaycastOrigin.position, Quaternion.LookRotation(transform.up * -1, transform.right * -1));
+        vfx_local_particles.Play();
 
         RaycastHit hit;
         if (Physics.Raycast(RaycastOrigin.position, transform.up * -1, out hit, Mathf.Infinity))
@@ -51,6 +72,7 @@ public class BasicGun : MonoBehaviour
 
                 Debug.DrawRay(RaycastOrigin.position, (transform.up * -1) * hit.distance, Color.yellow);
                 Debug.Log("Did Hit");
+
             }
             OnGunHit?.Invoke(hit.collider.gameObject); // ballon tree is listening to this
 

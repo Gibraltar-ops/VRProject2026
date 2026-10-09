@@ -56,12 +56,14 @@ public class EnemyBird : EnemyParentClass
 
         BalloonTree.OnBalloonPopped += HandleTargetChange;
         _health.Die += EnterDeadState;
+        GameManager.instance.GameComplete += KillEnemy;
     }
 
     void OnDisable()
     {
         BalloonTree.OnBalloonPopped -= HandleTargetChange;
         _health.Die -= EnterDeadState;
+        GameManager.instance.GameComplete -= KillEnemy;
     }
 
     public string GetCurrentStateDebug()
@@ -89,6 +91,10 @@ public class EnemyBird : EnemyParentClass
 
     override public void Update()
     {
+        if (!GameManager.instance.isRunning)
+        {
+            return;
+        }
         if (isAlive == false) 
         {
             if (_birdDeadState != _stateMachine._currentState)
@@ -102,7 +108,10 @@ public class EnemyBird : EnemyParentClass
 
     private void HandleTargetChange(BalloonInfo balloon)
     {
-        ChangeBirdState(_birdCircleState);
+        if(target == balloon)
+        {
+            ChangeBirdState(_birdCircleState);
+        }
     }
 
     private void EnterDeadState()
@@ -110,28 +119,6 @@ public class EnemyBird : EnemyParentClass
         Instantiate(particleVFX, transform.position, Quaternion.identity);
         ChangeBirdState(_birdDeadState);
         isAlive = false;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!hasAttacked)
-        {
-            if (other.gameObject.CompareTag("Balloon"))
-            {
-                _targetBalloonTree.PopBalloon(target);
-                hasAttacked = true;
-            }
-            
-        }
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-            if (other.gameObject.CompareTag("Balloon"))
-            {
-                _targetBalloonTree.PopBalloon(target);
-                hasAttacked = true;
-            }
     }
 
     public void ChangeBirdState(IState newState)

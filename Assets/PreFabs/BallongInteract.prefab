@@ -5129,7 +5129,7 @@ MonoBehaviour:
   m_Colliders: []
   m_InteractionLayers:
     m_Bits: 1
-  m_DistanceCalculationMode: 1
+  m_DistanceCalculationMode: 0
   m_SelectMode: 0
   m_FocusMode: 1
   m_CustomReticle: {fileID: 0}
@@ -5310,8 +5310,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3, y: 0.1, z: 0.26}
-  m_Center: {x: 0.16, y: 0, z: 0}
+  m_Size: {x: 0.25, y: 0.1, z: 0.4}
+  m_Center: {x: -0.01, y: 0, z: 0.135}
 --- !u!114 &2146493592721169925
 MonoBehaviour:
   m_ObjectHideFlags: 0

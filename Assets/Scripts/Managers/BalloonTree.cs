@@ -40,9 +40,6 @@ public class BalloonTree : MonoBehaviour
     public int ActiveBalloons { get; private set; }
     [SerializeField] private int startBalloons = 7;
 
-    private float _popInterval = 1.5f;
-    private float _timer = 0;
-    //public Transform TargetOrigin;
     public GameObject PopParticles;
     public GameObject NonInteractiveBalloon;
     public Transform NonInteractiveBalloonSpawnPoint;
@@ -282,9 +279,15 @@ public class BalloonTree : MonoBehaviour
 
     public void InflateAndAddBalloon(float spawnTime)
     {
+        if (NonInteractiveBalloon == null || NonInteractiveBalloonSpawnPoint == null)
+        {
+            Debug.LogWarning("Missing Inflate Prefab.");
+            AddBalloon();
+            return;
+        }
         BalloonInfo slot = GetFreeBalloonSlot();
         if (slot == null) return;
-        GameObject balloonInstance = Instantiate(NonInteractiveBalloon, CenterPoint.position + (Vector3.down * 3f), Quaternion.identity);
+        GameObject balloonInstance = Instantiate(NonInteractiveBalloon, NonInteractiveBalloonSpawnPoint.localPosition, Quaternion.identity, CenterPoint);
         StartCoroutine(InflateAndAdd(balloonInstance, slot, spawnTime));
 
     }
@@ -306,7 +309,8 @@ public class BalloonTree : MonoBehaviour
         float addToCanopyTime = spawnTime - inflateTime;
         Vector3 finalScale = slot.transform.localScale;
         Vector3 startScale = Vector3.zero;
-        Vector3 startPosition = balloonToAdd.transform.position;
+        Vector3 startPosition = NonInteractiveBalloonSpawnPoint.localPosition;
+        Vector3 endPosition = slot.transform.localPosition;
 
         balloonToAdd.transform.localScale = startScale;
         while (timer < inflateTime)
@@ -315,6 +319,7 @@ public class BalloonTree : MonoBehaviour
             float t = timer / inflateTime;
 
             balloonToAdd.transform.localScale = Vector3.Lerp(startScale, finalScale, t);
+            balloonToAdd.transform.localPosition = NonInteractiveBalloonSpawnPoint.localPosition;
             yield return null;
 
         }
@@ -326,12 +331,11 @@ public class BalloonTree : MonoBehaviour
         {
             timer += Time.deltaTime;
             float t = timer / addToCanopyTime;
-
-            balloonToAdd.transform.position = Vector3.Lerp(startPosition, slot.transform.position, t);
+            balloonToAdd.transform.localPosition = Vector3.Lerp(startPosition, endPosition, t);
             yield return null;
         }
 
-        balloonToAdd.transform.position = finalScale;
+        //balloonToAdd.transform.position = finalScale;
         AddBalloon(slot);
         Destroy(balloonToAdd);
     }

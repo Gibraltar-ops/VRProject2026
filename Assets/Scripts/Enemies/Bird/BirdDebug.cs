@@ -8,8 +8,11 @@ public class BirdDebug : MonoBehaviour
     public string _debugString = string.Empty;
     public Transform _faceCameraTransform;
 
-    
 
+    private void Start()
+    {
+        debugText.gameObject.SetActive(true);
+    }
     // Update is called once per frame
     void Update()
     {

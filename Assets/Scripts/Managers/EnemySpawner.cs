@@ -34,6 +34,11 @@ public class EnemySpawner : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.isRunning)
+        {
+            return;
+        }
+        
         _altitude = GameManager.instance.Altitude;
         HandleEnemySpawn();
         timer += Time.deltaTime;
@@ -97,7 +102,7 @@ public class EnemySpawner : MonoBehaviour
             {
                 return;
             }
-            bird.SpawnBird(bird, this, treeToTarget);
+            SpawnBird(bird, 0);
         }
     }
 

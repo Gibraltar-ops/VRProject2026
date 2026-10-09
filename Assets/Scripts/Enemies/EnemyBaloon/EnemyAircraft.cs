@@ -25,16 +25,16 @@ public class EnemyAircraft : EnemyParentClass
     public EnemyFireAtBird          _enemyFireAtBird;
     public EnemyFireAtPlayerState   _enemyFireAtPlayerState;
     public EnemyRefillState         _enemyRefillState;
+    public EnemyWait                _enemyWaitState;
 
     [Header("Stats")]
-    public float accuracy {get; private set;}    = .0f;
-    public float aimTime {get; private set;}     = 3f;
-    public float timeToFillBalloon {get;}        = 5f;
+    public float accuracy {get; private set;}               = .75f;
+    public float aimTime {get; private set;}                = 2.5f;
+    public float timeToFillBalloon {get; private set;}      = 5f;
 
     [Header("Altitude")]
     private float enemyAltitude;
     private float enemyVelocity;
-    private Vector3 startPos;
     [SerializeField] private float relativeDistance;
 
     [Header("Sway and rotation")]
@@ -59,6 +59,7 @@ public class EnemyAircraft : EnemyParentClass
         _enemyFireAtBird         = new EnemyFireAtBird(this, _enemySpawner);
         _enemyFireAtPlayerState  = new EnemyFireAtPlayerState(this);
         _enemyRefillState        = new EnemyRefillState(this);
+        _enemyWaitState          = new EnemyWait(this);
     }
 
 
@@ -71,7 +72,6 @@ public class EnemyAircraft : EnemyParentClass
         enemyAltitude = 0;
         enemyVelocity = 0;
 
-        startPos = gameObject.transform.position;
         targetRotation = gameObject.transform.eulerAngles.y;
 
         timeSinceLastBoost = 0;
@@ -84,6 +84,10 @@ public class EnemyAircraft : EnemyParentClass
 
     public override void Update()
     {
+        if (!GameManager.instance.isRunning)
+        {
+            return;
+        }
         _statemachine._currentState.StateUpdate();
         timeSinceLastBoost += Time.deltaTime;
         UpdateAltitude();
@@ -127,7 +131,14 @@ public class EnemyAircraft : EnemyParentClass
             relativeDistance = GameManager.instance.GroundAltitude;
         }
         
+        if(enemyAltitude < 5)
+        {
+            swaySpeed = 0;
+        }
+        else
+        {
         swaySpeed = Mathf.Lerp(.10f, .4f, Mathf.Sin(swayTimer) + 1f) / 2f;
+        }
         if(swayChangeTime >= swayChange)
         {
             GetNewSwayPoint();
@@ -196,7 +207,14 @@ public class EnemyAircraft : EnemyParentClass
 
     private IState FarAboveDec()
     {
-        return _enemyFireAtBird;
+        if(_enemySpawner.enemiesSpawned.Count > 0)
+        {
+            return _enemyFireAtBird;
+        }
+        else
+        {
+            return _enemyWaitState;
+        }
     }
 
     private IState AboveDec()
@@ -240,6 +258,7 @@ public class EnemyAircraft : EnemyParentClass
     {
         accuracy = .6f;
         aimTime = 3f;
+        timeToFillBalloon = 3f;
         if(_enemySpawner.enemiesSpawned.Count <= 0)
         {
             return _enemyRefillState;
@@ -267,6 +286,7 @@ public class EnemyAircraft : EnemyParentClass
         }
         else
         {
+            timeToFillBalloon = 1;
             accuracy = .6f;
             aimTime = 3;
             return _enemyRefillState;
@@ -352,7 +372,7 @@ public class EnemyAircraft : EnemyParentClass
     public void ChangeTask()
     {
         IState newState = MakeDecition();
-        _statemachine.ChangeState(newState);
+        _statemachine.ChangeState(_enemyWaitState);
         if (debug)
         {
             Debug.Log("Changed task to: " + newState);
