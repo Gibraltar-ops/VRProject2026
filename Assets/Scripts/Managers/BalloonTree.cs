@@ -39,6 +39,7 @@ public class BalloonTree : MonoBehaviour
     public List<BalloonInfo> _balloons { get; private set; }
     public int ActiveBalloons { get; private set; }
     [SerializeField] private int startBalloons = 7;
+    private List<int> startupBalloonIndexes = new();
 
     public GameObject PopParticles;
     public GameObject NonInteractiveBalloon;
@@ -53,11 +54,13 @@ public class BalloonTree : MonoBehaviour
     {
         BasicGun.OnGunHit += HandleBalloonHit;
         ProjectileBird.OnCannonProjectileHit += HandleBalloonHit;
+
     }
     void OnDisable()
     {
         BasicGun.OnGunHit -= HandleBalloonHit;
         ProjectileBird.OnCannonProjectileHit -= HandleBalloonHit;
+        GameManager.instance.OnStartGame -= ResetAndStart;
     }
 
     void Start()
@@ -106,18 +109,33 @@ public class BalloonTree : MonoBehaviour
             if (_balloons[i].state == BalloonInfo.BalloonState.Alive)
             {
                 counter++;
+                startupBalloonIndexes.Add(i);
             }
         }
         ActiveBalloons = counter;
         OnInitialized?.Invoke();
+        GameManager.instance.OnStartGame += ResetAndStart;
     }
 
     // Update is called once per frame
-    void Update()
+    void ResetAndStart()
     {
 
+        for (int i = 0; i < _balloons.Count; i++)
+        {
+            if (startupBalloonIndexes.Contains(i))
+            {
+                ActivateBalloon(_balloons[i]);
+            }
+            else
+            {
+                DeactivateBalloon(_balloons[i]);
+            }
 
+        }
+        ActiveBalloons = startupBalloonIndexes.Count;
     }
+
 
     public BalloonInfo GetOutmostBalloon()
     {
@@ -254,6 +272,21 @@ public class BalloonTree : MonoBehaviour
 
     }
 
+    public void DeactivateBalloon(BalloonInfo balloon)
+    {
+        balloon.state = BalloonInfo.BalloonState.Dead;
+        balloon.transform.gameObject.SetActive(false);
+
+
+    }
+
+    public void ActivateBalloon(BalloonInfo balloon)
+    {
+        balloon.state = BalloonInfo.BalloonState.Alive;
+        balloon.transform.gameObject.SetActive(true);
+
+    }
+
     BalloonInfo GetBalloonFromIndex(int index)
     {
         if (index < 0) return null;
@@ -295,13 +328,13 @@ public class BalloonTree : MonoBehaviour
     public void PopAllBalloons()
     {
         BalloonInfo[] balloonsToPop = _balloons.Where(b => b.state == BalloonInfo.BalloonState.Alive).ToArray();
-        
+
         foreach (BalloonInfo balloon in balloonsToPop)
         {
             PopBalloon(balloon);
         }
     }
-    
+
     IEnumerator InflateAndAdd(GameObject balloonToAdd, BalloonInfo slot, float spawnTime)
     {
         float timer = 0f;
