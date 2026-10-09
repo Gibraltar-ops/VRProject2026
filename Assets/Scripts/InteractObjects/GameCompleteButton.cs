@@ -7,15 +7,15 @@ public class GameCompleteButton : MonoBehaviour
     void Start()
     {
         FinishGamePanel.SetActive(false);
+        GameManager.instance.OnGameComplete += ActivatePanel;
     }
 
     void OnEnable()
     {
-        GameManager.instance.GameComplete += ActivatePanel;
     }
     void OnDisable()
     {
-        GameManager.instance.GameComplete -= ActivatePanel;
+        GameManager.instance.OnGameComplete -= ActivatePanel;
     }
 
     private void ActivatePanel()
