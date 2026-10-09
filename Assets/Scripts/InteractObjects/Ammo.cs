@@ -85,6 +85,11 @@ public class Ammo : MonoBehaviour
         state = State.Ammo;
     }
 
+    public Ammo.State GetBirdStateEnum()
+    {
+        return state;
+    }
+
     public void AddToGun(Transform attachPoint)
     {
         grabInteractable.enabled = false;
