@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour
            isRunning = false;
         }
         if (IsGameOver) return;
+        if (!isRunning) return;
 
         HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));
     }
