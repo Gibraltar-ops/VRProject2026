@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
 
-    public event Action GameComplete;
-    public event Action StartGame;
+    public event Action OnGameComplete;
+    public event Action OnStartGame;
 
     [Header("Systems")]
 
@@ -110,10 +110,11 @@ public class GameManager : MonoBehaviour
         if(Altitude >= WinAltitude)
         {
            IsGameOver = true;
-           GameComplete?.Invoke(); 
+           OnGameComplete?.Invoke(); 
            isRunning = false;
         }
         if (IsGameOver) return;
+        if (!isRunning) return;
 
         HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));
         HandleFallHaptics();
@@ -361,6 +362,6 @@ public class GameManager : MonoBehaviour
 
     public void TriggerStartGameEvent()
     {
-        StartGame?.Invoke();
+        OnStartGame?.Invoke();
     }
 }
