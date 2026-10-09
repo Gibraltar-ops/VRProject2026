@@ -88,12 +88,15 @@ public class EnemyFireAtBird : IState
     {
         if(targetToFireAt == null)
         {
+            Debug.LogWarning("Target Invalid");
             return false;
         }
         if (!enemySpawner.enemiesSpawned.Contains(targetToFireAt))
         {
+            Debug.LogWarning("Target Invalid");
             return false;
         }
+        Debug.LogWarning("Target Valid");
         return true;
     }
 }
