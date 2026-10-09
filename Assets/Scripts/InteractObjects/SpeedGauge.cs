@@ -14,7 +14,7 @@ public class SpeedGauge : MonoBehaviour
     private Quaternion neutralSpeedRotation;
     private Quaternion freefallRotation;
 
-    public Quaternion targetRotation;
+    private Quaternion targetRotation;
 
     void Start()
     {
@@ -61,8 +61,6 @@ public class SpeedGauge : MonoBehaviour
                 maxSpeedBalloons,
                 playerBalloons
             );
-
-            Debug.Log(t);
 
             targetRotation = Quaternion.Lerp(
                 neutralSpeedRotation,
