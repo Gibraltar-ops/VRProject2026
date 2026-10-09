@@ -90,7 +90,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cloud_Whiteness: 0
+    - _Cloud_Whiteness: 1
     - _EnableInstancedPerPixelNormal: 1
     - _Metallic0: 0
     - _Metallic1: 0
