@@ -1,5 +1,10 @@
-using System;
+using System.Collections;
+using NUnit.Framework;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.XR.Haptics;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
+using System;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -12,11 +17,21 @@ public class GameManager : MonoBehaviour
     [Header("Systems")]
 
     public BalloonTree PlayerBaloonTree;
+    
+    [Header("VR Camera reference")]
+    [SerializeField] private Transform vrCameraTransform;
 
     public int ActivePlayerBalloons
     {
         get { return PlayerBaloonTree.ActiveBalloons; }
     }
+    
+    [Header("Haptics")]
+    [Tooltip("Referens till Haptic Impulse Player på vänster hand")]
+    public HapticImpulsePlayer leftHandHaptics;
+    [Tooltip("Referens till Haptic Impulse Player på höger hand")]
+    public HapticImpulsePlayer rightHandHaptics;
+    [SerializeField] private float maxHapticVelocity = -30f;
 
     [Header("Altitude")]
     public float Altitude { get; private set; }
@@ -51,9 +66,23 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip crashSound;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private ParticleSystem crashParticlePrefab;
+    
+    [Header("Win Sequence ")]
+    [SerializeField] private AudioClip winSound;
+    [SerializeField] private GameObject winUIPrefab;
+    
+    [SerializeField] private GameObject airplanePrefab;
+    
+    [SerializeField] private float winAirplaneFlyDuration = 6.0f; 
+    [SerializeField] private float winAirplaneSpawnDistance = 600f;
+    [SerializeField] private float winAirplaneHeightOffset = 30f;
+    
     public bool isRunning;
 
     public bool IsGameOver { get; private set; }
+    public bool IsGameWon { get; private set; }
+    
+    private bool bWinSequence = false;
 
     private float VelocityCap = 5;
 
@@ -88,6 +117,12 @@ public class GameManager : MonoBehaviour
         if (!isRunning) return;
 
         HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));
+        HandleFallHaptics();
+        
+        if (!bWinSequence)
+        {
+            HandleFallHaptics();
+        }
     }
 
     public float CalculateVelocity(int personalBalloons, float currentVel, bool player, float aiDiff)
@@ -140,7 +175,7 @@ public class GameManager : MonoBehaviour
             Altitude = 0f;
 
             // Hastighet över fatal threshold - vi dör 
-            if (velocity <= fatalImpactVelocity)
+            if (velocity <= fatalImpactVelocity && !IsGameWon)
             {
                 TriggerGameOver();
             }
@@ -148,6 +183,31 @@ public class GameManager : MonoBehaviour
             {
                 // under fatal threshold - mjuk landning 
                 VerticalVelocity = 0f;
+            }
+        }
+
+        if (Altitude >= WinAltitude && !IsGameWon)
+        {
+            TriggerGameWon();
+        }
+    }
+    
+    private void HandleFallHaptics()
+    {
+       
+        if (VerticalVelocity <= 0f)
+        {
+        
+            float hapticIntensity = Mathf.InverseLerp(0f, maxHapticVelocity, VerticalVelocity);
+
+            if (leftHandHaptics != null)
+            {
+                leftHandHaptics.SendHapticImpulse(hapticIntensity, Time.deltaTime);
+            }
+            
+            if (rightHandHaptics != null)
+            {
+                rightHandHaptics.SendHapticImpulse(hapticIntensity, Time.deltaTime);
             }
         }
     }
@@ -163,6 +223,112 @@ public class GameManager : MonoBehaviour
 
 
     }
+    
+    [ContextMenu("Debug: Trigga Vinstsekvens")]
+    private void TriggerGameWon()
+    {
+        IsGameWon = true;
+        StartCoroutine(WinSequenceTimeline());
+        
+    }
+
+    private IEnumerator WinSequenceTimeline()
+    {
+        bWinSequence = true;
+        bool balloonsPopped = false;
+        
+        Vector3 flattenedForward = vrCameraTransform.forward;
+        flattenedForward.y = 0; 
+
+        if (flattenedForward.sqrMagnitude < 0.01f)
+        {
+            flattenedForward = vrCameraTransform.up; 
+            flattenedForward.y = 0;
+            if (flattenedForward.sqrMagnitude < 0.01f) flattenedForward = Vector3.forward;
+        }
+        flattenedForward.Normalize();
+
+        Vector3 startPos = vrCameraTransform.position + (flattenedForward * winAirplaneSpawnDistance) + (Vector3.up * winAirplaneHeightOffset);
+        Vector3 endPos = vrCameraTransform.position - (flattenedForward * winAirplaneSpawnDistance) + (Vector3.up * winAirplaneHeightOffset);
+        
+        GameObject airplaneInstance = null;
+        if (airplanePrefab != null)
+        {
+            airplaneInstance = Instantiate(airplanePrefab, startPos, Quaternion.LookRotation(endPos - startPos));
+        }
+
+        if (winSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(winSound);
+        }
+        
+        float timer = 0f;
+        while (timer < winAirplaneFlyDuration)
+        {
+            timer += Time.deltaTime;
+            float progress = timer / winAirplaneFlyDuration;
+
+            if (airplaneInstance != null)
+            {
+                airplaneInstance.transform.position = Vector3.Lerp(startPos, endPos, progress);
+
+                float distanceToPlayer = Vector3.Distance(airplaneInstance.transform.position, vrCameraTransform.position);
+                float intensity = 1.0f - Mathf.Clamp01(distanceToPlayer / winAirplaneSpawnDistance);
+                
+                if (leftHandHaptics != null) leftHandHaptics.SendHapticImpulse(intensity, Time.deltaTime);
+                if (rightHandHaptics != null) rightHandHaptics.SendHapticImpulse(intensity, Time.deltaTime);
+            }
+
+            if (progress >= 0.5f && !balloonsPopped)
+            {
+                if (PlayerBaloonTree != null)
+                {
+                    PlayerBaloonTree.PopAllBalloons();
+                }
+                balloonsPopped = true;
+            }
+
+            yield return null; 
+        }
+
+        float uiWaitDelay = 5.0f;
+        float postTimer = 0f;
+        
+        if (airplaneInstance != null)
+        {
+            Vector3 flightDirection = (endPos - startPos).normalized;
+            float flightSpeed = Vector3.Distance(startPos, endPos) / winAirplaneFlyDuration;
+
+            while (postTimer < uiWaitDelay)
+            {
+                postTimer += Time.deltaTime;
+                if (airplaneInstance != null)
+                {
+                    airplaneInstance.transform.position += flightDirection * flightSpeed * Time.deltaTime;
+                }
+                yield return null;
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(uiWaitDelay);
+        }
+
+        // Cleanup efter utfasning
+        if (airplaneInstance != null)
+        {
+            Destroy(airplaneInstance);
+        }
+        bWinSequence = false;
+
+        // Spawna UI
+        if (winUIPrefab != null && vrCameraTransform != null)
+        {
+            Vector3 uiPosition = vrCameraTransform.position + vrCameraTransform.forward * 1.5f;
+            Quaternion uiRotation = Quaternion.LookRotation(uiPosition - vrCameraTransform.position);
+            Instantiate(winUIPrefab, uiPosition, uiRotation, vrCameraTransform.parent);
+        }
+    }
 
     private void PlayImpactEffects()
     {
@@ -174,7 +340,6 @@ public class GameManager : MonoBehaviour
         // Instansiera partiklar om prefab finns
         if (crashParticlePrefab != null)
         {
-            // Vi instansierar partiklarna i världens nollpunkt.
             Instantiate(crashParticlePrefab, Vector3.zero, Quaternion.identity);
         }
     }
