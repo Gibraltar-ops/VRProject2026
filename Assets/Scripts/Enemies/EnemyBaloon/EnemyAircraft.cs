@@ -30,7 +30,7 @@ public class EnemyAircraft : EnemyParentClass
     [Header("Stats")]
     public float accuracy {get; private set;}               = .75f;
     public float aimTime {get; private set;}                = 2.5f;
-    public float timeToFillBalloon {get; private set;}      = 5f;
+    public float timeToFillBalloon {get; private set;}      = 2f;
 
     [Header("Altitude")]
     private float enemyAltitude;

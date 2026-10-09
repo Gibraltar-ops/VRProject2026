@@ -8,6 +8,15 @@
         },
         {
             "m_Id": "7ecf750148d6402fb22028707d5e93ac"
+        },
+        {
+            "m_Id": "23a600b3213b4b98a499d8cdf09a84a8"
+        },
+        {
+            "m_Id": "355eb2293aae4b7dbf5420d213967fcb"
+        },
+        {
+            "m_Id": "ebea49416c2f4b1d9eb1477ba3d662bf"
         }
     ],
     "m_Keywords": [],
@@ -53,6 +62,15 @@
         },
         {
             "m_Id": "3cef7151bc8e4a7bbba29ee5c6ef18a6"
+        },
+        {
+            "m_Id": "8891ee4943ae445582a8200c164233c9"
+        },
+        {
+            "m_Id": "a7eac8b5d3344b67ad6925882a18b203"
+        },
+        {
+            "m_Id": "a2f5e3b98f7e472682368d8b9a60a538"
         }
     ],
     "m_GroupDatas": [],
@@ -140,6 +158,48 @@
                     "m_Id": "2b3b5b4fb849488cb4083719350b1232"
                 },
                 "m_SlotId": 5
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "8891ee4943ae445582a8200c164233c9"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "2b3b5b4fb849488cb4083719350b1232"
+                },
+                "m_SlotId": 9
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "a2f5e3b98f7e472682368d8b9a60a538"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "2b3b5b4fb849488cb4083719350b1232"
+                },
+                "m_SlotId": 11
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "a7eac8b5d3344b67ad6925882a18b203"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "2b3b5b4fb849488cb4083719350b1232"
+                },
+                "m_SlotId": 10
             }
         },
         {
@@ -360,6 +420,50 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "23a600b3213b4b98a499d8cdf09a84a8",
+    "m_Guid": {
+        "m_GuidSerialized": "e929a55d-4f63-4983-96af-953e5ebba03c"
+    },
+    "promotedFromAssetID": "",
+    "promotedFromCategoryName": "",
+    "promotedOrdering": -1,
+    "m_Name": "Cloud Whiteness",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Cloud Whiteness",
+    "m_DefaultReferenceName": "_Cloud_Whiteness",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": 0.0,
+    "m_FloatType": 0,
+    "m_LiteralFloatMode": false,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
+}
+
+{
     "m_SGVersion": 2,
     "m_Type": "UnityEditor.Rendering.Universal.ShaderGraph.UniversalUnlitSubTarget",
     "m_ObjectId": "2722711f2cf04dd99ec921e2e97ab096",
@@ -403,6 +507,15 @@
             "m_Id": "7a025f2d8e6f4e97b23f0bc594cbf4e8"
         },
         {
+            "m_Id": "e9b1db2d254d4922ab6a7d228b4ad72f"
+        },
+        {
+            "m_Id": "3adf61a8e21c44cd83d7719ae484980d"
+        },
+        {
+            "m_Id": "8fdc130fa3d148328aeba9db1a75f276"
+        },
+        {
             "m_Id": "d2c8ed8493fb468091c5211b67339867"
         },
         {
@@ -424,7 +537,67 @@
     "m_FunctionName": "RaymarchCloud",
     "m_FunctionSource": "",
     "m_FunctionSourceUsePragmas": true,
-    "m_FunctionBody": "// camPosWorld tas nu emot som ett argument från grafen, vilket garanterar korrekt stereoposition för VR.\r\nfloat3 rayOrigin = mul(GetWorldToObjectMatrix(), float4(camPosWorld, 1.0)).xyz;\r\nfloat3 posObject = mul(GetWorldToObjectMatrix(), float4(posWorld, 1.0)).xyz;\r\nfloat3 rayDir = normalize(posObject - rayOrigin);\r\n\r\nfloat3 safeRayDir = rayDir + 0.000001; \r\nfloat3 invDir = 1.0 / safeRayDir;\r\n\r\nfloat3 t0 = (-0.5 - rayOrigin) * invDir;\r\nfloat3 t1 = (0.5 - rayOrigin) * invDir;\r\n\r\nfloat3 tmin = min(t0, t1);\r\nfloat3 tmax = max(t0, t1);\r\n\r\nfloat tNear = max(max(tmin.x, tmin.y), tmin.z);\r\nfloat tFar = min(min(tmax.x, tmax.y), tmax.z);\r\n\r\nfloat currentAlpha = 0;\r\nfloat maxSteps = 64;\r\ncloudAlpha = 0;\r\ncloudColor = float3(0, 0, 0);\r\n\r\nif (tNear <= tFar) \r\n{\r\n    float distanceTraveled = max(0.0, tNear + 0.001);\r\n    float totalDensity = 0;\r\n    float accumulatedLighting = 0;\r\n\r\n    [loop]\r\n    for (int i = 0; i < maxSteps; i++)\r\n    {\r\n        if (distanceTraveled > tFar) \r\n        {\r\n            break;\r\n        }\r\n        \r\n        float3 currentPos = rayOrigin + (rayDir * distanceTraveled);\r\n        float3 uvw = currentPos + 0.5;\r\n        \r\n        if (uvw.x < -0.001 || uvw.x > 1.001 || uvw.y < -0.001 || uvw.y > 1.001 || uvw.z < -0.001 || uvw.z > 1.001)\r\n        {\r\n            break;\r\n        }\r\n        \r\n        // --- BOX FADE ---\r\n        float3 distToEdge = min(uvw, 1.0 - uvw);\r\n        float minEdgeDist = min(min(distToEdge.x, distToEdge.y), distToEdge.z);\r\n        float boxFade = smoothstep(0.0, 0.05, minEdgeDist);\r\n        \r\n        float sdfDistance = SAMPLE_TEXTURE3D_LOD(_SDF_Volume, sampler_LinearClamp, uvw, 0).r;\r\n        \r\n        float timeVal = _Time.y * 0.15;\r\n        float3 noiseCoord = currentPos * 8.0 + float3(timeVal, timeVal * 0.5, timeVal);\r\n        float proceduralNoise = (sin(noiseCoord.x) * cos(noiseCoord.y) * sin(noiseCoord.z)) * 0.04;\r\n        float fluffySdf = sdfDistance + proceduralNoise;\r\n\r\n        if (fluffySdf < 0.03)\r\n        {\r\n            float densityStep = 0.4;\r\n            \r\n            float3 lightSamplePos = uvw + (lightDir * 0.05);\r\n            float lightSdf = SAMPLE_TEXTURE3D_LOD(_SDF_Volume, sampler_LinearClamp, lightSamplePos, 0).r;\r\n            \r\n            float shadowFactor = saturate(lightSdf * 3.0); \r\n            \r\n            float currentStepDensity = (densityStep * (shadowFactor + 0.2)) * boxFade;\r\n            totalDensity += currentStepDensity;\r\n            \r\n            float stepLight = (shadowFactor * densityStep) * boxFade;\r\n            accumulatedLighting += stepLight;\r\n            \r\n            distanceTraveled += 0.015;\r\n            \r\n            if (totalDensity >= 1.0) break;\r\n        }\r\n        else\r\n        {\r\n            distanceTraveled += max(fluffySdf * 0.25, 0.01);\r\n        }\r\n    }\r\n\r\n    cloudAlpha = saturate(pow(totalDensity, 0.7));\r\n\r\n    float3 ambientShadowColor = float3(0.65, 0.72, 0.82); \r\n    float3 sunLitColor = lightColor * 1.2;                 \r\n\r\n    float lightingFactor = saturate(accumulatedLighting / (totalDensity + 0.001));\r\n\r\n    cloudColor = lerp(ambientShadowColor, sunLitColor, lightingFactor);\r\n}"
+    "m_FunctionBody": "// camPosWorld tas nu emot som ett argument från grafen, vilket garanterar korrekt stereoposition för VR.\r\nfloat3 rayOrigin = mul(GetWorldToObjectMatrix(), float4(camPosWorld, 1.0)).xyz;\r\nfloat3 posObject = mul(GetWorldToObjectMatrix(), float4(posWorld, 1.0)).xyz;\r\nfloat3 rayDir = normalize(posObject - rayOrigin);\r\n\r\nfloat3 safeRayDir = rayDir + 0.000001; \r\nfloat3 invDir = 1.0 / safeRayDir;\r\n\r\nfloat3 t0 = (-0.5 - rayOrigin) * invDir;\r\nfloat3 t1 = (0.5 - rayOrigin) * invDir;\r\n\r\nfloat3 tmin = min(t0, t1);\r\nfloat3 tmax = max(t0, t1);\r\n\r\nfloat tNear = max(max(tmin.x, tmin.y), tmin.z);\r\nfloat tFar = min(min(tmax.x, tmax.y), tmax.z);\r\n\r\nfloat currentAlpha = 0;\r\nfloat maxSteps = 64;\r\ncloudAlpha = 0;\r\ncloudColor = float3(0, 0, 0);\r\n\r\nif (tNear <= tFar) \r\n{\r\n    float distanceTraveled = max(0.0, tNear + 0.001);\r\n    float totalDensity = 0;\r\n    float accumulatedLighting = 0;\r\n\r\n    [loop]\r\n    for (int i = 0; i < maxSteps; i++)\r\n    {\r\n        if (distanceTraveled > tFar) \r\n        {\r\n            break;\r\n        }\r\n        \r\n        float3 currentPos = rayOrigin + (rayDir * distanceTraveled);\r\n        float3 uvw = currentPos + 0.5;\r\n        \r\n        if (uvw.x < -0.001 || uvw.x > 1.001 || uvw.y < -0.001 || uvw.y > 1.001 || uvw.z < -0.001 || uvw.z > 1.001)\r\n        {\r\n            break;\r\n        }\r\n        \r\n        // --- BOX FADE ---\r\n        float3 distToEdge = min(uvw, 1.0 - uvw);\r\n        float minEdgeDist = min(min(distToEdge.x, distToEdge.y), distToEdge.z);\r\n        float boxFade = smoothstep(0.0, 0.05, minEdgeDist);\r\n        \r\n        float sdfDistance = SAMPLE_TEXTURE3D_LOD(_SDF_Volume, sampler_LinearClamp, uvw, 0).r;\r\n        \r\n        float timeVal = _Time.y * 0.15;\r\n        float3 noiseCoord = currentPos * 8.0 + float3(timeVal, timeVal * 0.5, timeVal);\r\n        float proceduralNoise = (sin(noiseCoord.x) * cos(noiseCoord.y) * sin(noiseCoord.z)) * 0.04;\r\n        float fluffySdf = sdfDistance + proceduralNoise;\r\n\r\n        if (fluffySdf < 0.03)\r\n        {\r\n            float densityStep = 0.4;\r\n            \r\n            float3 lightSamplePos = uvw + (lightDir * 0.05);\r\n            float lightSdf = SAMPLE_TEXTURE3D_LOD(_SDF_Volume, sampler_LinearClamp, lightSamplePos, 0).r;\r\n            \r\n            float shadowFactor = saturate(lightSdf * 3.0); \r\n            \r\n            float currentStepDensity = (densityStep * (shadowFactor + 0.2)) * boxFade;\r\n            totalDensity += currentStepDensity;\r\n            \r\n            float stepLight = (shadowFactor * densityStep) * boxFade;\r\n            accumulatedLighting += stepLight;\r\n            \r\n            distanceTraveled += 0.015;\r\n            \r\n            if (totalDensity >= 1.0) break;\r\n        }\r\n        else\r\n        {\r\n            distanceTraveled += max(fluffySdf * 0.25, 0.01);\r\n        }\r\n    }\r\n\r\n    cloudAlpha = saturate(pow(totalDensity, 0.7));\r\n\r\n    float3 ambientShadowColor = CustomShadowColor;\r\n    float3 sunLitColor = CustomSunColor * 1.2;                 \r\n\r\n    float lightingFactor = saturate(accumulatedLighting / (totalDensity + 0.001));\r\n\r\nfloat3 baseCloudColor = lerp(ambientShadowColor, sunLitColor, lightingFactor); \r\n\r\n    cloudColor = baseCloudColor * max(0.0, whitenessMultiplier); \r\n}\r\n\r\n"
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
+    "m_ObjectId": "343e05261f4045fa8209554c72cd1f31",
+    "m_Id": 0,
+    "m_DisplayName": "Cloud Shadow",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 3,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
+    "m_ObjectId": "355eb2293aae4b7dbf5420d213967fcb",
+    "m_Guid": {
+        "m_GuidSerialized": "096ace4e-3321-4404-a6b3-086f8fa5aaf0"
+    },
+    "promotedFromAssetID": "",
+    "promotedFromCategoryName": "",
+    "promotedOrdering": -1,
+    "m_Name": "Cloud Shadow",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Cloud Shadow",
+    "m_DefaultReferenceName": "_Cloud_Shadow",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": {
+        "r": 0.5176470875740051,
+        "g": 0.5568627715110779,
+        "b": 0.5411764979362488,
+        "a": 1.0
+    },
+    "isMainColor": false,
+    "m_ColorMode": 0
 }
 
 {
@@ -441,6 +614,29 @@
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
+    "m_ObjectId": "3adf61a8e21c44cd83d7719ae484980d",
+    "m_Id": 10,
+    "m_DisplayName": "CustomShadowColor",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "CustomShadowColor",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": []
 }
 
 {
@@ -489,10 +685,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -745.333251953125,
-            "y": -73.99994659423828,
-            "width": 123.99993896484375,
-            "height": 246.6666259765625
+            "x": -1276.0,
+            "y": -183.19998168945313,
+            "width": 122.4000244140625,
+            "height": 244.79994201660157
         }
     },
     "m_Slots": [
@@ -686,6 +882,22 @@
 {
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "7166fae6ba434a649fab2b64be755dc8",
+    "m_Id": 0,
+    "m_DisplayName": "Cloud Whiteness",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "729c3ee585694c6eb5c3504383e7acdb",
     "m_Id": 5,
     "m_DisplayName": "Z Buffer Sign",
@@ -711,10 +923,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -701.5999145507813,
-            "y": -139.99998474121095,
+            "x": -1276.0,
+            "y": -221.60000610351563,
             "width": 125.5999755859375,
-            "height": 33.59999084472656
+            "height": 33.60002136230469
         }
     },
     "m_Slots": [
@@ -802,8 +1014,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1064.800048828125,
-            "y": -391.1999206542969,
+            "x": -1521.5999755859375,
+            "y": -420.8000183105469,
             "width": 208.0,
             "height": 311.9999694824219
         }
@@ -839,10 +1051,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -719.199951171875,
-            "y": -264.79998779296877,
+            "x": -1276.0,
+            "y": -303.20001220703127,
             "width": 160.800048828125,
-            "height": 76.80003356933594
+            "height": 76.80001831054688
         }
     },
     "m_Slots": [
@@ -895,6 +1107,65 @@
     },
     "isMainColor": false,
     "m_ColorMode": 1
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "8891ee4943ae445582a8200c164233c9",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -1313.5999755859375,
+            "y": 83.9999771118164,
+            "width": 164.0,
+            "height": 33.60002136230469
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "7166fae6ba434a649fab2b64be755dc8"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "23a600b3213b4b98a499d8cdf09a84a8"
+    }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
+    "m_ObjectId": "8fdc130fa3d148328aeba9db1a75f276",
+    "m_Id": 11,
+    "m_DisplayName": "CustomSunColor",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "CustomSunColor",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": []
 }
 
 {
@@ -978,6 +1249,78 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "a2f5e3b98f7e472682368d8b9a60a538",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -812.7999877929688,
+            "y": 155.19993591308595,
+            "width": 157.5999755859375,
+            "height": 33.60002136230469
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "e91939f02e12406f96a15d3ec86ccef7"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "ebea49416c2f4b1d9eb1477ba3d662bf"
+    }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "a7eac8b5d3344b67ad6925882a18b203",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -808.7999267578125,
+            "y": 100.7999267578125,
+            "width": 152.7999267578125,
+            "height": 33.60002136230469
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "343e05261f4045fa8209554c72cd1f31"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "355eb2293aae4b7dbf5420d213967fcb"
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.TangentMaterialSlot",
     "m_ObjectId": "b07723faa5bc49c6b8bb9d26ba8bbc8d",
     "m_Id": 0,
@@ -1035,9 +1378,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -639.2000122070313,
-            "y": -322.3999938964844,
-            "width": 148.00006103515626,
+            "x": -1461.5999755859375,
+            "y": -515.2000122070313,
+            "width": 148.0,
             "height": 33.600006103515628
         }
     },
@@ -1095,6 +1438,15 @@
         },
         {
             "m_Id": "7ecf750148d6402fb22028707d5e93ac"
+        },
+        {
+            "m_Id": "23a600b3213b4b98a499d8cdf09a84a8"
+        },
+        {
+            "m_Id": "355eb2293aae4b7dbf5420d213967fcb"
+        },
+        {
+            "m_Id": "ebea49416c2f4b1d9eb1477ba3d662bf"
         }
     ]
 }
@@ -1244,6 +1596,47 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector4MaterialSlot",
+    "m_ObjectId": "e91939f02e12406f96a15d3ec86ccef7",
+    "m_Id": 0,
+    "m_DisplayName": "Cloud Highlight",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    },
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "e9b1db2d254d4922ab6a7d228b4ad72f",
+    "m_Id": 9,
+    "m_DisplayName": "whitenessMultiplier",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "whitenessMultiplier",
+    "m_StageCapability": 3,
+    "m_Value": -0.7599999904632568,
+    "m_DefaultValue": 0.0,
+    "m_Labels": [],
+    "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
     "m_ObjectId": "eb2b14c7c2684eeabd2b61bf0e38a3fd",
     "m_Id": 0,
@@ -1263,6 +1656,41 @@
         "z": 0.0
     },
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 3,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.ColorShaderProperty",
+    "m_ObjectId": "ebea49416c2f4b1d9eb1477ba3d662bf",
+    "m_Guid": {
+        "m_GuidSerialized": "05da058e-a3b3-44d8-afee-c4841090d532"
+    },
+    "promotedFromAssetID": "",
+    "promotedFromCategoryName": "",
+    "promotedOrdering": -1,
+    "m_Name": "Cloud Highlight",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Cloud Highlight",
+    "m_DefaultReferenceName": "_Cloud_Highlight",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": {
+        "r": 0.9372549653053284,
+        "g": 0.7764706611633301,
+        "b": 0.5490196347236633,
+        "a": 1.0
+    },
+    "isMainColor": false,
+    "m_ColorMode": 0
 }
 
 {

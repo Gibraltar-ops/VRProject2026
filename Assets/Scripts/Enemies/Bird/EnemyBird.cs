@@ -56,14 +56,14 @@ public class EnemyBird : EnemyParentClass
 
         BalloonTree.OnBalloonPopped += HandleTargetChange;
         _health.Die += EnterDeadState;
-        GameManager.instance.GameComplete += KillEnemy;
+        GameManager.instance.OnGameComplete += KillEnemy;
     }
 
     void OnDisable()
     {
         BalloonTree.OnBalloonPopped -= HandleTargetChange;
         _health.Die -= EnterDeadState;
-        GameManager.instance.GameComplete -= KillEnemy;
+        GameManager.instance.OnGameComplete -= KillEnemy;
     }
 
     public string GetCurrentStateDebug()
