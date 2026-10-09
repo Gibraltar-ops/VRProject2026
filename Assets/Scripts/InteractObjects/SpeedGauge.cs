@@ -13,6 +13,7 @@ public class SpeedGauge : MonoBehaviour
     private Quaternion maxSpeedRotation;
     private Quaternion neutralSpeed;
     private Quaternion freefallRotation;
+    public Quaternion targetRotation;
 
     void Start()
     {
@@ -35,7 +36,6 @@ public class SpeedGauge : MonoBehaviour
 
     private void HandleRotation()
     {
-        Quaternion targetRotation;
         float t;
         switch (playerBalloons)
         {
@@ -58,6 +58,6 @@ public class SpeedGauge : MonoBehaviour
                 break;
         }
 
-        needle.localRotation = Quaternion.Slerp(needle.localRotation, targetRotation, needleSpeed);
+        needle.localRotation = Quaternion.Slerp(needle.localRotation, targetRotation, needleSpeed*Time.deltaTime);
     }
 }
