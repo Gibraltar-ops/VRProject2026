@@ -14,5 +14,6 @@ public class StartGameButton : MonoBehaviour
     {
         GameManager.instance.SetRunning(true);
         MainMenuPanel.SetActive(false);
+        GameManager.instance.TriggerStartGameEvent();
     }
 }

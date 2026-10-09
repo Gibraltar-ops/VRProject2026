@@ -1,12 +1,13 @@
-using NUnit.Framework;
-using TMPro;
+using System;
 using UnityEngine;
-using UnityEngine.InputSystem.XR.Haptics;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
+
+    public event Action GameComplete;
+    public event Action StartGame;
 
     [Header("Systems")]
 
@@ -70,8 +71,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        isRunning = false;
+    }
+
     void Update()
     {
+        if(Altitude >= WinAltitude)
+        {
+           IsGameOver = true;
+           GameComplete?.Invoke(); 
+           isRunning = false;
+        }
         if (IsGameOver) return;
 
         HandlePlayerAltitude(CalculateVelocity(ActivePlayerBalloons, VerticalVelocity, true, 0f));
@@ -180,5 +192,10 @@ public class GameManager : MonoBehaviour
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentSceneName);
+    }
+
+    public void TriggerStartGameEvent()
+    {
+        StartGame?.Invoke();
     }
 }

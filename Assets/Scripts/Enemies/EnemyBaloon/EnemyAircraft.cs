@@ -25,6 +25,7 @@ public class EnemyAircraft : EnemyParentClass
     public EnemyFireAtBird          _enemyFireAtBird;
     public EnemyFireAtPlayerState   _enemyFireAtPlayerState;
     public EnemyRefillState         _enemyRefillState;
+    public EnemyWait                _enemyWaitState;
 
     [Header("Stats")]
     public float accuracy {get; private set;}               = .75f;
@@ -58,6 +59,7 @@ public class EnemyAircraft : EnemyParentClass
         _enemyFireAtBird         = new EnemyFireAtBird(this, _enemySpawner);
         _enemyFireAtPlayerState  = new EnemyFireAtPlayerState(this);
         _enemyRefillState        = new EnemyRefillState(this);
+        _enemyWaitState          = new EnemyWait(this);
     }
 
 
@@ -82,6 +84,10 @@ public class EnemyAircraft : EnemyParentClass
 
     public override void Update()
     {
+        if (!GameManager.instance.isRunning)
+        {
+            return;
+        }
         _statemachine._currentState.StateUpdate();
         timeSinceLastBoost += Time.deltaTime;
         UpdateAltitude();
@@ -201,7 +207,14 @@ public class EnemyAircraft : EnemyParentClass
 
     private IState FarAboveDec()
     {
-        return _enemyFireAtBird;
+        if(_enemySpawner.enemiesSpawned.Count > 0)
+        {
+            return _enemyFireAtBird;
+        }
+        else
+        {
+            return _enemyWaitState;
+        }
     }
 
     private IState AboveDec()
@@ -359,7 +372,7 @@ public class EnemyAircraft : EnemyParentClass
     public void ChangeTask()
     {
         IState newState = MakeDecition();
-        _statemachine.ChangeState(newState);
+        _statemachine.ChangeState(_enemyWaitState);
         if (debug)
         {
             Debug.Log("Changed task to: " + newState);
