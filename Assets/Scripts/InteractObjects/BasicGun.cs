@@ -14,6 +14,7 @@ public class BasicGun : MonoBehaviour
 
     public LineRenderer _lineRenderObject;
     public GameObject _debug_Sphere;
+    public AudioSource _audioSource;
 
     float timer = 0;
     bool lineIsReset = true;
@@ -61,6 +62,7 @@ public class BasicGun : MonoBehaviour
 
         //Instantiate(vfx, RaycastOrigin.position, Quaternion.LookRotation(transform.up * -1, transform.right * -1));
         vfx_local_particles.Play();
+        _audioSource.Play();
 
         RaycastHit hit;
         if (Physics.Raycast(RaycastOrigin.position, transform.up * -1, out hit, Mathf.Infinity))

@@ -54,7 +54,7 @@ public class Cannon : MonoBehaviour
             return;
         }
 
-        _vfx.Play();
+        _vfx.Play(true);
 
         GameObject projectile = Instantiate(_projectile, _instantiateOrigin.position, Quaternion.LookRotation(_instantiateOrigin.forward) );
         

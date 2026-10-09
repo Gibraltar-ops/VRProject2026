@@ -5501,22 +5501,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cannon
       objectReference: {fileID: 0}
-    - target: {fileID: 3539445733274926092, guid: fd9941e7c5d25694b8ff586797f3ab7b, type: 3}
-      propertyPath: _vfx
-      value: 
-      objectReference: {fileID: 7972776285768377050, guid: 19ecd94c04e60de48992e378e5102d5d, type: 3}
-    - target: {fileID: 3896146738758861110, guid: fd9941e7c5d25694b8ff586797f3ab7b, type: 3}
-      propertyPath: m_Activated.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4505005059554887078, guid: fd9941e7c5d25694b8ff586797f3ab7b, type: 3}
-      propertyPath: CollisionModule.enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7685636238611682798, guid: fd9941e7c5d25694b8ff586797f3ab7b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 9055301627580642384, guid: fd9941e7c5d25694b8ff586797f3ab7b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.577
