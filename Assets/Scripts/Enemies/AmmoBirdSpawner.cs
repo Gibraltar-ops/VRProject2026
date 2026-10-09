@@ -17,6 +17,11 @@ public class AmmoBirdSpawner : MonoBehaviour
 
     public void SpawnAmmoBird(Vector3 position)
     {
+        //RaycastHit hit;
+        if(Physics.Raycast(position + Vector3.up*2, Vector3.down, 4f))
+        {
+            return;
+        }
         Instantiate(spawnPrefab,position,Quaternion.LookRotation(Vector3.up-position) );
     }
 

@@ -33,7 +33,7 @@ public class Ammo : MonoBehaviour
     void Start()
     {
         _randomTimeOffset = Random.value;
-        _amplitude = Random.value + 1.0f;
+        _amplitude = Random.value + .15f;
         _startPos = transform.position;
         _speed = Random.value + 1f;
         _isAlive = true;

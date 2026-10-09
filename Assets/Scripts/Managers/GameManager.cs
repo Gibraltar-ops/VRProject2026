@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Hur få ballonger som behövs för att hamna i fritt fall")]
     public int freefallThreshold {get; private set;}= 3;
-    public int balloonsForVelocityCap {get; private set;} = 10;
+    public int balloonsForVelocityCap {get; private set;} = 20;
 
 
     [Tooltip("Hur mycket acceleration/lift multiplier påverkas per uppblåst ballong")]

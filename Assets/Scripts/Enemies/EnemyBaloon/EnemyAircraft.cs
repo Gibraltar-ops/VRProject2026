@@ -88,6 +88,7 @@ public class EnemyAircraft : EnemyParentClass
         {
             return;
         }
+
         _statemachine._currentState.StateUpdate();
         timeSinceLastBoost += Time.deltaTime;
         UpdateAltitude();
@@ -139,6 +140,7 @@ public class EnemyAircraft : EnemyParentClass
         {
         swaySpeed = Mathf.Lerp(.10f, .4f, Mathf.Sin(swayTimer) + 1f) / 2f;
         }
+
         if(swayChangeTime >= swayChange)
         {
             GetNewSwayPoint();
@@ -372,7 +374,7 @@ public class EnemyAircraft : EnemyParentClass
     public void ChangeTask()
     {
         IState newState = MakeDecition();
-        _statemachine.ChangeState(_enemyWaitState);
+        _statemachine.ChangeState(newState);
         if (debug)
         {
             Debug.Log("Changed task to: " + newState);
