@@ -60,7 +60,7 @@ public class BalloonTree : MonoBehaviour
     {
         BasicGun.OnGunHit -= HandleBalloonHit;
         ProjectileBird.OnCannonProjectileHit -= HandleBalloonHit;
-        GameManager.instance.StartGame -= ResetAndStart;
+        GameManager.instance.OnStartGame -= ResetAndStart;
     }
 
     void Start()
@@ -114,7 +114,7 @@ public class BalloonTree : MonoBehaviour
         }
         ActiveBalloons = counter;
         OnInitialized?.Invoke();
-        GameManager.instance.StartGame += ResetAndStart;
+        GameManager.instance.OnStartGame += ResetAndStart;
     }
 
     // Update is called once per frame
@@ -328,13 +328,13 @@ public class BalloonTree : MonoBehaviour
     public void PopAllBalloons()
     {
         BalloonInfo[] balloonsToPop = _balloons.Where(b => b.state == BalloonInfo.BalloonState.Alive).ToArray();
-        
+
         foreach (BalloonInfo balloon in balloonsToPop)
         {
             PopBalloon(balloon);
         }
     }
-    
+
     IEnumerator InflateAndAdd(GameObject balloonToAdd, BalloonInfo slot, float spawnTime)
     {
         float timer = 0f;
