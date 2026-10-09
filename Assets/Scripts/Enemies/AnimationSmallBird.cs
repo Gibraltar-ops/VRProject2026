@@ -11,6 +11,7 @@ public class AnimationSmallBird : MonoBehaviour
     private float _flapTimer = 0f;
 
     float time = 0f;
+    float soundVolume = 0.2f;
 
     int BIRD_ATTACK = Animator.StringToHash("Attack");
     int BIRD_HOLDING = Animator.StringToHash("Holding");
@@ -84,7 +85,7 @@ public class AnimationSmallBird : MonoBehaviour
     {
         if (_audioSource != null && _attackClip != null)
         {
-            _audioSource.pitch = Random.Range(0.9f, 1.1f);
+            _audioSource.pitch = Random.Range(0.9f, 1.1f) * soundVolume;
             _audioSource.volume = 1.0f;
             _audioSource.PlayOneShot(_attackClip);
         }
@@ -94,8 +95,8 @@ public class AnimationSmallBird : MonoBehaviour
     {
         if (_audioSource != null && _wingFlapClip != null)
         {
-            _audioSource.pitch = Random.Range(0.85f, 1.15f);
-            _audioSource.volume = Random.Range(0.8f, 1.0f);
+            _audioSource.pitch = Random.Range(0.85f, 1.15f) * soundVolume;
+            _audioSource.volume = Random.Range(0.8f, 1.0f) * soundVolume;
 
             _audioSource.PlayOneShot(_wingFlapClip);
         }
