@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance = null;
 
     public event Action GameComplete;
+    public event Action StartGame;
 
     [Header("Systems")]
 
@@ -68,6 +69,11 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    void Start()
+    {
+        isRunning = false;
     }
 
     void Update()
@@ -186,5 +192,10 @@ public class GameManager : MonoBehaviour
     {
         string currentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentSceneName);
+    }
+
+    public void TriggerStartGameEvent()
+    {
+        StartGame?.Invoke();
     }
 }
