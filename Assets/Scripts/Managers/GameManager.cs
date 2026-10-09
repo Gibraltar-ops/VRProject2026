@@ -39,14 +39,14 @@ public class GameManager : MonoBehaviour
 
     public float GroundAltitude { get; private set; }
 
-    public float CloudBaseAltitude { get; } = 700f;
-    public float WinAltitude { get; private set; } = 100f;// 2000 standard
+    public float CloudBaseAltitude { get; } = 400f;
+    public float WinAltitude { get; private set; } = 700f;// 2000 standard
 
     [Header("Balans/Thresholds")]
     [SerializeField] private float gravityMultiplier = 5.0f;
 
     [Tooltip("Hur många ballonger som behövs för att hovra")]
-    public int hoverThreshold {get; private set;}= 10;
+    public int hoverThreshold {get; private set;}= 6;
 
     [Tooltip("Hur få ballonger som behövs för att hamna i fritt fall")]
     public int freefallThreshold {get; private set;}= 3;
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
 
 
     [Tooltip("Hur mycket acceleration/lift multiplier påverkas per uppblåst ballong")]
-    [SerializeField] private float acceleration = 1.25f;
+    [SerializeField] private float acceleration = 2.0f;
 
     [Header("Fritt fall - justeringar")]
     [SerializeField] private float maxFreeFallSpeed = 40.0f;

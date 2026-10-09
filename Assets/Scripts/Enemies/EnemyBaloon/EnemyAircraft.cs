@@ -95,7 +95,7 @@ public class EnemyAircraft : EnemyParentClass
         UpdateRotation();
         SetRangePhase();
         
-        aiCapDiff = Mathf.Lerp(1.25f, .75f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
+        aiCapDiff = Mathf.Lerp(1.35f, .65f, Mathf.InverseLerp(-RelativeDistanceCap, RelativeDistanceCap, relativeDistance));
     }
 
     private void UpdateAltitude()
@@ -297,7 +297,7 @@ public class EnemyAircraft : EnemyParentClass
 
     private bool minBalloonCheck()
     {
-        if(ownBalloonTree.ActiveBalloons <= 10)
+        if(ownBalloonTree.ActiveBalloons <= GameManager.instance.hoverThreshold)
         {
             if (debug)
             {
