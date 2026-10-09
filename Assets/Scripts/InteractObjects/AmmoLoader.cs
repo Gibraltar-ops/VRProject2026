@@ -35,7 +35,10 @@ public class AmmoLoader : MonoBehaviour
             Debug.LogWarning($"No Ammo Component found!");
             return; 
         }
-
+        if (this.ammo != null)
+        {
+            this.ammo.RemoveAmmo();
+        }
         ammo.AddToGun(attachPoint);
         this.ammo = ammo; // assign to local ammo
     }

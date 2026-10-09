@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     public float GroundAltitude { get; private set; }
 
     public float CloudBaseAltitude { get; } = 700f;
-    public float WinAltitude { get; private set; } = 2000f;
+    public float WinAltitude { get; private set; } = 100f;// 2000 standard
 
     [Header("Balans/Thresholds")]
     [SerializeField] private float gravityMultiplier = 5.0f;
@@ -109,9 +109,9 @@ public class GameManager : MonoBehaviour
     {
         if(Altitude >= WinAltitude)
         {
-           IsGameOver = true;
+           //IsGameOver = true;
            OnGameComplete?.Invoke(); 
-           isRunning = false;
+           //isRunning = false;
         }
         if (IsGameOver) return;
         if (!isRunning) return;
@@ -140,11 +140,11 @@ public class GameManager : MonoBehaviour
             {
                 if (aiDiff == 0)
                 {
-                    targetVelocity = Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap;
+                    targetVelocity = Mathf.InverseLerp(0, 8, extraBalloons) * VelocityCap;
                 }
                 else
                 {
-                    targetVelocity = (Mathf.InverseLerp(0, 6, extraBalloons) * VelocityCap) * aiDiff;
+                    targetVelocity = (Mathf.InverseLerp(0, 8, extraBalloons) * VelocityCap) * aiDiff;
                 }
             }
         }
@@ -291,7 +291,7 @@ public class GameManager : MonoBehaviour
             yield return null; 
         }
 
-        float uiWaitDelay = 5.0f;
+        float uiWaitDelay = 0.50f;
         float postTimer = 0f;
         
         if (airplaneInstance != null)
@@ -326,7 +326,10 @@ public class GameManager : MonoBehaviour
         {
             Vector3 uiPosition = vrCameraTransform.position + vrCameraTransform.forward * 1.5f;
             Quaternion uiRotation = Quaternion.LookRotation(uiPosition - vrCameraTransform.position);
-            Instantiate(winUIPrefab, uiPosition, uiRotation, vrCameraTransform.parent);
+            //Instantiate(winUIPrefab, uiPosition, uiRotation, vrCameraTransform.parent);
+            winUIPrefab.transform.rotation = uiRotation;
+            winUIPrefab.transform.position = uiPosition;
+            winUIPrefab.gameObject.SetActive(true);
         }
     }
 

@@ -208,7 +208,7 @@ public class BalloonTree : MonoBehaviour
         balloon.transform.gameObject.SetActive(false);
         Instantiate(PopParticles, balloon.transform.position, quaternion.identity, transform);
         OnBalloonPopped?.Invoke(balloon);
-        Debug.Log("Popped Balloon with id: " + balloon.ID);
+        //Debug.Log("Popped Balloon with id: " + balloon.ID);
         ActiveBalloons--;
 
         PlayPoppingSound(poppingSounds);
