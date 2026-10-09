@@ -6914,7 +6914,7 @@ MonoBehaviour:
   minPitch: 0.9
   maxPitch: 1.1
   sfxGroup: {fileID: 0}
-  startBalloons: 9
+  startBalloons: 6
   PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
   NonInteractiveBalloon: {fileID: 1137917864630088279, guid: 85fa2c097ad135b4ebe877f2fa423973, type: 3}
   NonInteractiveBalloonSpawnPoint: {fileID: 106035438}
@@ -16946,7 +16946,7 @@ MonoBehaviour:
   minPitch: 0.9
   maxPitch: 1.1
   sfxGroup: {fileID: 0}
-  startBalloons: 9
+  startBalloons: 5
   PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
   NonInteractiveBalloon: {fileID: 1137917864630088279, guid: 85fa2c097ad135b4ebe877f2fa423973, type: 3}
   NonInteractiveBalloonSpawnPoint: {fileID: 1405247357}
@@ -20043,7 +20043,7 @@ MonoBehaviour:
   minPitch: 0.9
   maxPitch: 1.1
   sfxGroup: {fileID: 0}
-  startBalloons: 9
+  startBalloons: 5
   PopParticles: {fileID: 3425879064181718866, guid: 2dba42f09c758054787cb53fa2c6976d, type: 3}
   NonInteractiveBalloon: {fileID: 1137917864630088279, guid: 85fa2c097ad135b4ebe877f2fa423973, type: 3}
   NonInteractiveBalloonSpawnPoint: {fileID: 1979880504}
