@@ -869,6 +869,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1297154230}
     m_Modifications:
+    - target: {fileID: 1889468324250276738, guid: ef0d199c33fb8ac438f5eac5da00b5ca, type: 3}
+      propertyPath: needleSpeed
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 2332571800608405138, guid: ef0d199c33fb8ac438f5eac5da00b5ca, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.115
@@ -919,7 +923,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6539978796025602356, guid: ef0d199c33fb8ac438f5eac5da00b5ca, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6860187735701182969, guid: ef0d199c33fb8ac438f5eac5da00b5ca, type: 3}
       propertyPath: m_StaticEditorFlags

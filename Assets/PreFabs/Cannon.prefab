@@ -186,6 +186,7 @@ MonoBehaviour:
   _projectileForce: 1500
   _audioSource: {fileID: 527220086369442731}
   _pitchVariation: 0.1
+  debugBool: 0
   _debugText: {fileID: 6452112057485848207}
   ammoLoader: {fileID: 3255625916597551368}
 --- !u!114 &3896146738758861110
@@ -5348,7 +5349,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4285949603139491586
 RectTransform:
   m_ObjectHideFlags: 0

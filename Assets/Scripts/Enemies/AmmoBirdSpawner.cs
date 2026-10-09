@@ -6,7 +6,7 @@ public class AmmoBirdSpawner : MonoBehaviour
     int childcount = 0;
     int childIndex = 0;
     float spawnTimer;
-    float SpawnThreshold = 5f;
+    public float SpawnThreshold = 5f;
 
     public GameObject spawnPrefab;
 

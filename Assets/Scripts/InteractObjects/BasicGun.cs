@@ -19,8 +19,11 @@ public class BasicGun : MonoBehaviour
     float timer = 0;
     bool lineIsReset = true;
 
+    Vector3 _startPos;
+
     void Start()
     {
+        _startPos = transform.position;
         if (_debug)
         {
             _lineRenderObject.gameObject.SetActive(true);
@@ -37,6 +40,14 @@ public class BasicGun : MonoBehaviour
      
     }
 
+    void CheckBounds()
+    {
+        if (transform.position.sqrMagnitude > 40f)
+        {
+            transform.position = _startPos;
+        }
+    }
+
     private void Update()
     {
         timer += Time.deltaTime;
@@ -46,6 +57,8 @@ public class BasicGun : MonoBehaviour
             _debug_Sphere.transform.position = Vector3.down;
             lineIsReset = true;
         }
+
+        CheckBounds();
     }
 
     public void SetKnots(Vector3 start, Vector3 end)

@@ -14,37 +14,73 @@ public class Cannon : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private float _pitchVariation = 0.1f;
 
+    public bool debugBool;
     public TMPro.TextMeshPro _debugText;
 
     public AmmoLoader ammoLoader;
 
+    Vector3 _startPos;
+
     void Start()
     {
+        _startPos = transform.position;
+        if (debugBool)
+        {
+            _debugText.gameObject.SetActive(true);
+        }
+        else
+        {
+            _debugText.gameObject.SetActive(false);
+        }
+    }
 
+    void CheckBounds()
+    {
+        if (transform.position.sqrMagnitude > 40f)
+        {
+            transform.position = _startPos;
+        }
+    }
+
+    private void Update()
+    {
+        CheckBounds();
     }
 
     public bool CheckAmmo()
     {
         if(ammoLoader.GetAmmo())
         {
-            _debugText.text = "Has Ammo";
+            if (debugBool)
+            {
+                _debugText.text = "Has Ammo";
+            }
             return true;
         }
         else
         {
-            _debugText.text = "No Ammo";
+            if (debugBool)
+            {
+                _debugText.text = "No Ammo";
+            }
             return false;
         }
     }
 
     public void AmmoAdd()
     {
-        _debugText.text = "Ammo ADD";
+        if (debugBool)
+        {
+            _debugText.text = "Ammo ADD";
+        }
     }
 
     public void AmmoRemove()
     {
-        _debugText.text = "Ammo REMOVE";
+        if (debugBool)
+        {
+            _debugText.text = "Ammo REMOVE";
+        }
     }
 
     public void Fire()
